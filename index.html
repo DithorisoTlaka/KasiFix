@@ -770,6 +770,9 @@
         let currentUser = null;
         let currentUserProfileKey = null;
 
+        // Flag to ignore the next snapshot after creating a new profile
+        let ignoreNextSnapshot = false;
+
         // ────────────────────────────────────────────────
         //  MODAL HELPERS (modern style)
         // ────────────────────────────────────────────────
@@ -964,7 +967,6 @@
         function renderHustlers(hustlersToRender) {
             container.innerHTML = ''; 
 
-            // No verification filter anymore — show all hustlers immediately
             if (hustlersToRender.length === 0) {
                 container.innerHTML = `
                     <div class="col-span-3 text-center py-10">
@@ -1021,7 +1023,13 @@
             }
         }
 
+        // Listen for changes – but skip the next one after we just created a profile
         db.ref('hustlers').on('value', (snapshot) => {
+            if (ignoreNextSnapshot) {
+                ignoreNextSnapshot = false;
+                return; // skip this snapshot (it's stale – we already have the optimistic update)
+            }
+
             const data = snapshot.val();
             allHustlers = [];
             if (data) {
@@ -1072,13 +1080,17 @@
                 rate: document.getElementById('inputRate').value,
                 imageUrl: imageUrl,
                 timestamp: Date.now()
-                // removed verified field completely
             };
 
             const newRef = db.ref('hustlers').push();
+
+            // Tell the listener to ignore the next snapshot (prevents overwrite)
+            ignoreNextSnapshot = true;
+
             newRef.set(newHustler).then(() => {
+                // Optimistic update – add immediately
                 allHustlers.unshift({ id: newRef.key, ...newHustler });
-                performSearch(); // immediately re-render → new profile appears
+                performSearch(); // show it right away
                 
                 openModal('successModal');
 
@@ -1088,6 +1100,7 @@
                 submitBtn.disabled = true;
                 termsCheckbox.checked = false;
             }).catch(err => {
+                ignoreNextSnapshot = false;
                 alert("Error: " + err.message);
                 submitBtn.innerText = originalText;
                 submitBtn.disabled = false;
