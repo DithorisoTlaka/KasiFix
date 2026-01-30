@@ -41,6 +41,186 @@
         #dashboard-section {
             display: none;
         }
+
+        /* Modern Search Bar Animation */
+        .search-container {
+            position: relative;
+            overflow: hidden;
+        }
+        .search-input {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border: 2px solid transparent;
+            background-clip: padding-box;
+        }
+        .search-input:focus {
+            transform: scale(1.02);
+            box-shadow: 0 10px 25px -5px rgba(249, 115, 22, 0.2);
+            border-color: #f97316;
+        }
+        .search-input::placeholder {
+            transition: all 0.3s ease;
+        }
+        .search-input:focus::placeholder {
+            color: #f97316;
+        }
+        .search-glow {
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #f97316, #fb923c, #f97316);
+            border-radius: inherit;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .search-input:focus ~ .search-glow {
+            opacity: 1;
+        }
+
+        /* Featured Cards Animation */
+        .hustler-card {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        .hustler-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: left 0.6s ease;
+            z-index: 1;
+        }
+        .hustler-card:hover::before {
+            left: 100%;
+        }
+        .hustler-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 40px -10px rgba(249, 115, 22, 0.25);
+        }
+        .hustler-card .card-image {
+            transition: all 0.3s ease;
+        }
+        .hustler-card:hover .card-image {
+            transform: scale(1.1);
+        }
+
+        /* Form Animation */
+        .form-section {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .form-section .form-input {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border: 2px solid #e5e7eb;
+            position: relative;
+            overflow: hidden;
+        }
+        .form-section .form-input::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(249, 115, 22, 0.1), transparent);
+            transition: left 0.6s ease;
+            z-index: 1;
+        }
+        .form-section .form-input:focus::before {
+            left: 100%;
+        }
+        .form-section .form-input:focus {
+            border-color: #f97316;
+            box-shadow: 0 10px 25px -5px rgba(249, 115, 22, 0.15);
+            transform: translateY(-2px);
+        }
+        .form-section .form-input:hover {
+            border-color: #f97316;
+        }
+        .form-section .form-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-position: right 0.5rem center;
+            background-repeat: no-repeat;
+            background-size: 1.5em;
+            padding-right: 2.5rem;
+        }
+
+        /* Pill Shaped Buttons with Animation */
+        .pill-btn {
+            border-radius: 9999px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .pill-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
+            z-index: 1;
+        }
+        .pill-btn:hover::before {
+            left: 100%;
+        }
+        .pill-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.2);
+        }
+        .pill-btn:active {
+            transform: translateY(0);
+        }
+        .primary-pill {
+            background: linear-gradient(135deg, #f97316 0%, #fb923c 100%);
+            border: 2px solid transparent;
+        }
+        .primary-pill:hover {
+            background: linear-gradient(135deg, #ea580c 0%, #f97316 100%);
+            border-color: #f97316;
+        }
+        .secondary-pill {
+            background: transparent;
+            border: 2px solid #1e3a8a;
+            color: #1e3a8a;
+        }
+        .secondary-pill:hover {
+            background: #1e3a8a;
+            color: white;
+            border-color: #1e3a8a;
+        }
+        .whatsapp-pill {
+            background: #25D366;
+            border: 2px solid #25D366;
+        }
+        .whatsapp-pill:hover {
+            background: #128C7E;
+            border-color: #128C7E;
+        }
+
+        /* File Upload Animation */
+        .file-upload {
+            transition: all 0.3s ease;
+            border: 2px dashed #d1d5db;
+        }
+        .file-upload:hover {
+            border-color: #f97316;
+            background: linear-gradient(135deg, #fef3c7 0%, #fed7aa 100%);
+            transform: scale(1.02);
+        }
     </style>
 </head>
 <body class="bg-gray-50 flex flex-col min-h-screen">
@@ -53,17 +233,16 @@
                 </div>
                 <div class="hidden md:flex space-x-8 items-center">
                     <a href="#featured-section" class="text-gray-600 hover:text-blue-900 font-medium text-sm">Find Work</a>
-                    <a href="#" class="text-gray-600 hover:text-blue-900 font-medium text-sm">Safety</a>
                     
-                    <button onclick="document.getElementById('join-hustle').scrollIntoView({behavior: 'smooth'})" class="bg-[#f97316] text-white px-5 py-2 rounded-full font-bold hover:bg-orange-600 transition shadow-md text-sm">
+                    <button onclick="document.getElementById('join-hustle').scrollIntoView({behavior: 'smooth'})" class="pill-btn primary-pill text-white px-6 py-3 rounded-full font-bold hover:bg-orange-600 transition shadow-md text-sm">
                         Join as a Hustler
                     </button>
 
-                    <button id="login-btn" onclick="openLoginModal()" class="text-gray-600 hover:text-blue-900 font-bold text-sm flex items-center">
+                    <button id="login-btn" onclick="openLoginModal()" class="pill-btn secondary-pill px-6 py-3 rounded-full font-bold text-sm flex items-center">
                         <i class="fa-solid fa-right-to-bracket mr-2"></i> Login
                     </button>
 
-                    <button id="dashboard-btn" onclick="showDashboard()" class="hidden bg-[#1e3a8a] text-white px-5 py-2 rounded-full font-bold hover:bg-blue-900 transition shadow-md text-sm items-center">
+                    <button id="dashboard-btn" onclick="showDashboard()" class="hidden pill-btn primary-pill text-white px-6 py-3 rounded-full font-bold hover:bg-orange-600 transition shadow-md text-sm items-center">
                         <i class="fa-solid fa-user-gear mr-2"></i> Dashboard
                     </button>
                 </div>
@@ -85,13 +264,13 @@
                 <form id="loginForm" class="space-y-6">
                     <div>
                         <label class="block text-sm font-bold text-gray-700 mb-2">Email</label>
-                        <input type="email" id="loginEmail" required placeholder="sipho@example.com" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none bg-gray-50">
+                        <input type="email" id="loginEmail" required placeholder="sipho@example.com" class="form-input w-full px-4 py-3 rounded-xl border focus:border-[#f97316] outline-none bg-gray-50">
                     </div>
                     <div>
                         <label class="block text-sm font-bold text-gray-700 mb-2">Password</label>
-                        <input type="password" id="loginPassword" required placeholder="••••••••" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none bg-gray-50">
+                        <input type="password" id="loginPassword" required placeholder="••••••••" class="form-input w-full px-4 py-3 rounded-xl border focus:border-[#f97316] outline-none bg-gray-50">
                     </div>
-                    <button type="submit" class="w-full bg-[#f97316] text-white py-4 rounded-xl font-bold hover:bg-orange-600 transition shadow-lg">
+                    <button type="submit" class="pill-btn primary-pill w-full text-white py-4 rounded-xl font-bold hover:bg-orange-600 transition shadow-lg">
                         Login to Dashboard
                     </button>
                 </form>
@@ -110,17 +289,19 @@
                 <h1 class="text-4xl md:text-6xl font-extrabold mb-6 tracking-tight animate-fade-in">Local Kasi Hustle Hub</h1>
                 <p class="text-xl text-blue-100 mb-10 max-w-2xl mx-auto">Find vetted local help or list your skills. Connecting communities, one job at a time.</p>
                 
-                <div class="bg-white p-2 rounded-2xl shadow-2xl flex flex-col md:flex-row items-center max-w-3xl mx-auto transform transition hover:scale-[1.01]">
-                    <div class="flex-1 w-full px-4 py-2 border-b md:border-b-0 md:border-r border-gray-200 flex items-center">
+                <div class="search-container bg-white p-3 rounded-3xl shadow-2xl flex flex-col md:flex-row items-center max-w-4xl mx-auto transform transition hover:scale-[1.01]">
+                    <div class="flex-1 w-full px-4 py-3 border-b md:border-b-0 md:border-r border-gray-200 flex items-center search-input relative">
                         <i class="fa-solid fa-magnifying-glass text-gray-400 mr-3"></i>
-                        <input type="text" id="search-keyword" placeholder="Name, service, e.g. 'Sipho' or 'Plumbing'" class="w-full outline-none text-gray-800 placeholder-gray-400">
+                        <input type="text" id="search-keyword" placeholder="Name, service, e.g. 'Sipho' or 'Plumbing'" class="w-full outline-none text-gray-800 placeholder-gray-400 relative z-10">
+                        <div class="search-glow rounded-2xl"></div>
                     </div>
-                    <div class="w-full md:w-48 px-4 py-2 flex items-center">
+                    <div class="w-full md:w-56 px-4 py-3 flex items-center search-input relative">
                         <i class="fa-solid fa-location-dot text-gray-400 mr-3"></i>
                         <input type="text" id="search-location" placeholder="Location" class="w-full outline-none text-gray-800" value="Soweto">
+                        <div class="search-glow rounded-2xl"></div>
                     </div>
-                    <button onclick="performSearch()" class="w-full md:w-auto bg-[#f97316] text-white px-10 py-4 rounded-xl font-bold hover:bg-orange-600 transition">
-                        Search
+                    <button onclick="performSearch()" class="pill-btn primary-pill text-white px-8 py-4 rounded-2xl font-bold hover:bg-orange-600 transition mt-4 md:mt-0 ml-0 md:ml-4 relative z-10 w-full md:w-auto">
+                        <i class="fa-solid fa-search mr-2"></i> Search
                     </button>
                 </div>
             </div>
@@ -186,7 +367,9 @@
                         <h2 class="text-3xl font-extrabold text-gray-900">Featured Hustlers</h2>
                         <p id="featured-subtext" class="text-gray-600 mt-2">Verified professionals in your area.</p>
                     </div>
-                    <button onclick="toggleSeeAll()" id="see-all-btn" class="text-orange-600 font-bold hover:underline">See All</button>
+                    <button onclick="toggleSeeAll()" id="see-all-btn" class="pill-btn secondary-pill text-sm px-6 py-2 rounded-full font-bold hover:bg-blue-900 transition">
+                        See All
+                    </button>
                 </div>
 
                 <div id="hustlers-container" class="grid md:grid-cols-3 gap-8">
@@ -198,7 +381,7 @@
             </div>
         </section>
 
-        <section id="join-hustle" class="max-w-4xl mx-auto px-4 py-20">
+        <section id="join-hustle" class="max-w-4xl mx-auto px-4 py-20 form-section">
             <div class="bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row border border-gray-100">
                 <div class="bg-[#1e3a8a] p-10 md:w-1/3 text-white flex flex-col justify-center">
                     <h2 class="text-3xl font-extrabold mb-4">Start Earning.</h2>
@@ -217,29 +400,29 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                             <div>
                                 <label class="block text-sm font-bold text-gray-700 mb-1">Full Name</label>
-                                <input type="text" id="inputName" required placeholder="e.g. Sipho Khumalo" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none transition bg-gray-50">
+                                <input type="text" id="inputName" required placeholder="e.g. Sipho Khumalo" class="form-input w-full px-4 py-3 rounded-xl border focus:border-[#f97316] outline-none transition bg-gray-50">
                             </div>
                             <div>
                                 <label class="block text-sm font-bold text-gray-700 mb-1">Email</label>
-                                <input type="email" id="inputEmail" required placeholder="sipho@example.com" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none transition bg-gray-50">
+                                <input type="email" id="inputEmail" required placeholder="sipho@example.com" class="form-input w-full px-4 py-3 rounded-xl border focus:border-[#f97316] outline-none transition bg-gray-50">
                             </div>
                         </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                             <div>
                                 <label class="block text-sm font-bold text-gray-700 mb-1">WhatsApp Number</label>
-                                <input type="tel" id="inputPhone" required placeholder="081 234 5678" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none transition bg-gray-50">
+                                <input type="tel" id="inputPhone" required placeholder="081 234 5678" class="form-input w-full px-4 py-3 rounded-xl border focus:border-[#f97316] outline-none transition bg-gray-50">
                             </div>
                             <div>
                                 <label class="block text-sm font-bold text-gray-700 mb-1">Your Location (Kasi)</label>
-                                <input type="text" id="inputLocation" required placeholder="e.g. Soweto, Diepkloof" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none transition bg-gray-50">
+                                <input type="text" id="inputLocation" required placeholder="e.g. Soweto, Diepkloof" class="form-input w-full px-4 py-3 rounded-xl border focus:border-[#f97316] outline-none transition bg-gray-50">
                             </div>
                         </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                             <div>
                                 <label class="block text-sm font-bold text-gray-700 mb-1">What is your Hustle?</label>
-                                <select id="inputCategory" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none transition bg-gray-50">
+                                <select id="inputCategory" class="form-select form-input w-full px-4 py-3 rounded-xl border focus:border-[#f97316] outline-none transition bg-gray-50">
                                     <option value="Solar & Inverter Setup">Solar & Inverter Setup</option>
                                     <option value="Plumbing">Plumbing & Leaks</option>
                                     <option value="Car Wash">Mobile Car Wash</option>
@@ -251,17 +434,17 @@
                             </div>
                             <div>
                                 <label class="block text-sm font-bold text-gray-700 mb-1">Hourly Rate (R)</label>
-                                <input type="number" id="inputRate" required placeholder="e.g. 250" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none transition bg-gray-50">
+                                <input type="number" id="inputRate" required placeholder="e.g. 250" class="form-input w-full px-4 py-3 rounded-xl border focus:border-[#f97316] outline-none transition bg-gray-50">
                             </div>
                         </div>
 
                         <div>
                             <label class="block text-sm font-bold text-gray-700 mb-1">Short Bio</label>
-                            <textarea id="inputBio" required rows="3" placeholder="I have 5 years experience in..." class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none transition bg-gray-50"></textarea>
+                            <textarea id="inputBio" required rows="3" placeholder="I have 5 years experience in..." class="form-input w-full px-4 py-3 rounded-xl border focus:border-[#f97316] outline-none transition bg-gray-50"></textarea>
                         </div>
 
                         <div class="flex items-center justify-center w-full">
-                            <label for="fileInput" class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-200 rounded-xl cursor-pointer hover:bg-orange-50 transition">
+                            <label for="fileInput" class="file-upload flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-xl cursor-pointer transition">
                                 <div class="flex flex-col items-center justify-center pt-5 pb-6">
                                     <i class="fa-solid fa-camera text-gray-400 text-2xl mb-2"></i>
                                     <p id="file-label" class="text-sm text-gray-500 font-semibold">Upload Profile Photo</p>
@@ -275,7 +458,7 @@
                             <label class="ml-2 text-xs text-gray-500">I agree to the KasiFix Safety & Vetting Policy.</label>
                         </div>
 
-                        <button type="submit" id="submitBtn" disabled class="w-full bg-[#f97316] text-white py-4 rounded-xl font-extrabold text-lg shadow-lg hover:bg-orange-600 transition-all transform hover:-translate-y-1">
+                        <button type="submit" id="submitBtn" disabled class="pill-btn primary-pill w-full text-white py-4 rounded-2xl font-extrabold text-lg shadow-lg hover:bg-orange-600 transition-all transform">
                             Create Profile
                         </button>
                     </form>
@@ -358,7 +541,7 @@
                     <p class="text-gray-600">Manage your profile, view earnings & activity</p>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <button onclick="handleLogout()" class="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-full font-medium transition">
+                    <button onclick="handleLogout()" class="pill-btn bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-full font-medium transition">
                         Logout
                     </button>
                     <button onclick="showMainPage()" class="text-[#1e3a8a] hover:underline font-medium">
@@ -377,19 +560,19 @@
                         <input type="hidden" id="editKey">
                         <div>
                             <label class="block text-sm font-bold text-gray-700 mb-1">Full Name</label>
-                            <input type="text" id="editName" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none bg-gray-50">
+                            <input type="text" id="editName" class="form-input w-full px-4 py-3 rounded-xl border focus:border-[#f97316] outline-none bg-gray-50">
                         </div>
                         <div>
                             <label class="block text-sm font-bold text-gray-700 mb-1">Email</label>
-                            <input type="email" id="editEmail" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none bg-gray-50">
+                            <input type="email" id="editEmail" class="form-input w-full px-4 py-3 rounded-xl border focus:border-[#f97316] outline-none bg-gray-50">
                         </div>
                         <div>
                             <label class="block text-sm font-bold text-gray-700 mb-1">WhatsApp Number</label>
-                            <input type="tel" id="editPhone" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none bg-gray-50">
+                            <input type="tel" id="editPhone" class="form-input w-full px-4 py-3 rounded-xl border focus:border-[#f97316] outline-none bg-gray-50">
                         </div>
                         <div>
                             <label class="block text-sm font-bold text-gray-700 mb-1">Category</label>
-                            <select id="editCategory" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none bg-gray-50">
+                            <select id="editCategory" class="form-select form-input w-full px-4 py-3 rounded-xl border focus:border-[#f97316] outline-none bg-gray-50">
                                 <option value="Solar & Inverter Setup">Solar & Inverter Setup</option>
                                 <option value="Plumbing">Plumbing</option>
                                 <option value="Car Wash">Car Wash</option>
@@ -401,17 +584,17 @@
                         </div>
                         <div>
                             <label class="block text-sm font-bold text-gray-700 mb-1">Location</label>
-                            <input type="text" id="editLocation" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none bg-gray-50">
+                            <input type="text" id="editLocation" class="form-input w-full px-4 py-3 rounded-xl border focus:border-[#f97316] outline-none bg-gray-50">
                         </div>
                         <div>
                             <label class="block text-sm font-bold text-gray-700 mb-1">Hourly Rate (R)</label>
-                            <input type="number" id="editRate" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none bg-gray-50">
+                            <input type="number" id="editRate" class="form-input w-full px-4 py-3 rounded-xl border focus:border-[#f97316] outline-none bg-gray-50">
                         </div>
                         <div>
                             <label class="block text-sm font-bold text-gray-700 mb-1">Bio</label>
-                            <textarea id="editBio" rows="4" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none bg-gray-50"></textarea>
+                            <textarea id="editBio" rows="4" class="form-input w-full px-4 py-3 rounded-xl border focus:border-[#f97316] outline-none bg-gray-50"></textarea>
                         </div>
-                        <button type="submit" class="w-full bg-[#1e3a8a] text-white py-4 rounded-xl font-bold hover:bg-blue-900 transition mt-4">
+                        <button type="submit" class="pill-btn primary-pill w-full text-white py-4 rounded-2xl font-bold hover:bg-orange-600 transition mt-4">
                             Update Profile
                         </button>
                     </form>
@@ -463,7 +646,7 @@
             </div>
             <h3 class="text-2xl font-extrabold text-gray-900 mb-2">Ayoba! Received.</h3>
             <p class="text-gray-600 mb-8">Siyabonga. Your profile is now live!</p>
-            <button onclick="closeSuccessModal()" class="w-full bg-[#1e3a8a] text-white py-3 rounded-xl font-bold hover:bg-blue-900 transition shadow-lg">
+            <button onclick="closeSuccessModal()" class="pill-btn primary-pill w-full text-white py-3 rounded-2xl font-bold hover:bg-orange-600 transition shadow-lg">
                 Sharp, I'll check it
             </button>
         </div>
@@ -499,7 +682,7 @@
                     <p class="text-2xl font-bold text-[#1e3a8a]">R<span id="modal-rate">0</span><span class="text-sm font-normal text-gray-500">/hr</span></p>
                 </div>
                 <div class="space-y-3">
-                    <a id="whatsapp-link" href="#" target="_blank" class="flex items-center justify-center w-full bg-[#25D366] text-white py-4 rounded-xl font-bold text-lg hover:bg-green-600 transition shadow-lg">
+                    <a id="whatsapp-link" href="#" target="_blank" class="whatsapp-pill flex items-center justify-center w-full text-white py-4 rounded-2xl font-bold text-lg hover:bg-green-600 transition shadow-lg">
                         <i class="fa-brands fa-whatsapp text-2xl mr-2"></i> Chat on WhatsApp
                     </a>
                 </div>
@@ -708,7 +891,7 @@
                             <i class="fa-regular fa-folder-open text-gray-400 text-2xl"></i>
                         </div>
                         <p class="text-gray-500 font-medium">No hustlers found matching your criteria.</p>
-                        <button onclick="document.getElementById('search-keyword').value=''; performSearch()" class="text-orange-500 font-bold mt-2 hover:underline">Clear Filters</button>
+                        <button onclick="document.getElementById('search-keyword').value=''; performSearch()" class="pill-btn secondary-pill text-sm px-6 py-2 rounded-full font-bold mt-2 hover:bg-blue-900 transition">Clear Filters</button>
                     </div>
                 `;
                 return;
@@ -716,17 +899,17 @@
 
             const displayList = viewAll ? hustlersToRender : hustlersToRender.slice(0, 3);
 
-            displayList.forEach(h => {
+            displayList.forEach((h, index) => {
                 const initial = h.name.charAt(0).toUpperCase();
                 const rating = h.rating || (4 + Math.random()).toFixed(1); 
                 
                 let imageHtml = h.imageUrl 
-                    ? `<img src="${h.imageUrl}" alt="${h.name}" class="w-14 h-14 rounded-2xl object-cover bg-gray-100">`
+                    ? `<img src="${h.imageUrl}" alt="${h.name}" class="card-image w-14 h-14 rounded-2xl object-cover bg-gray-100">`
                     : `<div class="bg-gray-100 w-14 h-14 rounded-2xl flex items-center justify-center font-bold text-xl text-gray-600">${initial}</div>`;
 
                 const cardHTML = `
-                <div class="bg-white rounded-3xl overflow-hidden shadow-lg border border-gray-200 flex flex-col h-full transform transition hover:-translate-y-1 hover:shadow-xl">
-                    <div class="p-8 flex-grow">
+                <div class="hustler-card bg-white rounded-3xl overflow-hidden shadow-lg border border-gray-200 flex flex-col h-full transform transition">
+                    <div class="p-8 flex-grow relative z-10">
                         <div class="flex justify-between mb-4">
                             ${imageHtml}
                             <span class="bg-green-100 text-green-700 text-xs font-bold px-3 py-1 rounded-full flex items-center h-fit">
@@ -743,7 +926,7 @@
                     </div>
                     <div class="flex justify-between items-center border-t border-gray-100 bg-gray-50 px-8 py-4 mt-auto">
                         <span class="text-xl font-bold text-gray-900">R${h.rate}<small class="text-xs font-normal text-gray-500">/hr</small></span>
-                        <button onclick="openBookingModal('${h.id}')" class="bg-[#1e3a8a] text-white px-5 py-2 rounded-xl font-bold hover:bg-blue-900 transition text-sm shadow-md">Book</button>
+                        <button onclick="openBookingModal('${h.id}')" class="pill-btn secondary-pill text-sm px-5 py-2 rounded-full font-bold hover:bg-blue-900 transition shadow-md">Book</button>
                     </div>
                 </div>`;
                 container.innerHTML += cardHTML;
