@@ -5,58 +5,88 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KasiFix | Local Kasi Hustle Hub</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
         body { font-family: 'Inter', sans-serif; }
         .no-scroll { overflow: hidden; }
-        /* Disabled button style */
+        
         button:disabled {
             background-color: #9ca3af;
             cursor: not-allowed;
             transform: none !important;
         }
+
+        /* Card Animation Classes */
+        .category-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .category-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 10px 25px -5px rgba(249, 115, 22, 0.3);
+            border-color: #f97316;
+        }
+        
+        /* Fade in animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
     </style>
 </head>
-<body class="bg-gray-50">
+<body class="bg-gray-50 flex flex-col min-h-screen">
 
-    <nav class="bg-white border-b sticky top-0 z-40">
+    <nav class="bg-white border-b sticky top-0 z-40 shadow-sm">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16 items-center">
                 <div class="flex items-center cursor-pointer" onclick="window.location.reload()">
                     <span class="text-2xl font-extrabold text-[#1e3a8a]">Kasi<span class="text-[#f97316]">Fix</span></span>
                 </div>
                 <div class="hidden md:flex space-x-8 items-center">
-                    <a href="#featured-section" class="text-gray-600 hover:text-blue-900 font-medium">Find Work</a>
-                    <a href="#" class="text-gray-600 hover:text-blue-900 font-medium">Safety</a>
-                    <button onclick="document.getElementById('join-hustle').scrollIntoView({behavior: 'smooth'})" class="bg-[#f97316] text-white px-6 py-2 rounded-full font-bold hover:bg-orange-600 transition shadow-md">
-                        Join as a Hustler
+                    <a href="#featured-section" class="text-gray-600 hover:text-blue-900 font-medium text-sm">Find Work</a>
+                    <a href="#" class="text-gray-600 hover:text-blue-900 font-medium text-sm">Safety</a>
+                    
+                    <div id="nav-auth-container">
+                        <button onclick="handleNavLogin()" id="nav-login-btn" class="text-gray-600 hover:text-blue-900 font-bold text-sm mr-4">
+                            <i class="fa-brands fa-google mr-2"></i>Login
+                        </button>
+                        <button onclick="document.getElementById('join-hustle').scrollIntoView({behavior: 'smooth'})" class="bg-[#f97316] text-white px-5 py-2 rounded-full font-bold hover:bg-orange-600 transition shadow-md text-sm">
+                            Join as a Hustler
+                        </button>
+                    </div>
+
+                    <button id="nav-dashboard-btn" onclick="openDashboard()" class="hidden bg-[#1e3a8a] text-white px-5 py-2 rounded-full font-bold hover:bg-blue-900 transition shadow-md text-sm items-center">
+                        <i class="fa-solid fa-user-gear mr-2"></i> My Dashboard
                     </button>
                 </div>
             </div>
         </div>
     </nav>
 
-    <header class="bg-[#1e3a8a] py-16 px-4">
+    <header class="bg-[#1e3a8a] py-20 px-4">
         <div class="max-w-5xl mx-auto text-center text-white">
-            <h1 class="text-4xl md:text-6xl font-extrabold mb-4 tracking-tight">Local Kasi Hustle Hub</h1>
-            <p class="text-xl text-blue-100 mb-10">Find vetted local help for any job, big or small.</p>
+            <h1 class="text-4xl md:text-6xl font-extrabold mb-6 tracking-tight animate-fade-in">Local Kasi Hustle Hub</h1>
+            <p class="text-xl text-blue-100 mb-10 max-w-2xl mx-auto">Find vetted local help or list your skills. Connecting communities, one job at a time.</p>
             
-            <div class="bg-white p-2 rounded-2xl shadow-2xl flex flex-col md:flex-row items-center max-w-3xl mx-auto">
+            <div class="bg-white p-2 rounded-2xl shadow-2xl flex flex-col md:flex-row items-center max-w-3xl mx-auto transform transition hover:scale-[1.01]">
                 <div class="flex-1 w-full px-4 py-2 border-b md:border-b-0 md:border-r border-gray-200 flex items-center">
                     <i class="fa-solid fa-magnifying-glass text-gray-400 mr-3"></i>
-                    <input type="text" id="search-keyword" placeholder="Gate motor repair, solar cleaning..." class="w-full outline-none text-gray-800">
+                    <input type="text" id="search-keyword" placeholder="Name, service, e.g. 'Sipho' or 'Plumbing'" class="w-full outline-none text-gray-800 placeholder-gray-400">
                 </div>
                 <div class="w-full md:w-48 px-4 py-2 flex items-center">
                     <i class="fa-solid fa-location-dot text-gray-400 mr-3"></i>
                     <input type="text" id="search-location" placeholder="Location" class="w-full outline-none text-gray-800" value="Soweto">
                 </div>
                 <button onclick="performSearch()" class="w-full md:w-auto bg-[#f97316] text-white px-10 py-4 rounded-xl font-bold hover:bg-orange-600 transition">
-                    Find Help
+                    Search
                 </button>
             </div>
         </div>
@@ -66,88 +96,61 @@
         <div class="flex justify-between items-end mb-8">
             <div>
                 <h2 class="text-3xl font-extrabold text-gray-900">What do you need?</h2>
-                <p class="text-gray-600">Choose a category to find the right hustler for the job.</p>
+                <p class="text-gray-600 mt-2">Choose a category to find the right hustler for the job.</p>
             </div>
         </div>
         
-        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-            <div onclick="filterByCategory('Plumbing')" class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 hover:border-orange-500 transition cursor-pointer text-center group">
-                <div class="bg-blue-50 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:bg-orange-50">
-                    <i class="fa-solid fa-faucet text-blue-600 group-hover:text-orange-600"></i>
+        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
+            <div onclick="filterByCategory('Plumbing')" class="category-card bg-white p-6 rounded-2xl shadow-sm border border-gray-100 cursor-pointer text-center group">
+                <div class="bg-blue-50 w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-orange-100 transition">
+                    <i class="fa-solid fa-faucet text-xl text-blue-600 group-hover:text-orange-600"></i>
                 </div>
                 <h3 class="font-bold text-sm text-gray-800">Plumbing</h3>
             </div>
 
-            <div onclick="filterByCategory('Solar')" class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 hover:border-orange-500 transition cursor-pointer text-center group">
-                <div class="bg-blue-50 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:bg-orange-50">
-                    <i class="fa-solid fa-solar-panel text-blue-600 group-hover:text-orange-600"></i>
+            <div onclick="filterByCategory('Solar')" class="category-card bg-white p-6 rounded-2xl shadow-sm border border-gray-100 cursor-pointer text-center group">
+                <div class="bg-blue-50 w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-orange-100 transition">
+                    <i class="fa-solid fa-solar-panel text-xl text-blue-600 group-hover:text-orange-600"></i>
                 </div>
-                <h3 class="font-bold text-sm text-gray-800">Solar & Backup</h3>
+                <h3 class="font-bold text-sm text-gray-800">Solar & Power</h3>
             </div>
 
-            <div onclick="filterByCategory('Car Wash')" class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 hover:border-orange-500 transition cursor-pointer text-center group">
-                <div class="bg-blue-50 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:bg-orange-50">
-                    <i class="fa-solid fa-car text-blue-600 group-hover:text-orange-600"></i>
+            <div onclick="filterByCategory('Car Wash')" class="category-card bg-white p-6 rounded-2xl shadow-sm border border-gray-100 cursor-pointer text-center group">
+                <div class="bg-blue-50 w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-orange-100 transition">
+                    <i class="fa-solid fa-car text-xl text-blue-600 group-hover:text-orange-600"></i>
                 </div>
-                <h3 class="font-bold text-sm text-gray-800">Mobile Car Wash</h3>
+                <h3 class="font-bold text-sm text-gray-800">Car Wash</h3>
             </div>
 
-            <div onclick="filterByCategory('Phone Repair')" class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 hover:border-orange-500 transition cursor-pointer text-center group">
-                <div class="bg-blue-50 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:bg-orange-50">
-                    <i class="fa-solid fa-mobile-screen text-blue-600 group-hover:text-orange-600"></i>
+            <div onclick="filterByCategory('Phone Repair')" class="category-card bg-white p-6 rounded-2xl shadow-sm border border-gray-100 cursor-pointer text-center group">
+                <div class="bg-blue-50 w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-orange-100 transition">
+                    <i class="fa-solid fa-mobile-screen text-xl text-blue-600 group-hover:text-orange-600"></i>
                 </div>
                 <h3 class="font-bold text-sm text-gray-800">Phone Repair</h3>
             </div>
 
-            <div onclick="filterByCategory('Queue Runner')" class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 hover:border-orange-500 transition cursor-pointer text-center group">
-                <div class="bg-blue-50 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:bg-orange-50">
-                    <i class="fa-solid fa-person-running text-blue-600 group-hover:text-orange-600"></i>
+            <div onclick="filterByCategory('Queue Runner')" class="category-card bg-white p-6 rounded-2xl shadow-sm border border-gray-100 cursor-pointer text-center group">
+                <div class="bg-blue-50 w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-orange-100 transition">
+                    <i class="fa-solid fa-person-running text-xl text-blue-600 group-hover:text-orange-600"></i>
                 </div>
-                <h3 class="font-bold text-sm text-gray-800">Queue Runners</h3>
+                <h3 class="font-bold text-sm text-gray-800">Errands</h3>
             </div>
 
-            <div onclick="filterByCategory('Barber')" class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 hover:border-orange-500 transition cursor-pointer text-center group">
-                <div class="bg-blue-50 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:bg-orange-50">
-                    <i class="fa-solid fa-scissors text-blue-600 group-hover:text-orange-600"></i>
+            <div onclick="filterByCategory('Barber')" class="category-card bg-white p-6 rounded-2xl shadow-sm border border-gray-100 cursor-pointer text-center group">
+                <div class="bg-blue-50 w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-orange-100 transition">
+                    <i class="fa-solid fa-scissors text-xl text-blue-600 group-hover:text-orange-600"></i>
                 </div>
-                <h3 class="font-bold text-sm text-gray-800">Mobile Barber</h3>
+                <h3 class="font-bold text-sm text-gray-800">Barber</h3>
             </div>
         </div>
     </section>
 
-    <section class="max-w-7xl mx-auto px-4 pb-16">
-        <h3 class="text-xl font-bold mb-6">Popular Kasi Hustles</h3>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            <div onclick="filterByCategory('Energy')" class="flex items-center p-4 bg-white rounded-xl border border-gray-100 hover:shadow-md transition cursor-pointer">
-                <div class="text-orange-500 mr-4"><i class="fa-solid fa-bolt"></i></div>
-                <div>
-                    <p class="font-bold text-gray-900 uppercase text-xs tracking-wider">Energy</p>
-                    <p class="text-gray-600">Generator Repair & Refill</p>
-                </div>
-            </div>
-            <div onclick="filterByCategory('Cleaning')" class="flex items-center p-4 bg-white rounded-xl border border-gray-100 hover:shadow-md transition cursor-pointer">
-                <div class="text-orange-500 mr-4"><i class="fa-solid fa-broom"></i></div>
-                <div>
-                    <p class="font-bold text-gray-900 uppercase text-xs tracking-wider">Cleaning</p>
-                    <p class="text-gray-600">Yard Cleaning & Waste Removal</p>
-                </div>
-            </div>
-            <div onclick="filterByCategory('Transport')" class="flex items-center p-4 bg-white rounded-xl border border-gray-100 hover:shadow-md transition cursor-pointer">
-                <div class="text-orange-500 mr-4"><i class="fa-solid fa-truck-ramp-box"></i></div>
-                <div>
-                    <p class="font-bold text-gray-900 uppercase text-xs tracking-wider">Transport</p>
-                    <p class="text-gray-600">Bakkie Hire & Furniture Moving</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="featured-section" class="bg-gray-100 py-16 px-4">
+    <section id="featured-section" class="bg-gray-100 py-20 px-4">
         <div class="max-w-7xl mx-auto">
             <div class="flex justify-between items-end mb-10">
                 <div>
                     <h2 class="text-3xl font-extrabold text-gray-900">Featured Hustlers</h2>
-                    <p id="featured-subtext" class="text-gray-600">Verified professionals in your area.</p>
+                    <p id="featured-subtext" class="text-gray-600 mt-2">Verified professionals in your area.</p>
                 </div>
                 <button onclick="toggleSeeAll()" id="see-all-btn" class="text-orange-600 font-bold hover:underline">See All</button>
             </div>
@@ -166,31 +169,44 @@
             <div class="bg-[#1e3a8a] p-10 md:w-1/3 text-white flex flex-col justify-center">
                 <h2 class="text-3xl font-extrabold mb-4">Start Earning.</h2>
                 <p class="text-blue-100 mb-6">Join 500+ local hustlers making a living through KasiFix.</p>
-                <ul class="space-y-4 text-sm">
+                <ul class="space-y-4 text-sm font-medium">
                     <li class="flex items-center"><i class="fa-solid fa-check text-orange-500 mr-2"></i> Set your own rates</li>
                     <li class="flex items-center"><i class="fa-solid fa-check text-orange-500 mr-2"></i> Work in your area</li>
-                    <li class="flex items-center"><i class="fa-solid fa-check text-orange-500 mr-2"></i> Weekly payouts</li>
+                    <li class="flex items-center"><i class="fa-solid fa-check text-orange-500 mr-2"></i> Get verified</li>
                 </ul>
             </div>
 
-            <div class="p-10 md:w-2/3 bg-white">
+            <div class="p-10 md:w-2/3 bg-white relative">
                 <h3 class="text-2xl font-bold text-gray-900 mb-6">Create your Hustler Profile</h3>
+                
+                <div id="google-auth-overlay" class="absolute inset-0 bg-white/95 z-20 flex flex-col items-center justify-center p-8 text-center hidden">
+                    <div class="bg-orange-100 p-4 rounded-full mb-4">
+                        <i class="fa-solid fa-lock text-orange-600 text-2xl"></i>
+                    </div>
+                    <h4 class="text-xl font-bold mb-2">Sign in Required</h4>
+                    <p class="text-gray-500 mb-6 text-sm">To create and manage your profile securely, please sign in with Google.</p>
+                    <button onclick="signInWithGoogle()" class="flex items-center justify-center bg-white border border-gray-300 text-gray-700 font-bold py-3 px-6 rounded-xl shadow-sm hover:shadow-md hover:bg-gray-50 transition w-full max-w-xs">
+                        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" class="w-5 h-5 mr-3">
+                        Continue with Google
+                    </button>
+                </div>
+
                 <form id="hustleForm" class="space-y-5">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                         <div>
                             <label class="block text-sm font-bold text-gray-700 mb-1">Full Name</label>
-                            <input type="text" id="inputName" required placeholder="e.g. Sipho Khumalo" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none transition">
+                            <input type="text" id="inputName" required placeholder="e.g. Sipho Khumalo" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none transition bg-gray-50">
                         </div>
                         <div>
                             <label class="block text-sm font-bold text-gray-700 mb-1">WhatsApp Number</label>
-                            <input type="tel" id="inputPhone" required placeholder="081 234 5678" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none transition">
+                            <input type="tel" id="inputPhone" required placeholder="081 234 5678" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none transition bg-gray-50">
                         </div>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                         <div>
                             <label class="block text-sm font-bold text-gray-700 mb-1">What is your Hustle?</label>
-                            <select id="inputCategory" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none transition bg-white">
+                            <select id="inputCategory" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none transition bg-gray-50">
                                 <option value="Solar & Inverter Setup">Solar & Inverter Setup</option>
                                 <option value="Plumbing">Plumbing & Leaks</option>
                                 <option value="Car Wash">Mobile Car Wash</option>
@@ -202,22 +218,22 @@
                         </div>
                         <div>
                             <label class="block text-sm font-bold text-gray-700 mb-1">Your Location (Kasi)</label>
-                            <input type="text" id="inputLocation" required placeholder="e.g. Soweto, Diepkloof" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none transition">
+                            <input type="text" id="inputLocation" required placeholder="e.g. Soweto, Diepkloof" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none transition bg-gray-50">
                         </div>
                     </div>
 
                     <div>
                         <label class="block text-sm font-bold text-gray-700 mb-1">Hourly Rate (R)</label>
-                        <input type="number" id="inputRate" required placeholder="e.g. 250" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none transition">
+                        <input type="number" id="inputRate" required placeholder="e.g. 250" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none transition bg-gray-50">
                     </div>
 
                     <div>
                         <label class="block text-sm font-bold text-gray-700 mb-1">Short Bio</label>
-                        <textarea id="inputBio" required rows="3" placeholder="I have 5 years experience in..." class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none transition"></textarea>
+                        <textarea id="inputBio" required rows="3" placeholder="I have 5 years experience in..." class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none transition bg-gray-50"></textarea>
                     </div>
 
                     <div class="flex items-center justify-center w-full">
-                        <label for="fileInput" class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-200 rounded-xl cursor-pointer hover:bg-gray-50 transition">
+                        <label for="fileInput" class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-200 rounded-xl cursor-pointer hover:bg-orange-50 transition">
                             <div class="flex flex-col items-center justify-center pt-5 pb-6">
                                 <i class="fa-solid fa-camera text-gray-400 text-2xl mb-2"></i>
                                 <p id="file-label" class="text-sm text-gray-500 font-semibold">Upload Profile Photo</p>
@@ -232,19 +248,73 @@
                     </div>
 
                     <button type="submit" id="submitBtn" disabled class="w-full bg-[#f97316] text-white py-4 rounded-xl font-extrabold text-lg shadow-lg hover:bg-orange-600 transition-all transform hover:-translate-y-1">
-                        Submit Application
+                        Create Profile
                     </button>
                 </form>
             </div>
         </div>
     </section>
 
-    <footer class="bg-gray-900 text-white py-12 px-4">
-        <div class="max-w-7xl mx-auto text-center">
-            <div class="text-2xl font-bold mb-4">Kasi<span class="text-orange-500">Fix</span></div>
-            <p class="text-gray-400 mb-8">Building trust in the local South African economy.</p>
-            <div class="mt-8 text-gray-600 text-sm">
-                &copy; 2024 KasiFix. All rights reserved.
+    <footer class="bg-gray-900 text-white mt-auto pt-16 pb-8 border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+                <div>
+                    <span class="text-2xl font-extrabold text-white mb-6 block">Kasi<span class="text-[#f97316]">Fix</span></span>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-6">
+                        Empowering local economies by connecting vetted skilled professionals with the community. Safe, reliable, and proudly local.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-[#f97316] transition"><i class="fa-brands fa-facebook-f text-white"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-[#f97316] transition"><i class="fa-brands fa-twitter text-white"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-[#f97316] transition"><i class="fa-brands fa-instagram text-white"></i></a>
+                    </div>
+                </div>
+
+                <div>
+                    <h4 class="text-lg font-bold mb-6 text-white">For Clients</h4>
+                    <ul class="space-y-3 text-sm text-gray-400">
+                        <li><a href="#" class="hover:text-[#f97316] transition">How it Works</a></li>
+                        <li><a href="#" class="hover:text-[#f97316] transition">Safety & Trust</a></li>
+                        <li><a href="#" class="hover:text-[#f97316] transition">Browse Categories</a></li>
+                        <li><a href="#" class="hover:text-[#f97316] transition">Report an Issue</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="text-lg font-bold mb-6 text-white">For Hustlers</h4>
+                    <ul class="space-y-3 text-sm text-gray-400">
+                        <li><a href="#" class="hover:text-[#f97316] transition">Join KasiFix</a></li>
+                        <li><a href="#" class="hover:text-[#f97316] transition">Success Stories</a></li>
+                        <li><a href="#" class="hover:text-[#f97316] transition">Resources</a></li>
+                        <li><a href="#" class="hover:text-[#f97316] transition">Community Guidelines</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="text-lg font-bold mb-6 text-white">Contact Us</h4>
+                    <ul class="space-y-4 text-sm text-gray-400">
+                        <li class="flex items-start">
+                            <i class="fa-solid fa-location-dot mt-1 mr-3 text-[#f97316]"></i>
+                            <span>123 Vilakazi Street,<br>Orlando West, Soweto, 1804</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fa-solid fa-envelope mr-3 text-[#f97316]"></i>
+                            <span>support@kasifix.co.za</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fa-solid fa-phone mr-3 text-[#f97316]"></i>
+                            <span>+27 11 987 6543</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-gray-500">
+                <p>&copy; 2024 KasiFix (Pty) Ltd. All rights reserved.</p>
+                <div class="flex space-x-6 mt-4 md:mt-0">
+                    <a href="#" class="hover:text-white">Privacy Policy</a>
+                    <a href="#" class="hover:text-white">Terms of Service</a>
+                </div>
             </div>
         </div>
     </footer>
@@ -255,111 +325,271 @@
                 <i class="fa-solid fa-check text-4xl text-green-600"></i>
             </div>
             <h3 class="text-2xl font-extrabold text-gray-900 mb-2">Ayoba! Received.</h3>
-            <p class="text-gray-600 mb-8">
-                Siyabonga for signing up. Your profile is now live!
-            </p>
+            <p class="text-gray-600 mb-8">Siyabonga. Your profile is now live!</p>
             <button onclick="closeSuccessModal()" class="w-full bg-[#1e3a8a] text-white py-3 rounded-xl font-bold hover:bg-blue-900 transition shadow-lg">
                 Sharp, I'll check it
             </button>
         </div>
     </div>
 
-    <div id="bookingModal" class="fixed inset-0 bg-gray-900 bg-opacity-70 hidden items-end sm:items-center justify-center z-[100] backdrop-blur-sm">
-        <div class="bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden transform transition-all scale-100">
-            <div class="bg-[#1e3a8a] p-6 text-white relative">
-                <button onclick="closeBookingModal()" class="absolute top-4 right-4 text-white hover:text-orange-500">
-                    <i class="fa-solid fa-times text-2xl"></i>
-                </button>
-                <div class="flex items-center">
-                    <div id="modal-img-container" class="bg-white text-[#1e3a8a] w-16 h-16 rounded-2xl flex items-center justify-center font-bold text-2xl mr-4 shadow-lg overflow-hidden">
-                        </div>
-                    <div>
-                        <h3 id="modal-name" class="text-2xl font-bold">Hustler Name</h3>
-                        <p id="modal-category" class="text-orange-400 font-medium">Category</p>
-                    </div>
+    <div id="bookingModal" class="fixed inset-0 bg-gray-900 bg-opacity-70 hidden items-center justify-center z-[100] backdrop-blur-sm p-4">
+        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden transform transition-all relative">
+            <button onclick="closeBookingModal()" class="absolute top-4 right-4 text-white hover:text-orange-500 z-10">
+                <i class="fa-solid fa-times text-2xl"></i>
+            </button>
+            <div class="bg-[#1e3a8a] p-6 text-white flex items-center">
+                <div id="modal-img-container" class="bg-white text-[#1e3a8a] w-20 h-20 rounded-2xl flex items-center justify-center font-bold text-2xl mr-4 shadow-lg overflow-hidden shrink-0"></div>
+                <div>
+                    <h3 id="modal-name" class="text-2xl font-bold">Name</h3>
+                    <p id="modal-category" class="text-orange-400 font-medium text-sm">Category</p>
                 </div>
             </div>
-
             <div class="p-8">
                 <div class="flex items-center justify-between mb-6">
                     <div class="flex items-center text-sm font-bold text-gray-700 bg-gray-100 px-3 py-1 rounded-lg">
-                         <i class="fa-solid fa-location-dot text-gray-500 mr-2"></i> <span id="modal-location">Soweto</span>
+                         <i class="fa-solid fa-location-dot text-gray-500 mr-2"></i> <span id="modal-location">Loc</span>
                     </div>
                     <div class="flex items-center text-yellow-500 text-sm font-bold">
                         <i class="fa-solid fa-star mr-1"></i> <span id="modal-rating">5.0</span>
                     </div>
                 </div>
-
-                <div class="mb-8">
+                <div class="mb-6">
                     <h4 class="text-gray-400 text-xs font-bold uppercase tracking-wider mb-2">About</h4>
-                    <p id="modal-bio" class="text-gray-700 leading-relaxed bg-gray-50 p-4 rounded-xl border border-gray-100">
-                        </p>
+                    <p id="modal-bio" class="text-gray-700 text-sm leading-relaxed bg-gray-50 p-4 rounded-xl border border-gray-100"></p>
                 </div>
-
                 <div class="mb-8">
                     <h4 class="text-gray-400 text-xs font-bold uppercase tracking-wider mb-2">Hourly Rate</h4>
-                    <p class="text-2xl font-bold text-[#1e3a8a]">R<span id="modal-rate">250</span><span class="text-sm font-normal text-gray-500">/hr</span></p>
+                    <p class="text-2xl font-bold text-[#1e3a8a]">R<span id="modal-rate">0</span><span class="text-sm font-normal text-gray-500">/hr</span></p>
                 </div>
-
                 <div class="space-y-3">
                     <a id="whatsapp-link" href="#" target="_blank" class="flex items-center justify-center w-full bg-[#25D366] text-white py-4 rounded-xl font-bold text-lg hover:bg-green-600 transition shadow-lg">
                         <i class="fa-brands fa-whatsapp text-2xl mr-2"></i> Chat on WhatsApp
                     </a>
-                    <button onclick="closeBookingModal()" class="w-full bg-gray-100 text-gray-600 py-4 rounded-xl font-bold hover:bg-gray-200 transition">
-                        Cancel
-                    </button>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="dashboardModal" class="fixed inset-0 bg-gray-900 bg-opacity-70 hidden items-center justify-center z-[100] backdrop-blur-sm p-4">
+        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-2xl overflow-hidden flex flex-col max-h-[90vh]">
+            <div class="bg-[#f97316] p-6 text-white flex justify-between items-center shrink-0">
+                <h3 class="text-2xl font-bold"><i class="fa-solid fa-user-gear mr-2"></i> My Dashboard</h3>
+                <div class="flex items-center">
+                    <button onclick="handleLogout()" class="text-sm bg-white/20 px-3 py-1 rounded-lg hover:bg-white/30 mr-4">Logout</button>
+                    <button onclick="closeDashboard()" class="text-white hover:text-blue-900"><i class="fa-solid fa-times text-2xl"></i></button>
+                </div>
+            </div>
+            
+            <div class="p-8 overflow-y-auto">
+                <form id="editForm" class="space-y-4">
+                    <input type="hidden" id="editKey"> <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="text-sm font-bold text-gray-700">Name</label>
+                            <input type="text" id="editName" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-orange-500 outline-none">
+                        </div>
+                        <div>
+                            <label class="text-sm font-bold text-gray-700">Phone</label>
+                            <input type="tel" id="editPhone" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-orange-500 outline-none">
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="text-sm font-bold text-gray-700">Category</label>
+                            <select id="editCategory" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-orange-500 outline-none">
+                                <option value="Solar & Inverter Setup">Solar & Inverter Setup</option>
+                                <option value="Plumbing">Plumbing</option>
+                                <option value="Car Wash">Car Wash</option>
+                                <option value="Queue Runner">Queue Runner</option>
+                                <option value="Barber">Barber</option>
+                                <option value="Transport">Bakkie Hire</option>
+                                <option value="General">General</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="text-sm font-bold text-gray-700">Location</label>
+                            <input type="text" id="editLocation" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-orange-500 outline-none">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="text-sm font-bold text-gray-700">Hourly Rate (R)</label>
+                        <input type="number" id="editRate" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-orange-500 outline-none">
+                    </div>
+
+                    <div>
+                        <label class="text-sm font-bold text-gray-700">Bio</label>
+                        <textarea id="editBio" rows="3" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-orange-500 outline-none"></textarea>
+                    </div>
+                    
+                    <div class="pt-4 border-t">
+                        <button type="submit" class="w-full bg-[#1e3a8a] text-white py-3 rounded-xl font-bold hover:bg-blue-900 transition">Update Profile</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 
     <script>
         // *** CLOUDINARY CONFIGURATION ***
-        // You MUST replace these with your own details from your Cloudinary Dashboard
-        const CLOUD_NAME = 'dijpvzojr'; 
-        const UPLOAD_PRESET = 'Root'; // Must be an UNSIGNED upload preset
+        const CLOUD_NAME = 'YOUR_CLOUD_NAME'; 
+        const UPLOAD_PRESET = 'YOUR_UPLOAD_PRESET'; 
 
-        // 1. Firebase Configuration
+        // *** FIREBASE CONFIGURATION ***
         const firebaseConfig = {
             apiKey: "AIzaSyC4kR_HiywObXho8Zh20JyzC40iVrZq3lo",
             authDomain: "kasifix-5b102.firebaseapp.com",
             projectId: "kasifix-5b102",
             storageBucket: "kasifix-5b102.firebasestorage.app",
             messagingSenderId: "800882399249",
-            appId: "1:800882399249:web:f8ecdfb12fa98d7a5779b0",
-            measurementId: "G-8NKED4DENK"
+            appId: "1:800882399249:web:f8ecdfb12fa98d7a5779b0"
         };
 
         if (!firebase.apps.length) {
             firebase.initializeApp(firebaseConfig);
         }
         const db = firebase.database();
+        const auth = firebase.auth();
+        const provider = new firebase.auth.GoogleAuthProvider();
 
         let allHustlers = [];
         let viewAll = false;
-        const container = document.getElementById('hustlers-container');
+        let currentUser = null;
+        let currentUserProfileKey = null;
 
-        // 2. Terms & Conditions Logic
+        // --- AUTH LOGIC ---
+
+        auth.onAuthStateChanged(user => {
+            currentUser = user;
+            updateUIForAuth(user);
+            if(user) checkUserProfile(user);
+        });
+
+        function signInWithGoogle() {
+            auth.signInWithPopup(provider).catch(error => {
+                console.error("Auth Error:", error);
+                alert("Login failed: " + error.message);
+            });
+        }
+
+        function handleNavLogin() {
+            if (!currentUser) {
+                signInWithGoogle();
+            }
+        }
+
+        function handleLogout() {
+            auth.signOut().then(() => {
+                closeDashboard();
+                window.location.reload();
+            });
+        }
+
+        function updateUIForAuth(user) {
+            const overlay = document.getElementById('google-auth-overlay');
+            const navContainer = document.getElementById('nav-auth-container');
+            const dashboardBtn = document.getElementById('nav-dashboard-btn');
+
+            if (user) {
+                // Logged In
+                overlay.classList.add('hidden');
+                navContainer.classList.add('hidden');
+                dashboardBtn.classList.remove('hidden');
+                dashboardBtn.classList.add('flex');
+            } else {
+                // Logged Out
+                overlay.classList.remove('hidden');
+                overlay.classList.add('flex');
+                navContainer.classList.remove('hidden');
+                dashboardBtn.classList.add('hidden');
+                dashboardBtn.classList.remove('flex');
+            }
+        }
+
+        // Check if logged-in user already has a profile in DB
+        function checkUserProfile(user) {
+            db.ref('hustlers').once('value', snapshot => {
+                const data = snapshot.val();
+                if(data) {
+                    Object.keys(data).forEach(key => {
+                        if(data[key].uid === user.uid) {
+                            currentUserProfileKey = key; // Found their profile key
+                        }
+                    });
+                }
+            });
+        }
+
+        // --- DASHBOARD LOGIC ---
+
+        function openDashboard() {
+            if(!currentUser) return;
+            if(!currentUserProfileKey) {
+                alert("You don't have a Hustler Profile yet. Please create one below.");
+                document.getElementById('join-hustle').scrollIntoView({behavior: 'smooth'});
+                return;
+            }
+
+            const h = allHustlers.find(item => item.id === currentUserProfileKey);
+            if(h) {
+                document.getElementById('editKey').value = h.id;
+                document.getElementById('editName').value = h.name;
+                document.getElementById('editPhone').value = h.phone;
+                document.getElementById('editCategory').value = h.category;
+                document.getElementById('editLocation').value = h.location;
+                document.getElementById('editRate').value = h.rate;
+                document.getElementById('editBio').value = h.bio;
+                
+                const dbModal = document.getElementById('dashboardModal');
+                dbModal.classList.remove('hidden');
+                dbModal.classList.add('flex');
+            }
+        }
+
+        function closeDashboard() {
+            document.getElementById('dashboardModal').classList.add('hidden');
+            document.getElementById('dashboardModal').classList.remove('flex');
+        }
+
+        // Dashboard Edit Submission
+        document.getElementById('editForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const key = document.getElementById('editKey').value;
+            
+            const updates = {
+                name: document.getElementById('editName').value,
+                phone: document.getElementById('editPhone').value,
+                category: document.getElementById('editCategory').value,
+                location: document.getElementById('editLocation').value,
+                rate: document.getElementById('editRate').value,
+                bio: document.getElementById('editBio').value
+            };
+
+            db.ref('hustlers/' + key).update(updates)
+                .then(() => {
+                    alert("Profile updated successfully!");
+                    closeDashboard();
+                })
+                .catch(err => alert("Error updating: " + err.message));
+        });
+
+        // --- CORE FUNCTIONALITY (Similar to previous) ---
+
+        const container = document.getElementById('hustlers-container');
         const termsCheckbox = document.getElementById('termsCheckbox');
         const submitBtn = document.getElementById('submitBtn');
+        const fileInput = document.getElementById('fileInput');
 
         termsCheckbox.addEventListener('change', function() {
-            if (this.checked) {
-                submitBtn.disabled = false;
-            } else {
-                submitBtn.disabled = true;
-            }
+            submitBtn.disabled = !this.checked;
         });
-        
-        // 3. File Input UI Logic
-        const fileInput = document.getElementById('fileInput');
+
         fileInput.addEventListener('change', function() {
             if(this.files && this.files[0]) {
                 document.getElementById('file-label').innerText = "Selected: " + this.files[0].name;
             }
         });
 
-        // 4. Cloudinary Upload Function
         async function uploadImageToCloudinary(file) {
             const formData = new FormData();
             formData.append('file', file);
@@ -371,112 +601,26 @@
                     body: formData
                 });
                 const data = await response.json();
-                return data.secure_url; // Return the image URL
+                return data.secure_url; 
             } catch (error) {
                 console.error("Cloudinary upload error:", error);
                 return null;
             }
         }
 
-        // 5. Render Logic (Updated to show image, rate, location)
-        function renderHustlers(hustlersToRender) {
-            container.innerHTML = ''; 
-
-            if (hustlersToRender.length === 0) {
-                container.innerHTML = `
-                    <div class="col-span-3 text-center py-10">
-                        <div class="bg-gray-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-                            <i class="fa-regular fa-folder-open text-gray-400 text-2xl"></i>
-                        </div>
-                        <p class="text-gray-500 font-medium">No hustlers found matching your criteria.</p>
-                        <button onclick="resetFilters()" class="text-orange-500 font-bold mt-2 hover:underline">Clear Filters</button>
-                    </div>
-                `;
-                return;
-            }
-
-            const displayList = viewAll ? hustlersToRender : hustlersToRender.slice(0, 3);
-
-            displayList.forEach(h => {
-                const initial = h.name.charAt(0).toUpperCase();
-                const rating = h.rating || (4 + Math.random()).toFixed(1); // Default logic if null
-                const reviews = h.reviews || Math.floor(Math.random() * 50) + 5;
-                
-                // Image Logic
-                let imageHtml = '';
-                if (h.imageUrl) {
-                    imageHtml = `<img src="${h.imageUrl}" alt="${h.name}" class="w-14 h-14 rounded-2xl object-cover bg-gray-100">`;
-                } else {
-                    imageHtml = `<div class="bg-gray-100 w-14 h-14 rounded-2xl flex items-center justify-center font-bold text-xl text-gray-600">${initial}</div>`;
-                }
-
-                const cardHTML = `
-                <div class="bg-white rounded-3xl overflow-hidden shadow-lg border border-gray-200 flex flex-col h-full transform transition hover:-translate-y-1 hover:shadow-xl">
-                    <div class="p-8 flex-grow">
-                        <div class="flex justify-between mb-4">
-                            ${imageHtml}
-                            <span class="bg-green-100 text-green-700 text-xs font-bold px-3 py-1 rounded-full flex items-center h-fit">
-                                <i class="fa-solid fa-shield-check mr-1"></i> VETTED
-                            </span>
-                        </div>
-                        <h4 class="text-xl font-bold text-gray-900 line-clamp-1">${h.name}</h4>
-                        <p class="text-orange-500 font-semibold mb-2 text-sm">${h.category}</p>
-                        
-                        <p class="text-gray-500 text-xs mb-2"><i class="fa-solid fa-map-marker-alt mr-1"></i> ${h.location}</p>
-                        
-                        <p class="text-gray-500 text-xs mb-4 line-clamp-2 min-h-[2.5em]">${h.bio}</p>
-                        
-                        <div class="flex items-center text-gray-500 text-sm mb-6">
-                            <i class="fa-solid fa-star text-yellow-400 mr-1"></i> ${rating} (${reviews} Reviews)
-                        </div>
-                    </div>
-                    <div class="flex justify-between items-center border-t border-gray-100 bg-gray-50 px-8 py-4 mt-auto">
-                        <span class="text-xl font-bold text-gray-900">R${h.rate}<small class="text-xs font-normal text-gray-500">/hr</small></span>
-                        <button onclick="openBookingModal('${h.id}')" class="bg-[#1e3a8a] text-white px-5 py-2 rounded-xl font-bold hover:bg-blue-900 transition text-sm shadow-md">
-                            Book
-                        </button>
-                    </div>
-                </div>
-                `;
-                container.innerHTML += cardHTML;
-            });
-
-            const seeAllBtn = document.getElementById('see-all-btn');
-            if (hustlersToRender.length <= 3) {
-                seeAllBtn.style.display = 'none';
-            } else {
-                seeAllBtn.style.display = 'block';
-                seeAllBtn.innerText = viewAll ? "Show Less" : "See All";
-            }
-        }
-
-        db.ref('hustlers').on('value', (snapshot) => {
-            const data = snapshot.val();
-            allHustlers = [];
-            
-            if (data) {
-                Object.keys(data).forEach(key => {
-                    allHustlers.push({
-                        id: key,
-                        ...data[key]
-                    });
-                });
-                allHustlers.reverse();
-            }
-            performSearch(); 
-        });
-
+        // Updated Search Logic
         function performSearch() {
             const keyword = document.getElementById('search-keyword').value.toLowerCase();
             const locationInput = document.getElementById('search-location').value.toLowerCase();
             const featuredTitle = document.getElementById('featured-subtext');
 
             let filtered = allHustlers.filter(h => {
-                const matchesKeyword = h.category.toLowerCase().includes(keyword) || 
-                                     h.bio.toLowerCase().includes(keyword) || 
-                                     h.name.toLowerCase().includes(keyword);
+                // Check Name, Bio, or Category
+                const matchesKeyword = h.name.toLowerCase().includes(keyword) ||
+                                     h.category.toLowerCase().includes(keyword) || 
+                                     h.bio.toLowerCase().includes(keyword);
                 
-                // Check stored location against search input
+                // Check Location
                 const hLocation = (h.location || '').toLowerCase();
                 const matchesLocation = locationInput === '' ? true : hLocation.includes(locationInput);
                 
@@ -492,11 +636,78 @@
             }
 
             renderHustlers(filtered);
-            
-            if(window.event && window.event.type === 'click') {
-                document.getElementById('featured-section').scrollIntoView({behavior: 'smooth'});
+        }
+
+        function renderHustlers(hustlersToRender) {
+            container.innerHTML = ''; 
+
+            if (hustlersToRender.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-3 text-center py-10">
+                        <div class="bg-gray-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                            <i class="fa-regular fa-folder-open text-gray-400 text-2xl"></i>
+                        </div>
+                        <p class="text-gray-500 font-medium">No hustlers found matching your criteria.</p>
+                        <button onclick="document.getElementById('search-keyword').value=''; performSearch()" class="text-orange-500 font-bold mt-2 hover:underline">Clear Filters</button>
+                    </div>
+                `;
+                return;
+            }
+
+            const displayList = viewAll ? hustlersToRender : hustlersToRender.slice(0, 3);
+
+            displayList.forEach(h => {
+                const initial = h.name.charAt(0).toUpperCase();
+                const rating = h.rating || (4 + Math.random()).toFixed(1); 
+                
+                let imageHtml = h.imageUrl 
+                    ? `<img src="${h.imageUrl}" alt="${h.name}" class="w-14 h-14 rounded-2xl object-cover bg-gray-100">`
+                    : `<div class="bg-gray-100 w-14 h-14 rounded-2xl flex items-center justify-center font-bold text-xl text-gray-600">${initial}</div>`;
+
+                const cardHTML = `
+                <div class="bg-white rounded-3xl overflow-hidden shadow-lg border border-gray-200 flex flex-col h-full transform transition hover:-translate-y-1 hover:shadow-xl">
+                    <div class="p-8 flex-grow">
+                        <div class="flex justify-between mb-4">
+                            ${imageHtml}
+                            <span class="bg-green-100 text-green-700 text-xs font-bold px-3 py-1 rounded-full flex items-center h-fit">
+                                <i class="fa-solid fa-shield-check mr-1"></i> VETTED
+                            </span>
+                        </div>
+                        <h4 class="text-xl font-bold text-gray-900 line-clamp-1">${h.name}</h4>
+                        <p class="text-orange-500 font-semibold mb-2 text-sm">${h.category}</p>
+                        <p class="text-gray-500 text-xs mb-2"><i class="fa-solid fa-map-marker-alt mr-1"></i> ${h.location}</p>
+                        <p class="text-gray-500 text-xs mb-4 line-clamp-2 min-h-[2.5em]">${h.bio}</p>
+                        <div class="flex items-center text-gray-500 text-sm mb-6">
+                            <i class="fa-solid fa-star text-yellow-400 mr-1"></i> ${rating} (24 Reviews)
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center border-t border-gray-100 bg-gray-50 px-8 py-4 mt-auto">
+                        <span class="text-xl font-bold text-gray-900">R${h.rate}<small class="text-xs font-normal text-gray-500">/hr</small></span>
+                        <button onclick="openBookingModal('${h.id}')" class="bg-[#1e3a8a] text-white px-5 py-2 rounded-xl font-bold hover:bg-blue-900 transition text-sm shadow-md">Book</button>
+                    </div>
+                </div>`;
+                container.innerHTML += cardHTML;
+            });
+
+            const seeAllBtn = document.getElementById('see-all-btn');
+            if (hustlersToRender.length <= 3) seeAllBtn.style.display = 'none';
+            else {
+                seeAllBtn.style.display = 'block';
+                seeAllBtn.innerText = viewAll ? "Show Less" : "See All";
             }
         }
+
+        db.ref('hustlers').on('value', (snapshot) => {
+            const data = snapshot.val();
+            allHustlers = [];
+            if (data) {
+                Object.keys(data).forEach(key => {
+                    allHustlers.push({ id: key, ...data[key] });
+                });
+                allHustlers.reverse();
+            }
+            performSearch(); 
+        });
 
         function filterByCategory(category) {
             document.getElementById('search-keyword').value = category;
@@ -510,110 +721,72 @@
             performSearch();
         }
 
-        function resetFilters() {
-            document.getElementById('search-keyword').value = '';
-            document.getElementById('search-location').value = 'Soweto';
-            viewAll = false;
-            performSearch();
-        }
-
         document.getElementById('search-keyword').addEventListener('keypress', function (e) {
             if (e.key === 'Enter') performSearch();
         });
 
-        // 6. Updated Form Submission (Async for Image Upload)
+        // Create Profile Logic
         const form = document.getElementById('hustleForm');
-        const modal = document.getElementById('successModal');
-
         form.addEventListener('submit', async function(e) {
             e.preventDefault();
             
-            const originalText = submitBtn.innerText;
-            submitBtn.innerText = "Uploading & Saving...";
-            submitBtn.disabled = true;
-            submitBtn.classList.add('opacity-75');
+            if(!currentUser) {
+                alert("Please sign in with Google to create a profile.");
+                return;
+            }
 
-            // Collect Data
-            const name = document.getElementById('inputName').value;
-            const phone = document.getElementById('inputPhone').value;
-            const category = document.getElementById('inputCategory').value;
-            const bio = document.getElementById('inputBio').value;
-            const location = document.getElementById('inputLocation').value;
-            const rate = document.getElementById('inputRate').value;
-            
-            // Handle Image Upload
+            const originalText = submitBtn.innerText;
+            submitBtn.innerText = "Creating...";
+            submitBtn.disabled = true;
+
             let imageUrl = null;
             if (fileInput.files.length > 0) {
                 imageUrl = await uploadImageToCloudinary(fileInput.files[0]);
-                if (!imageUrl) {
-                    alert("Image upload failed. Please check your internet or Cloudinary config.");
-                    submitBtn.innerText = originalText;
-                    submitBtn.disabled = false;
-                    submitBtn.classList.remove('opacity-75');
-                    return; 
-                }
             }
 
             const newHustler = {
-                name: name,
-                phone: phone,
-                category: category,
-                bio: bio,
-                location: location, // User set location
-                rate: rate,         // User set rate
-                imageUrl: imageUrl, // Cloudinary URL
+                uid: currentUser.uid, // LINK TO AUTH USER
+                email: currentUser.email,
+                name: document.getElementById('inputName').value,
+                phone: document.getElementById('inputPhone').value,
+                category: document.getElementById('inputCategory').value,
+                bio: document.getElementById('inputBio').value,
+                location: document.getElementById('inputLocation').value,
+                rate: document.getElementById('inputRate').value,
+                imageUrl: imageUrl,
                 timestamp: Date.now(),
                 verified: false
             };
 
-            db.ref('hustlers').push(newHustler)
-                .then(() => {
-                    modal.classList.remove('hidden');
-                    modal.classList.add('flex');
-                    form.reset();
-                    document.getElementById('file-label').innerText = "Upload Profile Photo";
-                    submitBtn.innerText = originalText;
-                    submitBtn.disabled = true; // Disable again because checkbox is unchecked on reset
-                    submitBtn.classList.remove('opacity-75');
-                })
-                .catch((error) => {
-                    alert('Error submitting: ' + error.message);
-                    submitBtn.innerText = originalText;
-                    submitBtn.disabled = false; 
-                    submitBtn.classList.remove('opacity-75');
-                });
+            db.ref('hustlers').push(newHustler).then(() => {
+                document.getElementById('successModal').classList.remove('hidden');
+                document.getElementById('successModal').classList.add('flex');
+                form.reset();
+                submitBtn.innerText = originalText;
+            });
         });
 
+        // Helper Modals
         function closeSuccessModal() {
-            modal.classList.add('hidden');
-            modal.classList.remove('flex');
-            document.getElementById('featured-section').scrollIntoView({behavior: 'smooth'});
+            document.getElementById('successModal').classList.add('hidden');
+            document.getElementById('successModal').classList.remove('flex');
+            window.location.reload(); // Reload to update dashboard state
         }
 
-        // 7. Booking Modal Logic (Updated for Image/Rate/Location)
         const bookingModal = document.getElementById('bookingModal');
-
         function openBookingModal(hustlerId) {
             const h = allHustlers.find(item => item.id === hustlerId);
             if (!h) return;
-
-            // Handle Image in Modal
             const imgContainer = document.getElementById('modal-img-container');
-            if (h.imageUrl) {
-                imgContainer.innerHTML = `<img src="${h.imageUrl}" alt="${h.name}" class="w-full h-full object-cover">`;
-            } else {
-                 imgContainer.innerHTML = h.name.charAt(0).toUpperCase();
-            }
-
+            imgContainer.innerHTML = h.imageUrl ? `<img src="${h.imageUrl}" class="w-full h-full object-cover">` : h.name.charAt(0);
+            
             document.getElementById('modal-name').innerText = h.name;
             document.getElementById('modal-category').innerText = h.category;
             document.getElementById('modal-bio').innerText = h.bio;
-            document.getElementById('modal-rate').innerText = h.rate; // Real Rate
-            document.getElementById('modal-location').innerText = h.location; // Real Location
+            document.getElementById('modal-rate').innerText = h.rate;
+            document.getElementById('modal-location').innerText = h.location;
             
-            // Whatsapp
-            const message = `Hi ${h.name}, I found you on KasiFix. I need help with...`;
-            const waLink = `https://wa.me/${h.phone.replace(/\s/g, '').replace('0', '27')}?text=${encodeURIComponent(message)}`;
+            const waLink = `https://wa.me/${h.phone.replace(/\s/g, '').replace('0', '27')}`;
             document.getElementById('whatsapp-link').href = waLink;
 
             bookingModal.classList.remove('hidden');
@@ -625,15 +798,6 @@
             bookingModal.classList.add('hidden');
             bookingModal.classList.remove('flex');
             document.body.classList.remove('no-scroll');
-        }
-
-        window.onclick = function(event) {
-            if (event.target == bookingModal) {
-                closeBookingModal();
-            }
-            if (event.target == modal) {
-                closeSuccessModal();
-            }
         }
     </script>
 </body>
