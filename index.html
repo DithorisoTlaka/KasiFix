@@ -38,18 +38,23 @@
             <div class="bg-white p-2 rounded-2xl shadow-2xl flex flex-col md:flex-row items-center max-w-3xl mx-auto">
                 <div class="flex-1 w-full px-4 py-2 border-b md:border-b-0 md:border-r border-gray-200 flex items-center">
                     <i class="fa-solid fa-magnifying-glass text-gray-400 mr-3"></i>
-                    <input type="text" placeholder="Gate motor repair, solar cleaning..." class="w-full outline-none text-gray-800">
+                    <input id="search-query" type="text" placeholder="Gate motor repair, solar cleaning..." class="w-full outline-none text-gray-800">
                 </div>
                 <div class="w-full md:w-48 px-4 py-2 flex items-center">
                     <i class="fa-solid fa-location-dot text-gray-400 mr-3"></i>
                     <input type="text" placeholder="Location" class="w-full outline-none text-gray-800" value="Soweto">
                 </div>
-                <button class="w-full md:w-auto bg-[#f97316] text-white px-10 py-4 rounded-xl font-bold hover:bg-orange-600 transition">
+                <button onclick="searchHustlers()" class="w-full md:w-auto bg-[#f97316] text-white px-10 py-4 rounded-xl font-bold hover:bg-orange-600 transition">
                     Find Help
                 </button>
             </div>
         </div>
     </header>
+
+    <section id="search-results" class="max-w-7xl mx-auto px-4 py-16 hidden">
+        <h3 class="text-xl font-bold mb-6">Search Results</h3>
+        <div class="grid md:grid-cols-3 gap-8"></div>
+    </section>
 
     <section class="max-w-7xl mx-auto px-4 py-16">
         <div class="flex justify-between items-end mb-8">
@@ -60,42 +65,42 @@
         </div>
         
         <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-            <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 hover:border-orange-500 transition cursor-pointer text-center group">
+            <div onclick="filterByCategory('Plumbing')" class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 hover:border-orange-500 transition cursor-pointer text-center group">
                 <div class="bg-blue-50 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:bg-orange-50">
                     <i class="fa-solid fa-faucet text-blue-600 group-hover:text-orange-600"></i>
                 </div>
                 <h3 class="font-bold text-sm text-gray-800">Plumbing</h3>
             </div>
 
-            <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 hover:border-orange-500 transition cursor-pointer text-center group">
+            <div onclick="filterByCategory('Solar & Backup')" class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 hover:border-orange-500 transition cursor-pointer text-center group">
                 <div class="bg-blue-50 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:bg-orange-50">
                     <i class="fa-solid fa-solar-panel text-blue-600 group-hover:text-orange-600"></i>
                 </div>
                 <h3 class="font-bold text-sm text-gray-800">Solar & Backup</h3>
             </div>
 
-            <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 hover:border-orange-500 transition cursor-pointer text-center group">
+            <div onclick="filterByCategory('Mobile Car Wash')" class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 hover:border-orange-500 transition cursor-pointer text-center group">
                 <div class="bg-blue-50 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:bg-orange-50">
                     <i class="fa-solid fa-car text-blue-600 group-hover:text-orange-600"></i>
                 </div>
                 <h3 class="font-bold text-sm text-gray-800">Mobile Car Wash</h3>
             </div>
 
-            <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 hover:border-orange-500 transition cursor-pointer text-center group">
+            <div onclick="filterByCategory('Phone Repair')" class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 hover:border-orange-500 transition cursor-pointer text-center group">
                 <div class="bg-blue-50 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:bg-orange-50">
                     <i class="fa-solid fa-mobile-screen text-blue-600 group-hover:text-orange-600"></i>
                 </div>
                 <h3 class="font-bold text-sm text-gray-800">Phone Repair</h3>
             </div>
 
-            <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 hover:border-orange-500 transition cursor-pointer text-center group">
+            <div onclick="filterByCategory('Queue Runners')" class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 hover:border-orange-500 transition cursor-pointer text-center group">
                 <div class="bg-blue-50 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:bg-orange-50">
                     <i class="fa-solid fa-person-running text-blue-600 group-hover:text-orange-600"></i>
                 </div>
                 <h3 class="font-bold text-sm text-gray-800">Queue Runners</h3>
             </div>
 
-            <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 hover:border-orange-500 transition cursor-pointer text-center group">
+            <div onclick="filterByCategory('Mobile Barber')" class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 hover:border-orange-500 transition cursor-pointer text-center group">
                 <div class="bg-blue-50 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:bg-orange-50">
                     <i class="fa-solid fa-scissors text-blue-600 group-hover:text-orange-600"></i>
                 </div>
@@ -159,65 +164,19 @@
                     <h2 class="text-3xl font-extrabold text-gray-900">Featured Hustlers</h2>
                     <p class="text-gray-600">Verified professionals in your area.</p>
                 </div>
-                <a href="#" class="text-orange-600 font-bold hover:underline">See All</a>
+                <a onclick="showAllHustlers()" class="text-orange-600 font-bold hover:underline cursor-pointer">See All</a>
             </div>
 
-            <div class="grid md:grid-cols-3 gap-8">
-                <div class="bg-white rounded-3xl overflow-hidden shadow-lg border border-gray-200">
-                    <div class="p-8">
-                        <div class="flex justify-between mb-4">
-                            <div class="bg-gray-200 w-14 h-14 rounded-2xl flex items-center justify-center font-bold text-xl text-gray-500">L</div>
-                            <span class="bg-green-100 text-green-700 text-xs font-bold px-3 py-1 rounded-full flex items-center h-fit">
-                                <i class="fa-solid fa-shield-check mr-1"></i> VETTED
-                            </span>
-                        </div>
-                        <h4 class="text-xl font-bold">Lucky Dube</h4>
-                        <p class="text-orange-500 font-semibold mb-4">Inverter & Battery Setup</p>
-                        <div class="flex items-center text-gray-500 text-sm mb-6">
-                            <i class="fa-solid fa-star text-yellow-400 mr-1"></i> 4.9 (62 Reviews)
-                        </div>
-                        <div class="flex justify-between items-center border-t pt-6">
-                            <span class="text-2xl font-bold text-gray-900">R350<small class="text-sm font-normal text-gray-500">/hr</small></span>
-                            <button class="bg-blue-900 text-white px-6 py-2 rounded-xl font-bold">Book</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="bg-white rounded-3xl overflow-hidden shadow-lg border border-gray-200">
-                    <div class="p-8">
-                        <div class="flex justify-between mb-4">
-                            <div class="bg-gray-200 w-14 h-14 rounded-2xl flex items-center justify-center font-bold text-xl text-gray-500">T</div>
-                            <span class="bg-green-100 text-green-700 text-xs font-bold px-3 py-1 rounded-full flex items-center h-fit">
-                                <i class="fa-solid fa-shield-check mr-1"></i> VETTED
-                            </span>
-                        </div>
-                        <h4 class="text-xl font-bold">Thandiwe M.</h4>
-                        <p class="text-orange-500 font-semibold mb-4">Event Catering & Decor</p>
-                        <div class="flex items-center text-gray-500 text-sm mb-6">
-                            <i class="fa-solid fa-star text-yellow-400 mr-1"></i> 5.0 (40 Reviews)
-                        </div>
-                        <div class="flex justify-between items-center border-t pt-6">
-                            <span class="text-2xl font-bold text-gray-900">Quote</span>
-                            <button class="bg-blue-900 text-white px-6 py-2 rounded-xl font-bold">Book</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="bg-white rounded-3xl overflow-hidden shadow-lg border border-gray-200">
-                    <div class="p-8">
-                        <div class="flex justify-between mb-4">
-                            <div class="bg-gray-200 w-14 h-14 rounded-2xl flex items-center justify-center font-bold text-xl text-gray-500">J</div>
-                        </div>
-                        <h4 class="text-xl font-bold">James Zulu</h4>
-                        <p class="text-orange-500 font-semibold mb-4">Painting & Tiling</p>
-                        <div class="flex items-center text-gray-500 text-sm mb-6">
-                            <i class="fa-solid fa-star text-yellow-400 mr-1"></i> 4.7 (18 Reviews)
-                        </div>
-                        <div class="flex justify-between items-center border-t pt-6">
-                            <span class="text-2xl font-bold text-gray-900">R200<small class="text-sm font-normal text-gray-500">/hr</small></span>
-                            <button class="bg-blue-900 text-white px-6 py-2 rounded-xl font-bold">Book</button>
-                        </div>
-                    </div>
-                </div>
+            <div id="featured-grid" class="grid md:grid-cols-3 gap-8">
             </div>
+        </div>
+    </section>
+
+    <section id="all-hustlers" class="max-w-7xl mx-auto px-4 py-16 hidden">
+        <div class="flex justify-between items-end mb-10">
+            <h2 class="text-3xl font-extrabold text-gray-900">All Hustlers</h2>
+        </div>
+        <div class="grid md:grid-cols-3 gap-8">
         </div>
     </section>
 
@@ -318,10 +277,15 @@
         </div>
     </div>
 
-    <script>
-        const form = document.getElementById('hustleForm');
-        const modal = document.getElementById('successModal');
-        const submitBtn = form.querySelector('button[type="submit"]');
+    <div id="hustlerModal" class="fixed inset-0 bg-gray-900 bg-opacity-60 hidden items-center justify-center z-[100] backdrop-blur-sm px-4">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full p-8 text-center transform transition-all scale-105">
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getDatabase, ref, push, set, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+        import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
 
         // For Firebase JS SDK v7.20.0 and later, measurementId is optional
         const firebaseConfig = {
@@ -331,26 +295,168 @@
             storageBucket: "kasifix-5b102.firebasestorage.app",
             messagingSenderId: "800882399249",
             appId: "1:800882399249:web:f8ecdfb12fa98d7a5779b0",
-            measurementId: "G-8NKED4DENK"
+            measurementId: "G-8NKED4DENK",
+            databaseURL: "https://kasifix-5b102-default-rtdb.firebaseio.com"
             };
 
-      
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const storage = getStorage(app);
 
-        form.addEventListener('submit', function(e) {
+        let hustlers = [];
+
+        onValue(ref(db, 'hustlers'), (snapshot) => {
+            const data = snapshot.val();
+            hustlers = Object.entries(data || {}).map(([id, h]) => ({id, ...h}));
+            hustlers.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+
+            renderFeatured();
+        });
+
+        function renderFeatured() {
+            const featuredGrid = document.getElementById('featured-grid');
+            featuredGrid.innerHTML = '';
+            const top3 = hustlers.slice(0, 3);
+            top3.forEach(h => {
+                featuredGrid.appendChild(createHustlerCard(h));
+            });
+        }
+
+        function createHustlerCard(h) {
+            const div = document.createElement('div');
+            div.className = 'bg-white rounded-3xl overflow-hidden shadow-lg border border-gray-200';
+            div.innerHTML = `
+                <div class="p-8">
+                    <div class="flex justify-between mb-4">
+                        <div class="bg-gray-200 w-14 h-14 rounded-2xl flex items-center justify-center font-bold text-xl text-gray-500">${h.name[0].toUpperCase()}</div>
+                        ${h.vetted ? '<span class="bg-green-100 text-green-700 text-xs font-bold px-3 py-1 rounded-full flex items-center h-fit"><i class="fa-solid fa-shield-check mr-1"></i> VETTED</span>' : ''}
+                    </div>
+                    <h4 class="text-xl font-bold">${h.name}</h4>
+                    <p class="text-orange-500 font-semibold mb-4">${h.category}</p>
+                    <div class="flex items-center text-gray-500 text-sm mb-6">
+                        <i class="fa-solid fa-star text-yellow-400 mr-1"></i> ${(h.rating || 0).toFixed(1)} (${h.reviews || 0} Reviews)
+                    </div>
+                    <div class="flex justify-between items-center border-t pt-6">
+                        <span class="text-2xl font-bold text-gray-900">${h.rate.includes('R') ? h.rate + '<small class="text-sm font-normal text-gray-500">/hr</small>' : h.rate}</span>
+                        <button onclick='showHustlerModal(${JSON.stringify(h)})' class="bg-blue-900 text-white px-6 py-2 rounded-xl font-bold">Book</button>
+                    </div>
+                </div>
+            `;
+            return div;
+        }
+
+        function showAllHustlers() {
+            const allSection = document.getElementById('all-hustlers');
+            const grid = allSection.querySelector('.grid');
+            grid.innerHTML = '';
+            hustlers.forEach(h => {
+                grid.appendChild(createHustlerCard(h));
+            });
+            allSection.classList.remove('hidden');
+            allSection.scrollIntoView({behavior: 'smooth'});
+        }
+
+        function searchHustlers() {
+            const query = document.getElementById('search-query').value.toLowerCase();
+            const filtered = hustlers.filter(h => 
+                h.name.toLowerCase().includes(query) || 
+                h.category.toLowerCase().includes(query) || 
+                h.bio.toLowerCase().includes(query)
+            );
+            showResults(filtered);
+        }
+
+        function filterByCategory(cat) {
+            const filtered = hustlers.filter(h => h.category === cat);
+            showResults(filtered);
+        }
+
+        function showResults(list) {
+            const resultsSection = document.getElementById('search-results');
+            const grid = resultsSection.querySelector('.grid');
+            grid.innerHTML = '';
+            list.forEach(h => {
+                grid.appendChild(createHustlerCard(h));
+            });
+            resultsSection.classList.remove('hidden');
+            resultsSection.scrollIntoView({behavior: 'smooth'});
+        }
+
+        function showHustlerModal(h) {
+            const modal = document.getElementById('hustlerModal');
+            const content = modal.querySelector('.bg-white');
+            content.innerHTML = `
+                <img src="${h.photoUrl || 'https://via.placeholder.com/128'}" class="w-32 h-32 rounded-full mx-auto mb-4 object-cover">
+                <h3 class="text-2xl font-bold mb-2">${h.name}</h3>
+                <p class="text-orange-500 font-semibold mb-4">${h.category}</p>
+                <p class="text-gray-600 mb-6">${h.bio}</p>
+                <div class="flex justify-center">
+                    <a href="https://wa.me/${h.whatsapp}" target="_blank" class="bg-green-500 text-white px-6 py-3 rounded-xl font-bold flex items-center hover:bg-green-600">
+                        <i class="fa-brands fa-whatsapp mr-2"></i> Contact on WhatsApp
+                    </a>
+                </div>
+            `;
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeHustlerModal() {
+            const modal = document.getElementById('hustlerModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        document.getElementById('hustlerModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeHustlerModal();
+            }
+        });
+
+        const form = document.getElementById('hustleForm');
+        const modal = document.getElementById('successModal');
+        const submitBtn = form.querySelector('button[type="submit"]');
+
+        form.addEventListener('submit', async function(e) {
             e.preventDefault(); 
             
             const originalText = submitBtn.innerText;
             submitBtn.innerText = "Sending...";
             submitBtn.classList.add('opacity-75', 'cursor-not-allowed');
 
-            setTimeout(() => {
-                modal.classList.remove('hidden');
-                modal.classList.add('flex');
-                
-                form.reset();
-                submitBtn.innerText = originalText;
-                submitBtn.classList.remove('opacity-75', 'cursor-not-allowed');
-            }, 1500);
+            const name = form.querySelector('input[placeholder="e.g. Sipho Khumalo"]').value;
+            const whatsapp = form.querySelector('input[placeholder="081 234 5678"]').value;
+            const category = form.querySelector('select').value;
+            const bio = form.querySelector('textarea').value;
+            const fileInput = form.querySelector('input[type="file"]');
+            let photoUrl = '';
+
+            if (fileInput.files[0]) {
+                const fileRef = storageRef(storage, 'profiles/' + Date.now() + '_' + fileInput.files[0].name);
+                await uploadBytes(fileRef, fileInput.files[0]);
+                photoUrl = await getDownloadURL(fileRef);
+            }
+
+            const hustlersRef = ref(db, 'hustlers');
+            const newHustlerRef = push(hustlersRef);
+            await set(newHustlerRef, {
+                name,
+                whatsapp,
+                category,
+                bio,
+                photoUrl,
+                timestamp: Date.now(),
+                vetted: false,
+                rating: 0,
+                reviews: 0,
+                rate: 'Quote'
+            });
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            
+            form.reset();
+            submitBtn.innerText = originalText;
+            submitBtn.classList.remove('opacity-75', 'cursor-not-allowed');
         });
 
         function closeModal() {
