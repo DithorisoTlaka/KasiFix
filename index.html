@@ -706,7 +706,7 @@
         </div>
     </div>
 
-    <!-- Booking Modal (kept original style for consistency with content) -->
+    <!-- Booking Modal -->
     <div id="bookingModal" class="fixed inset-0 bg-gray-900 bg-opacity-70 hidden items-center justify-center z-[100] backdrop-blur-sm p-4">
         <div class="bg-white rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden transform transition-all relative">
             <button onclick="closeBookingModal()" class="absolute top-4 right-4 text-white hover:text-orange-500 z-10">
@@ -778,7 +778,6 @@
             const modal = document.getElementById(modalId);
             modal.classList.remove('hidden');
             modal.classList.add('flex');
-            // Small delay for animation
             setTimeout(() => modal.classList.add('show'), 10);
             document.body.classList.add('no-scroll');
         }
@@ -902,7 +901,7 @@
         });
 
         // ────────────────────────────────────────────────
-        //  PROFILE CREATION & OTHER LOGIC (unchanged)
+        //  PROFILE CREATION & DISPLAY LOGIC
         // ────────────────────────────────────────────────
 
         const container = document.getElementById('hustlers-container');
@@ -965,20 +964,23 @@
         function renderHustlers(hustlersToRender) {
             container.innerHTML = ''; 
 
-            if (hustlersToRender.length === 0) {
+            // Only show verified hustlers in the featured section
+            const verifiedHustlers = hustlersToRender.filter(h => h.verified === true);
+
+            if (verifiedHustlers.length === 0) {
                 container.innerHTML = `
                     <div class="col-span-3 text-center py-10">
                         <div class="bg-gray-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                             <i class="fa-regular fa-folder-open text-gray-400 text-2xl"></i>
                         </div>
-                        <p class="text-gray-500 font-medium">No hustlers found matching your criteria.</p>
+                        <p class="text-gray-500 font-medium">No verified hustlers found matching your criteria.</p>
                         <button onclick="document.getElementById('search-keyword').value=''; performSearch()" class="pill-btn secondary-pill text-sm px-6 py-2 rounded-full font-bold mt-2 hover:bg-blue-900 transition">Clear Filters</button>
                     </div>
                 `;
                 return;
             }
 
-            const displayList = viewAll ? hustlersToRender : hustlersToRender.slice(0, 3);
+            const displayList = viewAll ? verifiedHustlers : verifiedHustlers.slice(0, 3);
 
             displayList.forEach(h => {
                 const initial = h.name.charAt(0).toUpperCase();
@@ -1014,7 +1016,7 @@
             });
 
             const seeAllBtn = document.getElementById('see-all-btn');
-            if (hustlersToRender.length <= 3) seeAllBtn.style.display = 'none';
+            if (verifiedHustlers.length <= 3) seeAllBtn.style.display = 'none';
             else {
                 seeAllBtn.style.display = 'block';
                 seeAllBtn.innerText = viewAll ? "Show Less" : "See All";
@@ -1072,7 +1074,7 @@
                 rate: document.getElementById('inputRate').value,
                 imageUrl: imageUrl,
                 timestamp: Date.now(),
-                verified: false
+                verified: false   // New profiles are NOT verified by default
             };
 
             const newRef = db.ref('hustlers').push();
@@ -1080,7 +1082,6 @@
                 allHustlers.unshift({ id: newRef.key, ...newHustler });
                 performSearch();
                 
-                // Show modern success modal
                 openModal('successModal');
 
                 form.reset();
