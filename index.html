@@ -37,6 +37,10 @@
         .animate-fade-in {
             animation: fadeIn 0.5s ease-out forwards;
         }
+
+        #dashboard-section {
+            display: none;
+        }
     </style>
 </head>
 <body class="bg-gray-50 flex flex-col min-h-screen">
@@ -44,269 +48,414 @@
     <nav class="bg-white border-b sticky top-0 z-40 shadow-sm">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16 items-center">
-                <div class="flex items-center cursor-pointer" onclick="window.location.reload()">
+                <div class="flex items-center cursor-pointer" onclick="showMainPage()">
                     <span class="text-2xl font-extrabold text-[#1e3a8a]">Kasi<span class="text-[#f97316]">Fix</span></span>
                 </div>
                 <div class="hidden md:flex space-x-8 items-center">
                     <a href="#featured-section" class="text-gray-600 hover:text-blue-900 font-medium text-sm">Find Work</a>
                     <a href="#" class="text-gray-600 hover:text-blue-900 font-medium text-sm">Safety</a>
                     
-                    <div id="nav-auth-container">
-                        <button onclick="document.getElementById('join-hustle').scrollIntoView({behavior: 'smooth'})" class="bg-[#f97316] text-white px-5 py-2 rounded-full font-bold hover:bg-orange-600 transition shadow-md text-sm">
-                            Join as a Hustler
-                        </button>
-                    </div>
+                    <button onclick="document.getElementById('join-hustle').scrollIntoView({behavior: 'smooth'})" class="bg-[#f97316] text-white px-5 py-2 rounded-full font-bold hover:bg-orange-600 transition shadow-md text-sm">
+                        Join as a Hustler
+                    </button>
 
-                    <button id="nav-dashboard-btn" onclick="window.location.href='dashboard.html'" class="hidden bg-[#1e3a8a] text-white px-5 py-2 rounded-full font-bold hover:bg-blue-900 transition shadow-md text-sm items-center">
-                        <i class="fa-solid fa-user-gear mr-2"></i> My Dashboard
+                    <button id="login-btn" onclick="openLoginModal()" class="text-gray-600 hover:text-blue-900 font-bold text-sm flex items-center">
+                        <i class="fa-solid fa-right-to-bracket mr-2"></i> Login
+                    </button>
+
+                    <button id="dashboard-btn" onclick="showDashboard()" class="hidden bg-[#1e3a8a] text-white px-5 py-2 rounded-full font-bold hover:bg-blue-900 transition shadow-md text-sm items-center">
+                        <i class="fa-solid fa-user-gear mr-2"></i> Dashboard
                     </button>
                 </div>
             </div>
         </div>
     </nav>
 
-    <header class="bg-[#1e3a8a] py-20 px-4">
-        <div class="max-w-5xl mx-auto text-center text-white">
-            <h1 class="text-4xl md:text-6xl font-extrabold mb-6 tracking-tight animate-fade-in">Local Kasi Hustle Hub</h1>
-            <p class="text-xl text-blue-100 mb-10 max-w-2xl mx-auto">Find vetted local help or list your skills. Connecting communities, one job at a time.</p>
-            
-            <div class="bg-white p-2 rounded-2xl shadow-2xl flex flex-col md:flex-row items-center max-w-3xl mx-auto transform transition hover:scale-[1.01]">
-                <div class="flex-1 w-full px-4 py-2 border-b md:border-b-0 md:border-r border-gray-200 flex items-center">
-                    <i class="fa-solid fa-magnifying-glass text-gray-400 mr-3"></i>
-                    <input type="text" id="search-keyword" placeholder="Name, service, e.g. 'Sipho' or 'Plumbing'" class="w-full outline-none text-gray-800 placeholder-gray-400">
-                </div>
-                <div class="w-full md:w-48 px-4 py-2 flex items-center">
-                    <i class="fa-solid fa-location-dot text-gray-400 mr-3"></i>
-                    <input type="text" id="search-location" placeholder="Location" class="w-full outline-none text-gray-800" value="Soweto">
-                </div>
-                <button onclick="performSearch()" class="w-full md:w-auto bg-[#f97316] text-white px-10 py-4 rounded-xl font-bold hover:bg-orange-600 transition">
-                    Search
-                </button>
+    <!-- Login Modal -->
+    <div id="loginModal" class="fixed inset-0 bg-gray-900 bg-opacity-70 hidden items-center justify-center z-[200] backdrop-blur-sm p-4">
+        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden relative">
+            <button onclick="closeLoginModal()" class="absolute top-4 right-4 text-gray-600 hover:text-gray-900">
+                <i class="fa-solid fa-times text-2xl"></i>
+            </button>
+            <div class="bg-[#1e3a8a] p-8 text-white text-center">
+                <h3 class="text-2xl font-bold">Hustler Login</h3>
+                <p class="text-blue-100 mt-2 text-sm">Only registered hustlers can access the dashboard</p>
+            </div>
+            <div class="p-8">
+                <form id="loginForm" class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">Email</label>
+                        <input type="email" id="loginEmail" required placeholder="sipho@example.com" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none bg-gray-50">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">Password</label>
+                        <input type="password" id="loginPassword" required placeholder="••••••••" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none bg-gray-50">
+                    </div>
+                    <button type="submit" class="w-full bg-[#f97316] text-white py-4 rounded-xl font-bold hover:bg-orange-600 transition shadow-lg">
+                        Login to Dashboard
+                    </button>
+                </form>
+                <p class="text-center text-sm text-gray-500 mt-6">
+                    Not registered yet? <a href="#join-hustle" onclick="closeLoginModal()" class="text-[#f97316] font-medium hover:underline">Create profile here</a>
+                </p>
             </div>
         </div>
-    </header>
+    </div>
 
-    <section class="max-w-7xl mx-auto px-4 py-16">
-        <div class="flex justify-between items-end mb-8">
-            <div>
-                <h2 class="text-3xl font-extrabold text-gray-900">What do you need?</h2>
-                <p class="text-gray-600 mt-2">Choose a category to find the right hustler for the job.</p>
-            </div>
-        </div>
-        
-        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
-            <div onclick="filterByCategory('Plumbing')" class="category-card bg-white p-6 rounded-2xl shadow-sm border border-gray-100 cursor-pointer text-center group">
-                <div class="bg-blue-50 w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-orange-100 transition">
-                    <i class="fa-solid fa-faucet text-xl text-blue-600 group-hover:text-orange-600"></i>
-                </div>
-                <h3 class="font-bold text-sm text-gray-800">Plumbing</h3>
-            </div>
+    <!-- Main Content (hidden when dashboard is shown) -->
+    <div id="main-content">
 
-            <div onclick="filterByCategory('Solar')" class="category-card bg-white p-6 rounded-2xl shadow-sm border border-gray-100 cursor-pointer text-center group">
-                <div class="bg-blue-50 w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-orange-100 transition">
-                    <i class="fa-solid fa-solar-panel text-xl text-blue-600 group-hover:text-orange-600"></i>
-                </div>
-                <h3 class="font-bold text-sm text-gray-800">Solar & Power</h3>
-            </div>
-
-            <div onclick="filterByCategory('Car Wash')" class="category-card bg-white p-6 rounded-2xl shadow-sm border border-gray-100 cursor-pointer text-center group">
-                <div class="bg-blue-50 w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-orange-100 transition">
-                    <i class="fa-solid fa-car text-xl text-blue-600 group-hover:text-orange-600"></i>
-                </div>
-                <h3 class="font-bold text-sm text-gray-800">Car Wash</h3>
-            </div>
-
-            <div onclick="filterByCategory('Phone Repair')" class="category-card bg-white p-6 rounded-2xl shadow-sm border border-gray-100 cursor-pointer text-center group">
-                <div class="bg-blue-50 w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-orange-100 transition">
-                    <i class="fa-solid fa-mobile-screen text-xl text-blue-600 group-hover:text-orange-600"></i>
-                </div>
-                <h3 class="font-bold text-sm text-gray-800">Phone Repair</h3>
-            </div>
-
-            <div onclick="filterByCategory('Queue Runner')" class="category-card bg-white p-6 rounded-2xl shadow-sm border border-gray-100 cursor-pointer text-center group">
-                <div class="bg-blue-50 w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-orange-100 transition">
-                    <i class="fa-solid fa-person-running text-xl text-blue-600 group-hover:text-orange-600"></i>
-                </div>
-                <h3 class="font-bold text-sm text-gray-800">Errands</h3>
-            </div>
-
-            <div onclick="filterByCategory('Barber')" class="category-card bg-white p-6 rounded-2xl shadow-sm border border-gray-100 cursor-pointer text-center group">
-                <div class="bg-blue-50 w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-orange-100 transition">
-                    <i class="fa-solid fa-scissors text-xl text-blue-600 group-hover:text-orange-600"></i>
-                </div>
-                <h3 class="font-bold text-sm text-gray-800">Barber</h3>
-            </div>
-        </div>
-    </section>
-
-    <section id="featured-section" class="bg-gray-100 py-20 px-4">
-        <div class="max-w-7xl mx-auto">
-            <div class="flex justify-between items-end mb-10">
-                <div>
-                    <h2 class="text-3xl font-extrabold text-gray-900">Featured Hustlers</h2>
-                    <p id="featured-subtext" class="text-gray-600 mt-2">Verified professionals in your area.</p>
-                </div>
-                <button onclick="toggleSeeAll()" id="see-all-btn" class="text-orange-600 font-bold hover:underline">See All</button>
-            </div>
-
-            <div id="hustlers-container" class="grid md:grid-cols-3 gap-8">
-                <div class="col-span-3 text-center py-10 text-gray-500">
-                    <i class="fa-solid fa-circle-notch fa-spin text-3xl mb-3"></i>
-                    <p>Loading Hustlers from Kasi...</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="join-hustle" class="max-w-4xl mx-auto px-4 py-20">
-        <div class="bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row border border-gray-100">
-            <div class="bg-[#1e3a8a] p-10 md:w-1/3 text-white flex flex-col justify-center">
-                <h2 class="text-3xl font-extrabold mb-4">Start Earning.</h2>
-                <p class="text-blue-100 mb-6">Join 500+ local hustlers making a living through KasiFix.</p>
-                <ul class="space-y-4 text-sm font-medium">
-                    <li class="flex items-center"><i class="fa-solid fa-check text-orange-500 mr-2"></i> Set your own rates</li>
-                    <li class="flex items-center"><i class="fa-solid fa-check text-orange-500 mr-2"></i> Work in your area</li>
-                    <li class="flex items-center"><i class="fa-solid fa-check text-orange-500 mr-2"></i> Get verified</li>
-                </ul>
-            </div>
-
-            <div class="p-10 md:w-2/3 bg-white relative">
-                <h3 class="text-2xl font-bold text-gray-900 mb-6">Create your Hustler Profile</h3>
+        <header class="bg-[#1e3a8a] py-20 px-4">
+            <div class="max-w-5xl mx-auto text-center text-white">
+                <h1 class="text-4xl md:text-6xl font-extrabold mb-6 tracking-tight animate-fade-in">Local Kasi Hustle Hub</h1>
+                <p class="text-xl text-blue-100 mb-10 max-w-2xl mx-auto">Find vetted local help or list your skills. Connecting communities, one job at a time.</p>
                 
-                <form id="hustleForm" class="space-y-5">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                        <div>
-                            <label class="block text-sm font-bold text-gray-700 mb-1">Full Name</label>
-                            <input type="text" id="inputName" required placeholder="e.g. Sipho Khumalo" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none transition bg-gray-50">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-bold text-gray-700 mb-1">Email</label>
-                            <input type="email" id="inputEmail" required placeholder="sipho@example.com" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none transition bg-gray-50">
-                        </div>
+                <div class="bg-white p-2 rounded-2xl shadow-2xl flex flex-col md:flex-row items-center max-w-3xl mx-auto transform transition hover:scale-[1.01]">
+                    <div class="flex-1 w-full px-4 py-2 border-b md:border-b-0 md:border-r border-gray-200 flex items-center">
+                        <i class="fa-solid fa-magnifying-glass text-gray-400 mr-3"></i>
+                        <input type="text" id="search-keyword" placeholder="Name, service, e.g. 'Sipho' or 'Plumbing'" class="w-full outline-none text-gray-800 placeholder-gray-400">
                     </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                        <div>
-                            <label class="block text-sm font-bold text-gray-700 mb-1">WhatsApp Number</label>
-                            <input type="tel" id="inputPhone" required placeholder="081 234 5678" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none transition bg-gray-50">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-bold text-gray-700 mb-1">Your Location (Kasi)</label>
-                            <input type="text" id="inputLocation" required placeholder="e.g. Soweto, Diepkloof" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none transition bg-gray-50">
-                        </div>
+                    <div class="w-full md:w-48 px-4 py-2 flex items-center">
+                        <i class="fa-solid fa-location-dot text-gray-400 mr-3"></i>
+                        <input type="text" id="search-location" placeholder="Location" class="w-full outline-none text-gray-800" value="Soweto">
                     </div>
+                    <button onclick="performSearch()" class="w-full md:w-auto bg-[#f97316] text-white px-10 py-4 rounded-xl font-bold hover:bg-orange-600 transition">
+                        Search
+                    </button>
+                </div>
+            </div>
+        </header>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                        <div>
-                            <label class="block text-sm font-bold text-gray-700 mb-1">What is your Hustle?</label>
-                            <select id="inputCategory" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none transition bg-gray-50">
-                                <option value="Solar & Inverter Setup">Solar & Inverter Setup</option>
-                                <option value="Plumbing">Plumbing & Leaks</option>
-                                <option value="Car Wash">Mobile Car Wash</option>
-                                <option value="Queue Runner">Queue Runner / Errands</option>
-                                <option value="Barber">Barber / Hair Stylist</option>
-                                <option value="Transport">Bakkie Hire</option>
-                                <option value="General">Other / General Handyman</option>
-                            </select>
+        <section class="max-w-7xl mx-auto px-4 py-16">
+            <div class="flex justify-between items-end mb-8">
+                <div>
+                    <h2 class="text-3xl font-extrabold text-gray-900">What do you need?</h2>
+                    <p class="text-gray-600 mt-2">Choose a category to find the right hustler for the job.</p>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
+                <div onclick="filterByCategory('Plumbing')" class="category-card bg-white p-6 rounded-2xl shadow-sm border border-gray-100 cursor-pointer text-center group">
+                    <div class="bg-blue-50 w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-orange-100 transition">
+                        <i class="fa-solid fa-faucet text-xl text-blue-600 group-hover:text-orange-600"></i>
+                    </div>
+                    <h3 class="font-bold text-sm text-gray-800">Plumbing</h3>
+                </div>
+
+                <div onclick="filterByCategory('Solar')" class="category-card bg-white p-6 rounded-2xl shadow-sm border border-gray-100 cursor-pointer text-center group">
+                    <div class="bg-blue-50 w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-orange-100 transition">
+                        <i class="fa-solid fa-solar-panel text-xl text-blue-600 group-hover:text-orange-600"></i>
+                    </div>
+                    <h3 class="font-bold text-sm text-gray-800">Solar & Power</h3>
+                </div>
+
+                <div onclick="filterByCategory('Car Wash')" class="category-card bg-white p-6 rounded-2xl shadow-sm border border-gray-100 cursor-pointer text-center group">
+                    <div class="bg-blue-50 w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-orange-100 transition">
+                        <i class="fa-solid fa-car text-xl text-blue-600 group-hover:text-orange-600"></i>
+                    </div>
+                    <h3 class="font-bold text-sm text-gray-800">Car Wash</h3>
+                </div>
+
+                <div onclick="filterByCategory('Phone Repair')" class="category-card bg-white p-6 rounded-2xl shadow-sm border border-gray-100 cursor-pointer text-center group">
+                    <div class="bg-blue-50 w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-orange-100 transition">
+                        <i class="fa-solid fa-mobile-screen text-xl text-blue-600 group-hover:text-orange-600"></i>
+                    </div>
+                    <h3 class="font-bold text-sm text-gray-800">Phone Repair</h3>
+                </div>
+
+                <div onclick="filterByCategory('Queue Runner')" class="category-card bg-white p-6 rounded-2xl shadow-sm border border-gray-100 cursor-pointer text-center group">
+                    <div class="bg-blue-50 w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-orange-100 transition">
+                        <i class="fa-solid fa-person-running text-xl text-blue-600 group-hover:text-orange-600"></i>
+                    </div>
+                    <h3 class="font-bold text-sm text-gray-800">Errands</h3>
+                </div>
+
+                <div onclick="filterByCategory('Barber')" class="category-card bg-white p-6 rounded-2xl shadow-sm border border-gray-100 cursor-pointer text-center group">
+                    <div class="bg-blue-50 w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-orange-100 transition">
+                        <i class="fa-solid fa-scissors text-xl text-blue-600 group-hover:text-orange-600"></i>
+                    </div>
+                    <h3 class="font-bold text-sm text-gray-800">Barber</h3>
+                </div>
+            </div>
+        </section>
+
+        <section id="featured-section" class="bg-gray-100 py-20 px-4">
+            <div class="max-w-7xl mx-auto">
+                <div class="flex justify-between items-end mb-10">
+                    <div>
+                        <h2 class="text-3xl font-extrabold text-gray-900">Featured Hustlers</h2>
+                        <p id="featured-subtext" class="text-gray-600 mt-2">Verified professionals in your area.</p>
+                    </div>
+                    <button onclick="toggleSeeAll()" id="see-all-btn" class="text-orange-600 font-bold hover:underline">See All</button>
+                </div>
+
+                <div id="hustlers-container" class="grid md:grid-cols-3 gap-8">
+                    <div class="col-span-3 text-center py-10 text-gray-500">
+                        <i class="fa-solid fa-circle-notch fa-spin text-3xl mb-3"></i>
+                        <p>Loading Hustlers from Kasi...</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="join-hustle" class="max-w-4xl mx-auto px-4 py-20">
+            <div class="bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row border border-gray-100">
+                <div class="bg-[#1e3a8a] p-10 md:w-1/3 text-white flex flex-col justify-center">
+                    <h2 class="text-3xl font-extrabold mb-4">Start Earning.</h2>
+                    <p class="text-blue-100 mb-6">Join 500+ local hustlers making a living through KasiFix.</p>
+                    <ul class="space-y-4 text-sm font-medium">
+                        <li class="flex items-center"><i class="fa-solid fa-check text-orange-500 mr-2"></i> Set your own rates</li>
+                        <li class="flex items-center"><i class="fa-solid fa-check text-orange-500 mr-2"></i> Work in your area</li>
+                        <li class="flex items-center"><i class="fa-solid fa-check text-orange-500 mr-2"></i> Get verified</li>
+                    </ul>
+                </div>
+
+                <div class="p-10 md:w-2/3 bg-white">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-6">Create your Hustler Profile</h3>
+                    
+                    <form id="hustleForm" class="space-y-5">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-1">Full Name</label>
+                                <input type="text" id="inputName" required placeholder="e.g. Sipho Khumalo" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none transition bg-gray-50">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-1">Email</label>
+                                <input type="email" id="inputEmail" required placeholder="sipho@example.com" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none transition bg-gray-50">
+                            </div>
                         </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-1">WhatsApp Number</label>
+                                <input type="tel" id="inputPhone" required placeholder="081 234 5678" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none transition bg-gray-50">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-1">Your Location (Kasi)</label>
+                                <input type="text" id="inputLocation" required placeholder="e.g. Soweto, Diepkloof" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none transition bg-gray-50">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-1">What is your Hustle?</label>
+                                <select id="inputCategory" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none transition bg-gray-50">
+                                    <option value="Solar & Inverter Setup">Solar & Inverter Setup</option>
+                                    <option value="Plumbing">Plumbing & Leaks</option>
+                                    <option value="Car Wash">Mobile Car Wash</option>
+                                    <option value="Queue Runner">Queue Runner / Errands</option>
+                                    <option value="Barber">Barber / Hair Stylist</option>
+                                    <option value="Transport">Bakkie Hire</option>
+                                    <option value="General">Other / General Handyman</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-1">Hourly Rate (R)</label>
+                                <input type="number" id="inputRate" required placeholder="e.g. 250" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none transition bg-gray-50">
+                            </div>
+                        </div>
+
                         <div>
-                            <label class="block text-sm font-bold text-gray-700 mb-1">Hourly Rate (R)</label>
-                            <input type="number" id="inputRate" required placeholder="e.g. 250" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none transition bg-gray-50">
+                            <label class="block text-sm font-bold text-gray-700 mb-1">Short Bio</label>
+                            <textarea id="inputBio" required rows="3" placeholder="I have 5 years experience in..." class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none transition bg-gray-50"></textarea>
+                        </div>
+
+                        <div class="flex items-center justify-center w-full">
+                            <label for="fileInput" class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-200 rounded-xl cursor-pointer hover:bg-orange-50 transition">
+                                <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                                    <i class="fa-solid fa-camera text-gray-400 text-2xl mb-2"></i>
+                                    <p id="file-label" class="text-sm text-gray-500 font-semibold">Upload Profile Photo</p>
+                                </div>
+                                <input id="fileInput" type="file" class="hidden" accept="image/*" />
+                            </label>
+                        </div>
+
+                        <div class="flex items-center">
+                            <input type="checkbox" id="termsCheckbox" class="w-4 h-4 text-orange-600 border-gray-300 rounded focus:ring-orange-500">
+                            <label class="ml-2 text-xs text-gray-500">I agree to the KasiFix Safety & Vetting Policy.</label>
+                        </div>
+
+                        <button type="submit" id="submitBtn" disabled class="w-full bg-[#f97316] text-white py-4 rounded-xl font-extrabold text-lg shadow-lg hover:bg-orange-600 transition-all transform hover:-translate-y-1">
+                            Create Profile
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <footer class="bg-gray-900 text-white mt-auto pt-16 pb-8 border-t border-gray-800">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+                    <div>
+                        <span class="text-2xl font-extrabold text-white mb-6 block">Kasi<span class="text-[#f97316]">Fix</span></span>
+                        <p class="text-gray-400 text-sm leading-relaxed mb-6">
+                            Empowering local economies by connecting vetted skilled professionals with the community. Safe, reliable, and proudly local.
+                        </p>
+                        <div class="flex space-x-4">
+                            <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-[#f97316] transition"><i class="fa-brands fa-facebook-f text-white"></i></a>
+                            <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-[#f97316] transition"><i class="fa-brands fa-twitter text-white"></i></a>
+                            <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-[#f97316] transition"><i class="fa-brands fa-instagram text-white"></i></a>
                         </div>
                     </div>
 
                     <div>
-                        <label class="block text-sm font-bold text-gray-700 mb-1">Short Bio</label>
-                        <textarea id="inputBio" required rows="3" placeholder="I have 5 years experience in..." class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none transition bg-gray-50"></textarea>
+                        <h4 class="text-lg font-bold mb-6 text-white">For Clients</h4>
+                        <ul class="space-y-3 text-sm text-gray-400">
+                            <li><a href="#" class="hover:text-[#f97316] transition">How it Works</a></li>
+                            <li><a href="#" class="hover:text-[#f97316] transition">Safety & Trust</a></li>
+                            <li><a href="#" class="hover:text-[#f97316] transition">Browse Categories</a></li>
+                            <li><a href="#" class="hover:text-[#f97316] transition">Report an Issue</a></li>
+                        </ul>
                     </div>
 
-                    <div class="flex items-center justify-center w-full">
-                        <label for="fileInput" class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-200 rounded-xl cursor-pointer hover:bg-orange-50 transition">
-                            <div class="flex flex-col items-center justify-center pt-5 pb-6">
-                                <i class="fa-solid fa-camera text-gray-400 text-2xl mb-2"></i>
-                                <p id="file-label" class="text-sm text-gray-500 font-semibold">Upload Profile Photo</p>
-                            </div>
-                            <input id="fileInput" type="file" class="hidden" accept="image/*" />
-                        </label>
+                    <div>
+                        <h4 class="text-lg font-bold mb-6 text-white">For Hustlers</h4>
+                        <ul class="space-y-3 text-sm text-gray-400">
+                            <li><a href="#" class="hover:text-[#f97316] transition">Join KasiFix</a></li>
+                            <li><a href="#" class="hover:text-[#f97316] transition">Dashboard</a></li>
+                            <li><a href="#" class="hover:text-[#f97316] transition">Resources</a></li>
+                            <li><a href="#" class="hover:text-[#f97316] transition">Community Guidelines</a></li>
+                        </ul>
                     </div>
 
-                    <div class="flex items-center">
-                        <input type="checkbox" id="termsCheckbox" class="w-4 h-4 text-orange-600 border-gray-300 rounded focus:ring-orange-500">
-                        <label class="ml-2 text-xs text-gray-500">I agree to the KasiFix Safety & Vetting Policy.</label>
+                    <div>
+                        <h4 class="text-lg font-bold mb-6 text-white">Contact Us</h4>
+                        <ul class="space-y-4 text-sm text-gray-400">
+                            <li class="flex items-start">
+                                <i class="fa-solid fa-location-dot mt-1 mr-3 text-[#f97316]"></i>
+                                <span>123 Vilakazi Street,<br>Orlando West, Soweto, 1804</span>
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fa-solid fa-envelope mr-3 text-[#f97316]"></i>
+                                <span>support@kasifix.co.za</span>
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fa-solid fa-phone mr-3 text-[#f97316]"></i>
+                                <span>+27 11 987 6543</span>
+                            </li>
+                        </ul>
                     </div>
+                </div>
 
-                    <button type="submit" id="submitBtn" disabled class="w-full bg-[#f97316] text-white py-4 rounded-xl font-extrabold text-lg shadow-lg hover:bg-orange-600 transition-all transform hover:-translate-y-1">
-                        Create Profile
+                <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-gray-500">
+                    <p>© 2024 KasiFix (Pty) Ltd. All rights reserved.</p>
+                    <div class="flex space-x-6 mt-4 md:mt-0">
+                        <a href="#" class="hover:text-white">Privacy Policy</a>
+                        <a href="#" class="hover:text-white">Terms of Service</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- Dashboard Section (hidden by default) -->
+    <div id="dashboard-section" class="min-h-screen bg-gray-50">
+        <div class="max-w-6xl mx-auto px-4 py-10">
+            <div class="flex justify-between items-center mb-10">
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-900">My Hustler Dashboard</h1>
+                    <p class="text-gray-600">Manage your profile, view earnings & activity</p>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button onclick="handleLogout()" class="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-full font-medium transition">
+                        Logout
                     </button>
-                </form>
+                    <button onclick="showMainPage()" class="text-[#1e3a8a] hover:underline font-medium">
+                        ← Back to Home
+                    </button>
+                </div>
             </div>
-        </div>
-    </section>
 
-    <footer class="bg-gray-900 text-white mt-auto pt-16 pb-8 border-t border-gray-800">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
-                <div>
-                    <span class="text-2xl font-extrabold text-white mb-6 block">Kasi<span class="text-[#f97316]">Fix</span></span>
-                    <p class="text-gray-400 text-sm leading-relaxed mb-6">
-                        Empowering local economies by connecting vetted skilled professionals with the community. Safe, reliable, and proudly local.
-                    </p>
-                    <div class="flex space-x-4">
-                        <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-[#f97316] transition"><i class="fa-brands fa-facebook-f text-white"></i></a>
-                        <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-[#f97316] transition"><i class="fa-brands fa-twitter text-white"></i></a>
-                        <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-[#f97316] transition"><i class="fa-brands fa-instagram text-white"></i></a>
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Profile Edit -->
+                <div class="bg-white rounded-2xl shadow-lg p-8 border border-gray-200">
+                    <h2 class="text-xl font-bold mb-6 flex items-center">
+                        <i class="fa-solid fa-user-edit text-[#f97316] mr-3 text-2xl"></i> My Profile
+                    </h2>
+                    <form id="editForm" class="space-y-5">
+                        <input type="hidden" id="editKey">
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-1">Full Name</label>
+                            <input type="text" id="editName" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none bg-gray-50">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-1">Email</label>
+                            <input type="email" id="editEmail" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none bg-gray-50">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-1">WhatsApp Number</label>
+                            <input type="tel" id="editPhone" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none bg-gray-50">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-1">Category</label>
+                            <select id="editCategory" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none bg-gray-50">
+                                <option value="Solar & Inverter Setup">Solar & Inverter Setup</option>
+                                <option value="Plumbing">Plumbing</option>
+                                <option value="Car Wash">Car Wash</option>
+                                <option value="Queue Runner">Queue Runner</option>
+                                <option value="Barber">Barber</option>
+                                <option value="Transport">Bakkie Hire</option>
+                                <option value="General">General</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-1">Location</label>
+                            <input type="text" id="editLocation" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none bg-gray-50">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-1">Hourly Rate (R)</label>
+                            <input type="number" id="editRate" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none bg-gray-50">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-1">Bio</label>
+                            <textarea id="editBio" rows="4" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none bg-gray-50"></textarea>
+                        </div>
+                        <button type="submit" class="w-full bg-[#1e3a8a] text-white py-4 rounded-xl font-bold hover:bg-blue-900 transition mt-4">
+                            Update Profile
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Analytics & Activity Placeholder -->
+                <div class="md:col-span-2 space-y-8">
+                    <div class="bg-white rounded-2xl shadow-lg p-8 border border-gray-200">
+                        <h2 class="text-xl font-bold mb-6 flex items-center">
+                            <i class="fa-solid fa-chart-line text-[#f97316] mr-3 text-2xl"></i> Business Analytics
+                        </h2>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
+                            <div class="text-center p-6 bg-gray-50 rounded-xl">
+                                <p class="text-3xl font-bold text-[#1e3a8a]">R0</p>
+                                <p class="text-sm text-gray-600 mt-1">Total Earnings</p>
+                            </div>
+                            <div class="text-center p-6 bg-gray-50 rounded-xl">
+                                <p class="text-3xl font-bold text-[#1e3a8a]">0</p>
+                                <p class="text-sm text-gray-600 mt-1">Jobs Completed</p>
+                            </div>
+                            <div class="text-center p-6 bg-gray-50 rounded-xl">
+                                <p class="text-3xl font-bold text-[#1e3a8a]">0</p>
+                                <p class="text-sm text-gray-600 mt-1">Active Bookings</p>
+                            </div>
+                            <div class="text-center p-6 bg-gray-50 rounded-xl">
+                                <p class="text-3xl font-bold text-green-600">0%</p>
+                                <p class="text-sm text-gray-600 mt-1">Response Rate</p>
+                            </div>
+                        </div>
+                        <p class="text-gray-500 text-center py-10">Analytics & earnings tracking coming soon...</p>
+                    </div>
+
+                    <div class="bg-white rounded-2xl shadow-lg p-8 border border-gray-200">
+                        <h2 class="text-xl font-bold mb-6 flex items-center">
+                            <i class="fa-solid fa-calendar-check text-[#f97316] mr-3 text-2xl"></i> Recent Activity
+                        </h2>
+                        <p class="text-gray-500 text-center py-12">No recent activity yet.</p>
                     </div>
                 </div>
-
-                <div>
-                    <h4 class="text-lg font-bold mb-6 text-white">For Clients</h4>
-                    <ul class="space-y-3 text-sm text-gray-400">
-                        <li><a href="#" class="hover:text-[#f97316] transition">How it Works</a></li>
-                        <li><a href="#" class="hover:text-[#f97316] transition">Safety & Trust</a></li>
-                        <li><a href="#" class="hover:text-[#f97316] transition">Browse Categories</a></li>
-                        <li><a href="#" class="hover:text-[#f97316] transition">Report an Issue</a></li>
-                    </ul>
-                </div>
-
-                <div>
-                    <h4 class="text-lg font-bold mb-6 text-white">For Hustlers</h4>
-                    <ul class="space-y-3 text-sm text-gray-400">
-                        <li><a href="dashboard.html" class="hover:text-[#f97316] transition">My Dashboard</a></li>
-                        <li><a href="#" class="hover:text-[#f97316] transition">Success Stories</a></li>
-                        <li><a href="#" class="hover:text-[#f97316] transition">Resources</a></li>
-                        <li><a href="#" class="hover:text-[#f97316] transition">Community Guidelines</a></li>
-                    </ul>
-                </div>
-
-                <div>
-                    <h4 class="text-lg font-bold mb-6 text-white">Contact Us</h4>
-                    <ul class="space-y-4 text-sm text-gray-400">
-                        <li class="flex items-start">
-                            <i class="fa-solid fa-location-dot mt-1 mr-3 text-[#f97316]"></i>
-                            <span>123 Vilakazi Street,<br>Orlando West, Soweto, 1804</span>
-                        </li>
-                        <li class="flex items-center">
-                            <i class="fa-solid fa-envelope mr-3 text-[#f97316]"></i>
-                            <span>support@kasifix.co.za</span>
-                        </li>
-                        <li class="flex items-center">
-                            <i class="fa-solid fa-phone mr-3 text-[#f97316]"></i>
-                            <span>+27 11 987 6543</span>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-gray-500">
-                <p>© 2024 KasiFix (Pty) Ltd. All rights reserved.</p>
-                <div class="flex space-x-6 mt-4 md:mt-0">
-                    <a href="#" class="hover:text-white">Privacy Policy</a>
-                    <a href="#" class="hover:text-white">Terms of Service</a>
-                </div>
             </div>
         </div>
-    </footer>
+    </div>
 
+    <!-- Modals (success & booking) remain the same -->
     <div id="successModal" class="fixed inset-0 bg-gray-900 bg-opacity-60 hidden items-center justify-center z-[100] backdrop-blur-sm px-4">
         <div class="bg-white rounded-3xl shadow-2xl max-w-sm w-full p-8 text-center transform transition-all scale-105">
             <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -380,8 +529,117 @@
 
         let allHustlers = [];
         let viewAll = false;
+        let currentUser = null;           // {email, key, data}
+        let currentUserProfileKey = null;
 
-        // --- CORE FUNCTIONALITY ---
+        // ────────────────────────────────────────────────
+        //  LOGIN / LOGOUT / PAGE SWITCHING
+        // ────────────────────────────────────────────────
+
+        function openLoginModal() {
+            document.getElementById('loginModal').classList.remove('hidden');
+            document.getElementById('loginModal').classList.add('flex');
+        }
+
+        function closeLoginModal() {
+            document.getElementById('loginModal').classList.add('hidden');
+            document.getElementById('loginModal').classList.remove('flex');
+            document.getElementById('loginForm').reset();
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value.trim().toLowerCase();
+
+            // Simple check: does this email exist in hustlers?
+            const found = allHustlers.find(h => h.email?.toLowerCase() === email);
+
+            if (!found) {
+                alert("No hustler profile found with this email.\nPlease create a profile first.");
+                return;
+            }
+
+            // Simulate successful login (in real app → use Firebase Auth + password check)
+            currentUser = { email: found.email, key: found.id, data: found };
+            currentUserProfileKey = found.id;
+
+            closeLoginModal();
+            showDashboard();
+            alert("Welcome back, " + found.name + "!");
+        });
+
+        function handleLogout() {
+            currentUser = null;
+            currentUserProfileKey = null;
+            showMainPage();
+            alert("You have been logged out.");
+        }
+
+        function showDashboard() {
+            document.getElementById('main-content').style.display = 'none';
+            document.getElementById('dashboard-section').style.display = 'block';
+            document.getElementById('login-btn').classList.add('hidden');
+            document.getElementById('dashboard-btn').classList.remove('hidden');
+
+            if (currentUserProfileKey) {
+                const h = allHustlers.find(item => item.id === currentUserProfileKey);
+                if (h) {
+                    document.getElementById('editKey').value = h.id;
+                    document.getElementById('editName').value = h.name || '';
+                    document.getElementById('editEmail').value = h.email || '';
+                    document.getElementById('editPhone').value = h.phone || '';
+                    document.getElementById('editCategory').value = h.category || '';
+                    document.getElementById('editLocation').value = h.location || '';
+                    document.getElementById('editRate').value = h.rate || '';
+                    document.getElementById('editBio').value = h.bio || '';
+                }
+            }
+        }
+
+        function showMainPage() {
+            document.getElementById('main-content').style.display = 'block';
+            document.getElementById('dashboard-section').style.display = 'none';
+            document.getElementById('login-btn').classList.remove('hidden');
+            document.getElementById('dashboard-btn').classList.add('hidden');
+        }
+
+        // ────────────────────────────────────────────────
+        //  PROFILE EDIT (from dashboard)
+        // ────────────────────────────────────────────────
+
+        document.getElementById('editForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            if (!currentUserProfileKey) {
+                alert("You must be logged in to update your profile.");
+                return;
+            }
+
+            const updates = {
+                name: document.getElementById('editName').value,
+                email: document.getElementById('editEmail').value,
+                phone: document.getElementById('editPhone').value,
+                category: document.getElementById('editCategory').value,
+                location: document.getElementById('editLocation').value,
+                rate: document.getElementById('editRate').value,
+                bio: document.getElementById('editBio').value
+            };
+
+            db.ref('hustlers/' + currentUserProfileKey).update(updates)
+                .then(() => {
+                    alert("Profile updated successfully!");
+                    // Update local data too
+                    const idx = allHustlers.findIndex(h => h.id === currentUserProfileKey);
+                    if (idx !== -1) {
+                        allHustlers[idx] = { ...allHustlers[idx], ...updates };
+                    }
+                    performSearch();
+                })
+                .catch(err => alert("Error: " + err.message));
+        });
+
+        // ────────────────────────────────────────────────
+        //  Rest remains unchanged (profile creation, search, render, etc.)
+        // ────────────────────────────────────────────────
 
         const container = document.getElementById('hustlers-container');
         const termsCheckbox = document.getElementById('termsCheckbox');
@@ -527,7 +785,7 @@
             if (e.key === 'Enter') performSearch();
         });
 
-        // Create Profile (no auth required)
+        // Create Profile
         const form = document.getElementById('hustleForm');
         form.addEventListener('submit', async function(e) {
             e.preventDefault();
@@ -556,12 +814,7 @@
 
             const newRef = db.ref('hustlers').push();
             newRef.set(newHustler).then(() => {
-                // Immediately add to local array & re-render
-                allHustlers.unshift({
-                    id: newRef.key,
-                    ...newHustler
-                });
-
+                allHustlers.unshift({ id: newRef.key, ...newHustler });
                 performSearch();
                 
                 document.getElementById('successModal').classList.remove('hidden');
@@ -579,13 +832,11 @@
             });
         });
 
-        // Modals
         function closeSuccessModal() {
             document.getElementById('successModal').classList.add('hidden');
             document.getElementById('successModal').classList.remove('flex');
         }
 
-        const bookingModal = document.getElementById('bookingModal');
         function openBookingModal(hustlerId) {
             const h = allHustlers.find(item => item.id === hustlerId);
             if (!h) return;
@@ -601,16 +852,19 @@
             const waLink = `https://wa.me/${h.phone.replace(/\s/g, '').replace('0', '27')}`;
             document.getElementById('whatsapp-link').href = waLink;
 
-            bookingModal.classList.remove('hidden');
-            bookingModal.classList.add('flex');
+            document.getElementById('bookingModal').classList.remove('hidden');
+            document.getElementById('bookingModal').classList.add('flex');
             document.body.classList.add('no-scroll');
         }
 
         function closeBookingModal() {
-            bookingModal.classList.add('hidden');
-            bookingModal.classList.remove('flex');
+            document.getElementById('bookingModal').classList.add('hidden');
+            document.getElementById('bookingModal').classList.remove('flex');
             document.body.classList.remove('no-scroll');
         }
+
+        // Initial state
+        showMainPage();
     </script>
 </body>
 </html>
