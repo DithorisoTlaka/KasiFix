@@ -8,7 +8,6 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
     <style>
@@ -22,7 +21,6 @@
             transform: none !important;
         }
 
-        /* Card Animation Classes */
         .category-card {
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
@@ -32,7 +30,6 @@
             border-color: #f97316;
         }
         
-        /* Fade in animation */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
@@ -55,15 +52,12 @@
                     <a href="#" class="text-gray-600 hover:text-blue-900 font-medium text-sm">Safety</a>
                     
                     <div id="nav-auth-container">
-                        <button onclick="handleNavLogin()" id="nav-login-btn" class="text-gray-600 hover:text-blue-900 font-bold text-sm mr-4">
-                            <i class="fa-brands fa-google mr-2"></i>Login
-                        </button>
                         <button onclick="document.getElementById('join-hustle').scrollIntoView({behavior: 'smooth'})" class="bg-[#f97316] text-white px-5 py-2 rounded-full font-bold hover:bg-orange-600 transition shadow-md text-sm">
                             Join as a Hustler
                         </button>
                     </div>
 
-                    <button id="nav-dashboard-btn" onclick="openDashboard()" class="hidden bg-[#1e3a8a] text-white px-5 py-2 rounded-full font-bold hover:bg-blue-900 transition shadow-md text-sm items-center">
+                    <button id="nav-dashboard-btn" onclick="window.location.href='dashboard.html'" class="hidden bg-[#1e3a8a] text-white px-5 py-2 rounded-full font-bold hover:bg-blue-900 transition shadow-md text-sm items-center">
                         <i class="fa-solid fa-user-gear mr-2"></i> My Dashboard
                     </button>
                 </div>
@@ -179,18 +173,6 @@
             <div class="p-10 md:w-2/3 bg-white relative">
                 <h3 class="text-2xl font-bold text-gray-900 mb-6">Create your Hustler Profile</h3>
                 
-                <div id="google-auth-overlay" class="absolute inset-0 bg-white/95 z-20 flex flex-col items-center justify-center p-8 text-center hidden">
-                    <div class="bg-orange-100 p-4 rounded-full mb-4">
-                        <i class="fa-solid fa-lock text-orange-600 text-2xl"></i>
-                    </div>
-                    <h4 class="text-xl font-bold mb-2">Sign in Required</h4>
-                    <p class="text-gray-500 mb-6 text-sm">To create and manage your profile securely, please sign in with Google.</p>
-                    <button onclick="signInWithGoogle()" class="flex items-center justify-center bg-white border border-gray-300 text-gray-700 font-bold py-3 px-6 rounded-xl shadow-sm hover:shadow-md hover:bg-gray-50 transition w-full max-w-xs">
-                        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" class="w-5 h-5 mr-3">
-                        Continue with Google
-                    </button>
-                </div>
-
                 <form id="hustleForm" class="space-y-5">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                         <div>
@@ -198,8 +180,19 @@
                             <input type="text" id="inputName" required placeholder="e.g. Sipho Khumalo" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none transition bg-gray-50">
                         </div>
                         <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-1">Email</label>
+                            <input type="email" id="inputEmail" required placeholder="sipho@example.com" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none transition bg-gray-50">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div>
                             <label class="block text-sm font-bold text-gray-700 mb-1">WhatsApp Number</label>
                             <input type="tel" id="inputPhone" required placeholder="081 234 5678" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none transition bg-gray-50">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-1">Your Location (Kasi)</label>
+                            <input type="text" id="inputLocation" required placeholder="e.g. Soweto, Diepkloof" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none transition bg-gray-50">
                         </div>
                     </div>
 
@@ -217,14 +210,9 @@
                             </select>
                         </div>
                         <div>
-                            <label class="block text-sm font-bold text-gray-700 mb-1">Your Location (Kasi)</label>
-                            <input type="text" id="inputLocation" required placeholder="e.g. Soweto, Diepkloof" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none transition bg-gray-50">
+                            <label class="block text-sm font-bold text-gray-700 mb-1">Hourly Rate (R)</label>
+                            <input type="number" id="inputRate" required placeholder="e.g. 250" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none transition bg-gray-50">
                         </div>
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-bold text-gray-700 mb-1">Hourly Rate (R)</label>
-                        <input type="number" id="inputRate" required placeholder="e.g. 250" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none transition bg-gray-50">
                     </div>
 
                     <div>
@@ -283,7 +271,7 @@
                 <div>
                     <h4 class="text-lg font-bold mb-6 text-white">For Hustlers</h4>
                     <ul class="space-y-3 text-sm text-gray-400">
-                        <li><a href="#" class="hover:text-[#f97316] transition">Join KasiFix</a></li>
+                        <li><a href="dashboard.html" class="hover:text-[#f97316] transition">My Dashboard</a></li>
                         <li><a href="#" class="hover:text-[#f97316] transition">Success Stories</a></li>
                         <li><a href="#" class="hover:text-[#f97316] transition">Resources</a></li>
                         <li><a href="#" class="hover:text-[#f97316] transition">Community Guidelines</a></li>
@@ -310,7 +298,7 @@
             </div>
 
             <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-gray-500">
-                <p>&copy; 2024 KasiFix (Pty) Ltd. All rights reserved.</p>
+                <p>© 2024 KasiFix (Pty) Ltd. All rights reserved.</p>
                 <div class="flex space-x-6 mt-4 md:mt-0">
                     <a href="#" class="hover:text-white">Privacy Policy</a>
                     <a href="#" class="hover:text-white">Terms of Service</a>
@@ -370,72 +358,12 @@
         </div>
     </div>
 
-    <div id="dashboardModal" class="fixed inset-0 bg-gray-900 bg-opacity-70 hidden items-center justify-center z-[100] backdrop-blur-sm p-4">
-        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-2xl overflow-hidden flex flex-col max-h-[90vh]">
-            <div class="bg-[#f97316] p-6 text-white flex justify-between items-center shrink-0">
-                <h3 class="text-2xl font-bold"><i class="fa-solid fa-user-gear mr-2"></i> My Dashboard</h3>
-                <div class="flex items-center">
-                    <button onclick="handleLogout()" class="text-sm bg-white/20 px-3 py-1 rounded-lg hover:bg-white/30 mr-4">Logout</button>
-                    <button onclick="closeDashboard()" class="text-white hover:text-blue-900"><i class="fa-solid fa-times text-2xl"></i></button>
-                </div>
-            </div>
-            
-            <div class="p-8 overflow-y-auto">
-                <form id="editForm" class="space-y-4">
-                    <input type="hidden" id="editKey"> <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label class="text-sm font-bold text-gray-700">Name</label>
-                            <input type="text" id="editName" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-orange-500 outline-none">
-                        </div>
-                        <div>
-                            <label class="text-sm font-bold text-gray-700">Phone</label>
-                            <input type="tel" id="editPhone" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-orange-500 outline-none">
-                        </div>
-                    </div>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label class="text-sm font-bold text-gray-700">Category</label>
-                            <select id="editCategory" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-orange-500 outline-none">
-                                <option value="Solar & Inverter Setup">Solar & Inverter Setup</option>
-                                <option value="Plumbing">Plumbing</option>
-                                <option value="Car Wash">Car Wash</option>
-                                <option value="Queue Runner">Queue Runner</option>
-                                <option value="Barber">Barber</option>
-                                <option value="Transport">Bakkie Hire</option>
-                                <option value="General">General</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="text-sm font-bold text-gray-700">Location</label>
-                            <input type="text" id="editLocation" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-orange-500 outline-none">
-                        </div>
-                    </div>
-
-                    <div>
-                        <label class="text-sm font-bold text-gray-700">Hourly Rate (R)</label>
-                        <input type="number" id="editRate" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-orange-500 outline-none">
-                    </div>
-
-                    <div>
-                        <label class="text-sm font-bold text-gray-700">Bio</label>
-                        <textarea id="editBio" rows="3" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-orange-500 outline-none"></textarea>
-                    </div>
-                    
-                    <div class="pt-4 border-t">
-                        <button type="submit" class="w-full bg-[#1e3a8a] text-white py-3 rounded-xl font-bold hover:bg-blue-900 transition">Update Profile</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
     <script>
-        // *** CLOUDINARY CONFIGURATION ***
+        // *** CLOUDINARY CONFIG ***
         const CLOUD_NAME = 'dv5bsbydu'; 
         const UPLOAD_PRESET = 'admin_tlaka'; 
 
-        // *** FIREBASE CONFIGURATION ***
+        // *** FIREBASE CONFIG ***
         const firebaseConfig = {
             apiKey: "AIzaSyC4kR_HiywObXho8Zh20JyzC40iVrZq3lo",
             authDomain: "kasifix-5b102.firebaseapp.com",
@@ -449,131 +377,11 @@
             firebase.initializeApp(firebaseConfig);
         }
         const db = firebase.database();
-        const auth = firebase.auth();
-        const provider = new firebase.auth.GoogleAuthProvider();
 
         let allHustlers = [];
         let viewAll = false;
-        let currentUser = null;
-        let currentUserProfileKey = null;
 
-        // --- AUTH LOGIC ---
-
-        auth.onAuthStateChanged(user => {
-            currentUser = user;
-            updateUIForAuth(user);
-            if(user) checkUserProfile(user);
-        });
-
-        function signInWithGoogle() {
-            auth.signInWithPopup(provider).catch(error => {
-                console.error("Auth Error:", error);
-                alert("Login failed: " + error.message);
-            });
-        }
-
-        function handleNavLogin() {
-            if (!currentUser) {
-                signInWithGoogle();
-            }
-        }
-
-        function handleLogout() {
-            auth.signOut().then(() => {
-                closeDashboard();
-                window.location.reload();
-            });
-        }
-
-        function updateUIForAuth(user) {
-            const overlay = document.getElementById('google-auth-overlay');
-            const navContainer = document.getElementById('nav-auth-container');
-            const dashboardBtn = document.getElementById('nav-dashboard-btn');
-
-            if (user) {
-                // Logged In
-                overlay.classList.add('hidden');
-                navContainer.classList.add('hidden');
-                dashboardBtn.classList.remove('hidden');
-                dashboardBtn.classList.add('flex');
-            } else {
-                // Logged Out
-                overlay.classList.remove('hidden');
-                overlay.classList.add('flex');
-                navContainer.classList.remove('hidden');
-                dashboardBtn.classList.add('hidden');
-                dashboardBtn.classList.remove('flex');
-            }
-        }
-
-        // Check if logged-in user already has a profile in DB
-        function checkUserProfile(user) {
-            db.ref('hustlers').once('value', snapshot => {
-                const data = snapshot.val();
-                if(data) {
-                    Object.keys(data).forEach(key => {
-                        if(data[key].uid === user.uid) {
-                            currentUserProfileKey = key; // Found their profile key
-                        }
-                    });
-                }
-            });
-        }
-
-        // --- DASHBOARD LOGIC ---
-
-        function openDashboard() {
-            if(!currentUser) return;
-            if(!currentUserProfileKey) {
-                alert("You don't have a Hustler Profile yet. Please create one below.");
-                document.getElementById('join-hustle').scrollIntoView({behavior: 'smooth'});
-                return;
-            }
-
-            const h = allHustlers.find(item => item.id === currentUserProfileKey);
-            if(h) {
-                document.getElementById('editKey').value = h.id;
-                document.getElementById('editName').value = h.name;
-                document.getElementById('editPhone').value = h.phone;
-                document.getElementById('editCategory').value = h.category;
-                document.getElementById('editLocation').value = h.location;
-                document.getElementById('editRate').value = h.rate;
-                document.getElementById('editBio').value = h.bio;
-                
-                const dbModal = document.getElementById('dashboardModal');
-                dbModal.classList.remove('hidden');
-                dbModal.classList.add('flex');
-            }
-        }
-
-        function closeDashboard() {
-            document.getElementById('dashboardModal').classList.add('hidden');
-            document.getElementById('dashboardModal').classList.remove('flex');
-        }
-
-        // Dashboard Edit Submission
-        document.getElementById('editForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const key = document.getElementById('editKey').value;
-            
-            const updates = {
-                name: document.getElementById('editName').value,
-                phone: document.getElementById('editPhone').value,
-                category: document.getElementById('editCategory').value,
-                location: document.getElementById('editLocation').value,
-                rate: document.getElementById('editRate').value,
-                bio: document.getElementById('editBio').value
-            };
-
-            db.ref('hustlers/' + key).update(updates)
-                .then(() => {
-                    alert("Profile updated successfully!");
-                    closeDashboard();
-                })
-                .catch(err => alert("Error updating: " + err.message));
-        });
-
-        // --- CORE FUNCTIONALITY (Similar to previous) ---
+        // --- CORE FUNCTIONALITY ---
 
         const container = document.getElementById('hustlers-container');
         const termsCheckbox = document.getElementById('termsCheckbox');
@@ -608,22 +416,17 @@
             }
         }
 
-        // Updated Search Logic
         function performSearch() {
             const keyword = document.getElementById('search-keyword').value.toLowerCase();
             const locationInput = document.getElementById('search-location').value.toLowerCase();
             const featuredTitle = document.getElementById('featured-subtext');
 
             let filtered = allHustlers.filter(h => {
-                // Check Name, Bio, or Category
                 const matchesKeyword = h.name.toLowerCase().includes(keyword) ||
                                      h.category.toLowerCase().includes(keyword) || 
                                      h.bio.toLowerCase().includes(keyword);
-                
-                // Check Location
                 const hLocation = (h.location || '').toLowerCase();
                 const matchesLocation = locationInput === '' ? true : hLocation.includes(locationInput);
-                
                 return matchesKeyword && matchesLocation;
             });
 
@@ -632,7 +435,6 @@
                 viewAll = true; 
             } else {
                 featuredTitle.innerText = "Verified professionals in your area.";
-                if(!viewAll) viewAll = false;
             }
 
             renderHustlers(filtered);
@@ -725,16 +527,11 @@
             if (e.key === 'Enter') performSearch();
         });
 
-        // Create Profile Logic
+        // Create Profile (no auth required)
         const form = document.getElementById('hustleForm');
         form.addEventListener('submit', async function(e) {
             e.preventDefault();
             
-            if(!currentUser) {
-                alert("Please sign in with Google to create a profile.");
-                return;
-            }
-
             const originalText = submitBtn.innerText;
             submitBtn.innerText = "Creating...";
             submitBtn.disabled = true;
@@ -745,9 +542,8 @@
             }
 
             const newHustler = {
-                uid: currentUser.uid, // LINK TO AUTH USER
-                email: currentUser.email,
                 name: document.getElementById('inputName').value,
+                email: document.getElementById('inputEmail').value,
                 phone: document.getElementById('inputPhone').value,
                 category: document.getElementById('inputCategory').value,
                 bio: document.getElementById('inputBio').value,
@@ -758,19 +554,35 @@
                 verified: false
             };
 
-            db.ref('hustlers').push(newHustler).then(() => {
+            const newRef = db.ref('hustlers').push();
+            newRef.set(newHustler).then(() => {
+                // Immediately add to local array & re-render
+                allHustlers.unshift({
+                    id: newRef.key,
+                    ...newHustler
+                });
+
+                performSearch();
+                
                 document.getElementById('successModal').classList.remove('hidden');
                 document.getElementById('successModal').classList.add('flex');
+
                 form.reset();
+                document.getElementById('file-label').innerText = "Upload Profile Photo";
                 submitBtn.innerText = originalText;
+                submitBtn.disabled = true;
+                termsCheckbox.checked = false;
+            }).catch(err => {
+                alert("Error: " + err.message);
+                submitBtn.innerText = originalText;
+                submitBtn.disabled = false;
             });
         });
 
-        // Helper Modals
+        // Modals
         function closeSuccessModal() {
             document.getElementById('successModal').classList.add('hidden');
             document.getElementById('successModal').classList.remove('flex');
-            window.location.reload(); // Reload to update dashboard state
         }
 
         const bookingModal = document.getElementById('bookingModal');
