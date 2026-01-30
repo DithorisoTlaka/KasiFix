@@ -964,23 +964,21 @@
         function renderHustlers(hustlersToRender) {
             container.innerHTML = ''; 
 
-            // Only show verified hustlers in the featured section
-            const verifiedHustlers = hustlersToRender.filter(h => h.verified === true);
-
-            if (verifiedHustlers.length === 0) {
+            // No verification filter anymore — show all hustlers immediately
+            if (hustlersToRender.length === 0) {
                 container.innerHTML = `
                     <div class="col-span-3 text-center py-10">
                         <div class="bg-gray-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                             <i class="fa-regular fa-folder-open text-gray-400 text-2xl"></i>
                         </div>
-                        <p class="text-gray-500 font-medium">No verified hustlers found matching your criteria.</p>
+                        <p class="text-gray-500 font-medium">No hustlers found matching your criteria.</p>
                         <button onclick="document.getElementById('search-keyword').value=''; performSearch()" class="pill-btn secondary-pill text-sm px-6 py-2 rounded-full font-bold mt-2 hover:bg-blue-900 transition">Clear Filters</button>
                     </div>
                 `;
                 return;
             }
 
-            const displayList = viewAll ? verifiedHustlers : verifiedHustlers.slice(0, 3);
+            const displayList = viewAll ? hustlersToRender : hustlersToRender.slice(0, 3);
 
             displayList.forEach(h => {
                 const initial = h.name.charAt(0).toUpperCase();
@@ -996,7 +994,7 @@
                         <div class="flex justify-between mb-4">
                             ${imageHtml}
                             <span class="bg-green-100 text-green-700 text-xs font-bold px-3 py-1 rounded-full flex items-center h-fit">
-                                <i class="fa-solid fa-shield-check mr-1"></i> VETTED
+                                <i class="fa-solid fa-shield-check mr-1"></i> LISTED
                             </span>
                         </div>
                         <h4 class="text-xl font-bold text-gray-900 line-clamp-1">${h.name}</h4>
@@ -1016,7 +1014,7 @@
             });
 
             const seeAllBtn = document.getElementById('see-all-btn');
-            if (verifiedHustlers.length <= 3) seeAllBtn.style.display = 'none';
+            if (hustlersToRender.length <= 3) seeAllBtn.style.display = 'none';
             else {
                 seeAllBtn.style.display = 'block';
                 seeAllBtn.innerText = viewAll ? "Show Less" : "See All";
@@ -1073,14 +1071,14 @@
                 location: document.getElementById('inputLocation').value,
                 rate: document.getElementById('inputRate').value,
                 imageUrl: imageUrl,
-                timestamp: Date.now(),
-                verified: false   // New profiles are NOT verified by default
+                timestamp: Date.now()
+                // removed verified field completely
             };
 
             const newRef = db.ref('hustlers').push();
             newRef.set(newHustler).then(() => {
                 allHustlers.unshift({ id: newRef.key, ...newHustler });
-                performSearch();
+                performSearch(); // immediately re-render → new profile appears
                 
                 openModal('successModal');
 
