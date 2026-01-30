@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KasiFix – Find Trusted Local Help in Your Kasi</title>
+    <title>KasiFix | Find Local Hustlers</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     
@@ -13,34 +13,35 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
         body { font-family: 'Inter', sans-serif; }
-        
-        .hero-bg {
-            background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+        .no-scroll { overflow: hidden; }
+
+        button:disabled {
+            background-color: #9ca3af;
+            cursor: not-allowed;
+            transform: none !important;
         }
 
-        .card-hover {
+        .category-card {
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .card-hover:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 40px -10px rgba(249, 115, 22, 0.25);
+        .category-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 10px 25px -5px rgba(249, 115, 22, 0.3);
+            border-color: #f97316;
         }
 
-        .pill-btn {
-            border-radius: 9999px;
-            transition: all 0.3s ease;
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-        .pill-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.2);
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
         }
 
-        /* Search Bar Animation */
+        /* Modern Search Bar Animation */
         .search-container {
             position: relative;
             overflow: hidden;
-            max-width: 1100px;
-            margin: 0 auto;
         }
         .search-input {
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -61,7 +62,10 @@
         }
         .search-glow {
             position: absolute;
-            top: -2px; left: -2px; right: -2px; bottom: -2px;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
             background: linear-gradient(45deg, #f97316, #fb923c, #f97316);
             border-radius: inherit;
             z-index: -1;
@@ -72,130 +76,677 @@
             opacity: 1;
         }
 
-        .advanced-panel {
-            transition: all 0.4s ease;
-            max-height: 0;
+        /* Featured Cards Animation */
+        .hustler-card {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
             overflow: hidden;
         }
-        .advanced-panel.open {
-            max-height: 500px;
+        .hustler-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: left 0.6s ease;
+            z-index: 1;
+        }
+        .hustler-card:hover::before {
+            left: 100%;
+        }
+        .hustler-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 40px -10px rgba(249, 115, 22, 0.25);
+        }
+        .hustler-card .card-image {
+            transition: all 0.3s ease;
+        }
+        .hustler-card:hover .card-image {
+            transform: scale(1.1);
+        }
+
+        /* Form Animation */
+        .form-section {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .form-section .form-input {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border: 2px solid #e5e7eb;
+            position: relative;
+            overflow: hidden;
+        }
+        .form-section .form-input::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(249, 115, 22, 0.1), transparent);
+            transition: left 0.6s ease;
+            z-index: 1;
+        }
+        .form-section .form-input:focus::before {
+            left: 100%;
+        }
+        .form-section .form-input:focus {
+            border-color: #f97316;
+            box-shadow: 0 10px 25px -5px rgba(249, 115, 22, 0.15);
+            transform: translateY(-2px);
+        }
+        .form-section .form-input:hover {
+            border-color: #f97316;
+        }
+        .form-section .form-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-position: right 0.5rem center;
+            background-repeat: no-repeat;
+            background-size: 1.5em;
+            padding-right: 2.5rem;
+        }
+
+        /* Pill Shaped Buttons with Animation */
+        .pill-btn {
+            border-radius: 9999px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .pill-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
+            z-index: 1;
+        }
+        .pill-btn:hover::before {
+            left: 100%;
+        }
+        .pill-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.2);
+        }
+        .pill-btn:active {
+            transform: translateY(0);
+        }
+        .primary-pill {
+            background: linear-gradient(135deg, #f97316 0%, #fb923c 100%);
+            border: 2px solid transparent;
+        }
+        .primary-pill:hover {
+            background: linear-gradient(135deg, #ea580c 0%, #f97316 100%);
+            border-color: #f97316;
+        }
+        .secondary-pill {
+            background: transparent;
+            border: 2px solid #1e3a8a;
+            color: #1e3a8a;
+        }
+        .secondary-pill:hover {
+            background: #1e3a8a;
+            color: white;
+            border-color: #1e3a8a;
+        }
+        .whatsapp-pill {
+            background: #25D366;
+            border: 2px solid #25D366;
+        }
+        .whatsapp-pill:hover {
+            background: #128C7E;
+            border-color: #128C7E;
+        }
+
+        /* File Upload Animation */
+        .file-upload {
+            transition: all 0.3s ease;
+            border: 2px dashed #d1d5db;
+        }
+        .file-upload:hover {
+            border-color: #f97316;
+            background: linear-gradient(135deg, #fef3c7 0%, #fed7aa 100%);
+            transform: scale(1.02);
+        }
+
+        /* Modern Modal Styles */
+        .modern-modal-overlay {
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            transition: opacity 0.4s ease;
+        }
+        .modern-modal-content {
+            background: white;
+            border-radius: 1.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            transform: scale(0.95);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            max-width: 420px;
+            width: 90%;
+            overflow: hidden;
+        }
+        .modern-modal.show .modern-modal-content {
+            transform: scale(1);
+            opacity: 1;
+        }
+        .modern-modal-header {
+            background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+            color: white;
+            padding: 1.75rem 2rem;
+        }
+        .modern-modal-body {
+            padding: 2rem;
+        }
+        .modern-modal-footer {
+            padding: 1.25rem 2rem;
+            border-top: 1px solid #e5e7eb;
+            background: #f8fafc;
+        }
+        .modern-success-icon {
+            width: 5rem;
+            height: 5rem;
+            background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+            border-radius: 9999px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.4);
         }
     </style>
 </head>
-<body class="bg-gray-50">
+<body class="bg-gray-50 flex flex-col min-h-screen">
 
-    <!-- Navigation (unchanged) -->
-    <nav class="bg-white border-b sticky top-0 z-50 shadow-sm">
+    <nav class="bg-white border-b sticky top-0 z-40 shadow-sm">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16 items-center">
-                <div class="flex items-center cursor-pointer" onclick="window.location.href='index.html'">
+                <div class="flex items-center cursor-pointer" onclick="showMainPage()">
                     <span class="text-2xl font-extrabold text-[#1e3a8a]">Kasi<span class="text-[#f97316]">Fix</span></span>
                 </div>
-                <div class="hidden md:flex items-center space-x-8">
-                    <a href="#how-it-works" class="text-gray-700 hover:text-[#1e3a8a] font-medium">How it Works</a>
-                    <a href="#categories" class="text-gray-700 hover:text-[#1e3a8a] font-medium">Categories</a>
-                    <a href="#featured" class="text-gray-700 hover:text-[#1e3a8a] font-medium">Find Help</a>
-                    <a href="hustler-signup.html" class="pill-btn bg-[#f97316] text-white px-6 py-2.5 font-bold hover:bg-orange-600 transition shadow">
-                        Become a Hustler
-                    </a>
+                <div class="hidden md:flex space-x-8 items-center">
+                    <a href="#featured-section" class="text-gray-600 hover:text-blue-900 font-medium text-sm">Find Work</a>
+                    
+                    <button onclick="document.getElementById('join-hustle').scrollIntoView({behavior: 'smooth'})" class="pill-btn primary-pill text-white px-6 py-3 rounded-full font-bold hover:bg-orange-600 transition shadow-md text-sm">
+                        Join as a Hustler
+                    </button>
+
+                    <button id="login-btn" onclick="openLoginModal()" class="pill-btn secondary-pill px-6 py-3 rounded-full font-bold text-sm flex items-center">
+                        <i class="fa-solid fa-right-to-bracket mr-2"></i> Login
+                    </button>
+
+                    <button id="dashboard-btn" onclick="showDashboard()" class="hidden pill-btn primary-pill text-white px-6 py-3 rounded-full font-bold hover:bg-orange-600 transition shadow-md text-sm items-center">
+                        <i class="fa-solid fa-user-gear mr-2"></i> Dashboard
+                    </button>
                 </div>
             </div>
         </div>
     </nav>
 
-    <!-- Hero with Advanced Search -->
-    <section class="hero-bg text-white py-24 md:py-32">
-        <div class="max-w-6xl mx-auto px-4 text-center">
-            <h1 class="text-4xl md:text-6xl font-extrabold mb-6 leading-tight">
-                Find Trusted Local Help<br/>Right in Your Kasi
-            </h1>
-            <p class="text-xl md:text-2xl text-blue-100 mb-10 max-w-3xl mx-auto">
-                From plumbers and electricians to car washers and errand runners — real people, real skills, real fast.
-            </p>
-
-            <!-- Search Container -->
-            <div class="search-container bg-white p-4 md:p-5 rounded-3xl shadow-2xl transform transition hover:scale-[1.01]">
-                <div class="flex flex-col md:flex-row gap-4">
-                    <!-- Keyword -->
-                    <div class="flex-1 relative">
-                        <input 
-                            type="text" 
-                            id="search-keyword" 
-                            placeholder="Plumber, barber, solar installation..." 
-                            class="search-input w-full px-5 py-4 pl-12 rounded-2xl text-lg outline-none"
-                            oninput="filterFeatured()"
-                        >
-                        <i class="fa-solid fa-search absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 text-xl"></i>
-                        <div class="search-glow"></div>
+    <!-- Login Modal - Modern style -->
+    <div id="loginModal" class="modern-modal-overlay fixed inset-0 hidden flex items-center justify-center z-[200] transition-opacity duration-400">
+        <div class="modern-modal-content">
+            <div class="modern-modal-header relative">
+                <button onclick="closeLoginModal()" class="absolute top-4 right-5 text-white hover:text-gray-200 transition">
+                    <i class="fa-solid fa-times text-xl"></i>
+                </button>
+                <h3 class="text-2xl font-bold text-center">Hustler Login</h3>
+                <p class="text-blue-100 mt-2 text-center text-sm opacity-90">Access your dashboard • Registered hustlers only</p>
+            </div>
+            <div class="modern-modal-body">
+                <form id="loginForm" class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">Email</label>
+                        <input type="email" id="loginEmail" required placeholder="sipho@example.com" class="form-input w-full px-4 py-3 rounded-xl border focus:border-[#f97316] outline-none bg-gray-50">
                     </div>
-
-                    <!-- Location -->
-                    <div class="md:w-64 relative">
-                        <input 
-                            type="text" 
-                            id="search-location" 
-                            placeholder="Your location (e.g. Soweto)" 
-                            class="search-input w-full px-5 py-4 pl-12 rounded-2xl text-lg outline-none"
-                            value="Johannesburg"
-                            oninput="filterFeatured()"
-                        >
-                        <i class="fa-solid fa-location-dot absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 text-xl"></i>
-                        <div class="search-glow"></div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">Password</label>
+                        <input type="password" id="loginPassword" required placeholder="••••••••" class="form-input w-full px-4 py-3 rounded-xl border focus:border-[#f97316] outline-none bg-gray-50">
                     </div>
+                    <button type="submit" class="pill-btn primary-pill w-full text-white py-4 rounded-2xl font-bold hover:bg-orange-600 transition shadow-lg">
+                        Login to Dashboard
+                    </button>
+                </form>
+            </div>
+            <div class="modern-modal-footer text-center text-sm text-gray-600">
+                Not registered yet? 
+                <a href="#join-hustle" onclick="closeLoginModal()" class="text-[#f97316] font-medium hover:underline">Create profile here</a>
+            </div>
+        </div>
+    </div>
 
-                    <!-- Advanced Toggle -->
-                    <button 
-                        onclick="toggleAdvanced()"
-                        class="pill-btn bg-gray-100 text-gray-700 px-6 py-4 rounded-2xl font-medium hover:bg-gray-200 transition flex items-center justify-center md:w-48"
-                    >
-                        <i class="fa-solid fa-sliders mr-2"></i> Advanced
+    <!-- Main Content -->
+    <div id="main-content">
+
+        <header class="bg-[#1e3a8a] py-20 px-4">
+            <div class="max-w-5xl mx-auto text-center text-white">
+                <h1 class="text-4xl md:text-6xl font-extrabold mb-6 tracking-tight animate-fade-in">Local Kasi Hustle Hub</h1>
+                <p class="text-xl text-blue-100 mb-10 max-w-2xl mx-auto">Find vetted local help or list your skills. Connecting communities, one job at a time.</p>
+                
+                <div class="search-container bg-white p-3 rounded-3xl shadow-2xl flex flex-col md:flex-row items-center max-w-4xl mx-auto transform transition hover:scale-[1.01]">
+                    <div class="flex-1 w-full px-4 py-3 border-b md:border-b-0 md:border-r border-gray-200 flex items-center search-input relative">
+                        <i class="fa-solid fa-magnifying-glass text-gray-400 mr-3"></i>
+                        <input type="text" id="search-keyword" placeholder="Name, service, e.g. 'Sipho' or 'Plumbing'" class="w-full outline-none text-gray-800 placeholder-gray-400 relative z-10">
+                        <div class="search-glow rounded-2xl"></div>
+                    </div>
+                    <div class="w-full md:w-56 px-4 py-3 flex items-center search-input relative">
+                        <i class="fa-solid fa-location-dot text-gray-400 mr-3"></i>
+                        <input type="text" id="search-location" placeholder="Location" class="w-full outline-none text-gray-800" value="Soweto">
+                        <div class="search-glow rounded-2xl"></div>
+                    </div>
+                    <button onclick="performSearch()" class="pill-btn primary-pill text-white px-8 py-4 rounded-2xl font-bold hover:bg-orange-600 transition mt-4 md:mt-0 ml-0 md:ml-4 relative z-10 w-full md:w-auto">
+                        <i class="fa-solid fa-search mr-2"></i> Search
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <section class="max-w-7xl mx-auto px-4 py-16">
+            <div class="flex justify-between items-end mb-8">
+                <div>
+                    <h2 class="text-3xl font-extrabold text-gray-900">What do you need?</h2>
+                    <p class="text-gray-600 mt-2">Choose a category to find the right hustler for the job.</p>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
+                <div onclick="filterByCategory('Plumbing')" class="category-card bg-white p-6 rounded-2xl shadow-sm border border-gray-100 cursor-pointer text-center group">
+                    <div class="bg-blue-50 w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-orange-100 transition">
+                        <i class="fa-solid fa-faucet text-xl text-blue-600 group-hover:text-orange-600"></i>
+                    </div>
+                    <h3 class="font-bold text-sm text-gray-800">Plumbing</h3>
+                </div>
+
+                <div onclick="filterByCategory('Solar')" class="category-card bg-white p-6 rounded-2xl shadow-sm border border-gray-100 cursor-pointer text-center group">
+                    <div class="bg-blue-50 w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-orange-100 transition">
+                        <i class="fa-solid fa-solar-panel text-xl text-blue-600 group-hover:text-orange-600"></i>
+                    </div>
+                    <h3 class="font-bold text-sm text-gray-800">Solar & Power</h3>
+                </div>
+
+                <div onclick="filterByCategory('Car Wash')" class="category-card bg-white p-6 rounded-2xl shadow-sm border border-gray-100 cursor-pointer text-center group">
+                    <div class="bg-blue-50 w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-orange-100 transition">
+                        <i class="fa-solid fa-car text-xl text-blue-600 group-hover:text-orange-600"></i>
+                    </div>
+                    <h3 class="font-bold text-sm text-gray-800">Car Wash</h3>
+                </div>
+
+                <div onclick="filterByCategory('Phone Repair')" class="category-card bg-white p-6 rounded-2xl shadow-sm border border-gray-100 cursor-pointer text-center group">
+                    <div class="bg-blue-50 w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-orange-100 transition">
+                        <i class="fa-solid fa-mobile-screen text-xl text-blue-600 group-hover:text-orange-600"></i>
+                    </div>
+                    <h3 class="font-bold text-sm text-gray-800">Phone Repair</h3>
+                </div>
+
+                <div onclick="filterByCategory('Queue Runner')" class="category-card bg-white p-6 rounded-2xl shadow-sm border border-gray-100 cursor-pointer text-center group">
+                    <div class="bg-blue-50 w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-orange-100 transition">
+                        <i class="fa-solid fa-person-running text-xl text-blue-600 group-hover:text-orange-600"></i>
+                    </div>
+                    <h3 class="font-bold text-sm text-gray-800">Errands</h3>
+                </div>
+
+                <div onclick="filterByCategory('Barber')" class="category-card bg-white p-6 rounded-2xl shadow-sm border border-gray-100 cursor-pointer text-center group">
+                    <div class="bg-blue-50 w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-orange-100 transition">
+                        <i class="fa-solid fa-scissors text-xl text-blue-600 group-hover:text-orange-600"></i>
+                    </div>
+                    <h3 class="font-bold text-sm text-gray-800">Barber</h3>
+                </div>
+            </div>
+        </section>
+
+        <section id="featured-section" class="bg-gray-100 py-20 px-4">
+            <div class="max-w-7xl mx-auto">
+                <div class="flex justify-between items-end mb-10">
+                    <div>
+                        <h2 class="text-3xl font-extrabold text-gray-900">Featured Hustlers</h2>
+                        <p id="featured-subtext" class="text-gray-600 mt-2">Verified professionals in your area.</p>
+                    </div>
+                    <button onclick="toggleSeeAll()" id="see-all-btn" class="pill-btn secondary-pill text-sm px-6 py-2 rounded-full font-bold hover:bg-blue-900 transition">
+                        See All
                     </button>
                 </div>
 
-                <!-- Advanced Filters Panel -->
-                <div id="advanced-panel" class="advanced-panel mt-5 px-2">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-                        <!-- Category -->
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Category</label>
-                            <select id="search-category" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-[#f97316] outline-none bg-white" onchange="filterFeatured()">
-                                <option value="">All Categories</option>
-                            </select>
-                        </div>
-
-                        <!-- Min Rate -->
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Min Hourly Rate (R)</label>
-                            <input type="number" id="search-min-rate" min="0" placeholder="e.g. 150" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-[#f97316] outline-none" oninput="filterFeatured()">
-                        </div>
-
-                        <!-- Verified Only -->
-                        <div class="flex items-end">
-                            <label class="flex items-center cursor-pointer">
-                                <input type="checkbox" id="search-verified-only" class="w-5 h-5 text-[#f97316] border-gray-300 rounded focus:ring-[#f97316]" onchange="filterFeatured()" checked>
-                                <span class="ml-3 text-gray-700 font-medium">Verified hustlers only</span>
-                            </label>
-                        </div>
+                <div id="hustlers-container" class="grid md:grid-cols-3 gap-8">
+                    <div class="col-span-3 text-center py-10 text-gray-500">
+                        <i class="fa-solid fa-circle-notch fa-spin text-3xl mb-3"></i>
+                        <p>Loading Hustlers from Kasi...</p>
                     </div>
                 </div>
             </div>
+        </section>
 
-            <div class="flex flex-col sm:flex-row justify-center gap-5 mt-10 max-w-xl mx-auto">
-                <a href="#featured" class="pill-btn bg-white text-[#1e3a8a] px-10 py-5 text-lg font-bold hover:bg-gray-100 transition shadow-lg">
-                    Browse All Hustlers
-                </a>
-                <a href="hustler-signup.html" class="pill-btn border-2 border-white text-white px-10 py-5 text-lg font-bold hover:bg-white hover:text-[#1e3a8a] transition">
-                    Join as a Hustler
-                </a>
+        <section id="join-hustle" class="max-w-4xl mx-auto px-4 py-20 form-section">
+            <div class="bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row border border-gray-100">
+                <div class="bg-[#1e3a8a] p-10 md:w-1/3 text-white flex flex-col justify-center">
+                    <h2 class="text-3xl font-extrabold mb-4">Start Earning.</h2>
+                    <p class="text-blue-100 mb-6">Join 500+ local hustlers making a living through KasiFix.</p>
+                    <ul class="space-y-4 text-sm font-medium">
+                        <li class="flex items-center"><i class="fa-solid fa-check text-orange-500 mr-2"></i> Set your own rates</li>
+                        <li class="flex items-center"><i class="fa-solid fa-check text-orange-500 mr-2"></i> Work in your area</li>
+                        <li class="flex items-center"><i class="fa-solid fa-check text-orange-500 mr-2"></i> Get verified</li>
+                    </ul>
+                </div>
+
+                <div class="p-10 md:w-2/3 bg-white">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-6">Create your Hustler Profile</h3>
+                    
+                    <form id="hustleForm" class="space-y-5">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-1">Full Name</label>
+                                <input type="text" id="inputName" required placeholder="e.g. Sipho Khumalo" class="form-input w-full px-4 py-3 rounded-xl border focus:border-[#f97316] outline-none transition bg-gray-50">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-1">Email</label>
+                                <input type="email" id="inputEmail" required placeholder="sipho@example.com" class="form-input w-full px-4 py-3 rounded-xl border focus:border-[#f97316] outline-none transition bg-gray-50">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-1">WhatsApp Number</label>
+                                <input type="tel" id="inputPhone" required placeholder="081 234 5678" class="form-input w-full px-4 py-3 rounded-xl border focus:border-[#f97316] outline-none transition bg-gray-50">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-1">Your Location (Kasi)</label>
+                                <input type="text" id="inputLocation" required placeholder="e.g. Soweto, Diepkloof" class="form-input w-full px-4 py-3 rounded-xl border focus:border-[#f97316] outline-none transition bg-gray-50">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-1">What is your Hustle?</label>
+                                <select id="inputCategory" class="form-select form-input w-full px-4 py-3 rounded-xl border focus:border-[#f97316] outline-none transition bg-gray-50">
+                                    <option value="Solar & Inverter Setup">Solar & Inverter Setup</option>
+                                    <option value="Plumbing">Plumbing & Leaks</option>
+                                    <option value="Car Wash">Mobile Car Wash</option>
+                                    <option value="Queue Runner">Queue Runner / Errands</option>
+                                    <option value="Barber">Barber / Hair Stylist</option>
+                                    <option value="Transport">Bakkie Hire</option>
+                                    <option value="General">Other / General Handyman</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-1">Hourly Rate (R)</label>
+                                <input type="number" id="inputRate" required placeholder="e.g. 250" class="form-input w-full px-4 py-3 rounded-xl border focus:border-[#f97316] outline-none transition bg-gray-50">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-1">Short Bio</label>
+                            <textarea id="inputBio" required rows="3" placeholder="I have 5 years experience in..." class="form-input w-full px-4 py-3 rounded-xl border focus:border-[#f97316] outline-none transition bg-gray-50"></textarea>
+                        </div>
+
+                        <div class="flex items-center justify-center w-full">
+                            <label for="fileInput" class="file-upload flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-xl cursor-pointer transition">
+                                <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                                    <i class="fa-solid fa-camera text-gray-400 text-2xl mb-2"></i>
+                                    <p id="file-label" class="text-sm text-gray-500 font-semibold">Upload Profile Photo</p>
+                                </div>
+                                <input id="fileInput" type="file" class="hidden" accept="image/*" />
+                            </label>
+                        </div>
+
+                        <div class="flex items-center">
+                            <input type="checkbox" id="termsCheckbox" class="w-4 h-4 text-orange-600 border-gray-300 rounded focus:ring-orange-500">
+                            <label class="ml-2 text-xs text-gray-500">I agree to the KasiFix Safety & Vetting Policy.</label>
+                        </div>
+
+                        <button type="submit" id="submitBtn" disabled class="pill-btn primary-pill w-full text-white py-4 rounded-2xl font-extrabold text-lg shadow-lg hover:bg-orange-600 transition-all transform">
+                            Create Profile
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <footer class="bg-gray-900 text-white mt-auto pt-16 pb-8 border-t border-gray-800">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+                    <div>
+                        <span class="text-2xl font-extrabold text-white mb-6 block">Kasi<span class="text-[#f97316]">Fix</span></span>
+                        <p class="text-gray-400 text-sm leading-relaxed mb-6">
+                            Empowering local economies by connecting vetted skilled professionals with the community. Safe, reliable, and proudly local.
+                        </p>
+                        <div class="flex space-x-4">
+                            <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-[#f97316] transition"><i class="fa-brands fa-facebook-f text-white"></i></a>
+                            <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-[#f97316] transition"><i class="fa-brands fa-twitter text-white"></i></a>
+                            <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-[#f97316] transition"><i class="fa-brands fa-instagram text-white"></i></a>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h4 class="text-lg font-bold mb-6 text-white">For Clients</h4>
+                        <ul class="space-y-3 text-sm text-gray-400">
+                            <li><a href="#" class="hover:text-[#f97316] transition">How it Works</a></li>
+                            <li><a href="#" class="hover:text-[#f97316] transition">Safety & Trust</a></li>
+                            <li><a href="#" class="hover:text-[#f97316] transition">Browse Categories</a></li>
+                            <li><a href="#" class="hover:text-[#f97316] transition">Report an Issue</a></li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h4 class="text-lg font-bold mb-6 text-white">For Hustlers</h4>
+                        <ul class="space-y-3 text-sm text-gray-400">
+                            <li><a href="#" class="hover:text-[#f97316] transition">Join KasiFix</a></li>
+                            <li><a href="#" class="hover:text-[#f97316] transition">Dashboard</a></li>
+                            <li><a href="#" class="hover:text-[#f97316] transition">Resources</a></li>
+                            <li><a href="#" class="hover:text-[#f97316] transition">Community Guidelines</a></li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h4 class="text-lg font-bold mb-6 text-white">Contact Us</h4>
+                        <ul class="space-y-4 text-sm text-gray-400">
+                            <li class="flex items-start">
+                                <i class="fa-solid fa-location-dot mt-1 mr-3 text-[#f97316]"></i>
+                                <span>123 Vilakazi Street,<br>Orlando West, Soweto, 1804</span>
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fa-solid fa-envelope mr-3 text-[#f97316]"></i>
+                                <span>support@kasifix.co.za</span>
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fa-solid fa-phone mr-3 text-[#f97316]"></i>
+                                <span>+27 11 987 6543</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-gray-500">
+                    <p>© 2024 KasiFix (Pty) Ltd. All rights reserved.</p>
+                    <div class="flex space-x-6 mt-4 md:mt-0">
+                        <a href="#" class="hover:text-white">Privacy Policy</a>
+                        <a href="#" class="hover:text-white">Terms of Service</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- Dashboard Section -->
+    <div id="dashboard-section" class="min-h-screen bg-gray-50">
+        <div class="max-w-6xl mx-auto px-4 py-10">
+            <div class="flex justify-between items-center mb-10">
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-900">My Hustler Dashboard</h1>
+                    <p class="text-gray-600">Manage your profile, view earnings & activity</p>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button onclick="handleLogout()" class="pill-btn bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-full font-medium transition">
+                        Logout
+                    </button>
+                    <button onclick="showMainPage()" class="text-[#1e3a8a] hover:underline font-medium">
+                        ← Back to Home
+                    </button>
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="bg-white rounded-2xl shadow-lg p-8 border border-gray-200">
+                    <h2 class="text-xl font-bold mb-6 flex items-center">
+                        <i class="fa-solid fa-user-edit text-[#f97316] mr-3 text-2xl"></i> My Profile
+                    </h2>
+                    <form id="editForm" class="space-y-5">
+                        <input type="hidden" id="editKey">
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-1">Full Name</label>
+                            <input type="text" id="editName" class="form-input w-full px-4 py-3 rounded-xl border focus:border-[#f97316] outline-none bg-gray-50">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-1">Email</label>
+                            <input type="email" id="editEmail" class="form-input w-full px-4 py-3 rounded-xl border focus:border-[#f97316] outline-none bg-gray-50">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-1">WhatsApp Number</label>
+                            <input type="tel" id="editPhone" class="form-input w-full px-4 py-3 rounded-xl border focus:border-[#f97316] outline-none bg-gray-50">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-1">Category</label>
+                            <select id="editCategory" class="form-select form-input w-full px-4 py-3 rounded-xl border focus:border-[#f97316] outline-none bg-gray-50">
+                                <option value="Solar & Inverter Setup">Solar & Inverter Setup</option>
+                                <option value="Plumbing">Plumbing</option>
+                                <option value="Car Wash">Car Wash</option>
+                                <option value="Queue Runner">Queue Runner</option>
+                                <option value="Barber">Barber</option>
+                                <option value="Transport">Bakkie Hire</option>
+                                <option value="General">General</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-1">Location</label>
+                            <input type="text" id="editLocation" class="form-input w-full px-4 py-3 rounded-xl border focus:border-[#f97316] outline-none bg-gray-50">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-1">Hourly Rate (R)</label>
+                            <input type="number" id="editRate" class="form-input w-full px-4 py-3 rounded-xl border focus:border-[#f97316] outline-none bg-gray-50">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-1">Bio</label>
+                            <textarea id="editBio" rows="4" class="form-input w-full px-4 py-3 rounded-xl border focus:border-[#f97316] outline-none bg-gray-50"></textarea>
+                        </div>
+                        <button type="submit" class="pill-btn primary-pill w-full text-white py-4 rounded-2xl font-bold hover:bg-orange-600 transition mt-4">
+                            Update Profile
+                        </button>
+                    </form>
+                </div>
+
+                <div class="md:col-span-2 space-y-8">
+                    <div class="bg-white rounded-2xl shadow-lg p-8 border border-gray-200">
+                        <h2 class="text-xl font-bold mb-6 flex items-center">
+                            <i class="fa-solid fa-chart-line text-[#f97316] mr-3 text-2xl"></i> Business Analytics
+                        </h2>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
+                            <div class="text-center p-6 bg-gray-50 rounded-xl">
+                                <p class="text-3xl font-bold text-[#1e3a8a]">R0</p>
+                                <p class="text-sm text-gray-600 mt-1">Total Earnings</p>
+                            </div>
+                            <div class="text-center p-6 bg-gray-50 rounded-xl">
+                                <p class="text-3xl font-bold text-[#1e3a8a]">0</p>
+                                <p class="text-sm text-gray-600 mt-1">Jobs Completed</p>
+                            </div>
+                            <div class="text-center p-6 bg-gray-50 rounded-xl">
+                                <p class="text-3xl font-bold text-[#1e3a8a]">0</p>
+                                <p class="text-sm text-gray-600 mt-1">Active Bookings</p>
+                            </div>
+                            <div class="text-center p-6 bg-gray-50 rounded-xl">
+                                <p class="text-3xl font-bold text-green-600">0%</p>
+                                <p class="text-sm text-gray-600 mt-1">Response Rate</p>
+                            </div>
+                        </div>
+                        <p class="text-gray-500 text-center py-10">Analytics & earnings tracking coming soon...</p>
+                    </div>
+
+                    <div class="bg-white rounded-2xl shadow-lg p-8 border border-gray-200">
+                        <h2 class="text-xl font-bold mb-6 flex items-center">
+                            <i class="fa-solid fa-calendar-check text-[#f97316] mr-3 text-2xl"></i> Recent Activity
+                        </h2>
+                        <p class="text-gray-500 text-center py-12">No recent activity yet.</p>
+                    </div>
+                </div>
             </div>
         </div>
-    </section>
+    </div>
 
-    <!-- Categories section remains unchanged -->
-    <!-- Featured section remains unchanged -->
+    <!-- Success Modal - Modern style -->
+    <div id="successModal" class="modern-modal-overlay fixed inset-0 hidden flex items-center justify-center z-[100] transition-opacity duration-400">
+        <div class="modern-modal-content text-center">
+            <div class="modern-modal-header relative">
+                <button onclick="closeSuccessModal()" class="absolute top-4 right-5 text-white hover:text-gray-200 transition">
+                    <i class="fa-solid fa-times text-xl"></i>
+                </button>
+                <h3 class="text-2xl font-bold">Ayoba! Profile Received</h3>
+            </div>
+            <div class="modern-modal-body">
+                <div class="modern-success-icon mx-auto">
+                    <i class="fa-solid fa-check text-white text-5xl"></i>
+                </div>
+                <p class="text-gray-700 text-lg mb-6">Siyabonga! Your profile is now live and visible in the Featured section.</p>
+            </div>
+            <div class="modern-modal-footer">
+                <button onclick="closeSuccessModal()" class="pill-btn primary-pill w-full text-white py-4 rounded-2xl font-bold hover:bg-orange-600 transition shadow-lg">
+                    Sharp, I'll check it
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Booking Modal -->
+    <div id="bookingModal" class="fixed inset-0 bg-gray-900 bg-opacity-70 hidden items-center justify-center z-[100] backdrop-blur-sm p-4">
+        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden transform transition-all relative">
+            <button onclick="closeBookingModal()" class="absolute top-4 right-4 text-white hover:text-orange-500 z-10">
+                <i class="fa-solid fa-times text-2xl"></i>
+            </button>
+            <div class="bg-[#1e3a8a] p-6 text-white flex items-center">
+                <div id="modal-img-container" class="bg-white text-[#1e3a8a] w-20 h-20 rounded-2xl flex items-center justify-center font-bold text-2xl mr-4 shadow-lg overflow-hidden shrink-0"></div>
+                <div>
+                    <h3 id="modal-name" class="text-2xl font-bold">Name</h3>
+                    <p id="modal-category" class="text-orange-400 font-medium text-sm">Category</p>
+                </div>
+            </div>
+            <div class="p-8">
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center text-sm font-bold text-gray-700 bg-gray-100 px-3 py-1 rounded-lg">
+                         <i class="fa-solid fa-location-dot text-gray-500 mr-2"></i> <span id="modal-location">Loc</span>
+                    </div>
+                    <div class="flex items-center text-yellow-500 text-sm font-bold">
+                        <i class="fa-solid fa-star mr-1"></i> <span id="modal-rating">5.0</span>
+                    </div>
+                </div>
+                <div class="mb-6">
+                    <h4 class="text-gray-400 text-xs font-bold uppercase tracking-wider mb-2">About</h4>
+                    <p id="modal-bio" class="text-gray-700 text-sm leading-relaxed bg-gray-50 p-4 rounded-xl border border-gray-100"></p>
+                </div>
+                <div class="mb-8">
+                    <h4 class="text-gray-400 text-xs font-bold uppercase tracking-wider mb-2">Hourly Rate</h4>
+                    <p class="text-2xl font-bold text-[#1e3a8a]">R<span id="modal-rate">0</span><span class="text-sm font-normal text-gray-500">/hr</span></p>
+                </div>
+                <div class="space-y-3">
+                    <a id="whatsapp-link" href="#" target="_blank" class="whatsapp-pill flex items-center justify-center w-full text-white py-4 rounded-2xl font-bold text-lg hover:bg-green-600 transition shadow-lg">
+                        <i class="fa-brands fa-whatsapp text-2xl mr-2"></i> Chat on WhatsApp
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script>
-        // Firebase Config
+        // *** CLOUDINARY CONFIG ***
+        const CLOUD_NAME = 'dv5bsbydu'; 
+        const UPLOAD_PRESET = 'admin_tlaka'; 
+
+        // *** FIREBASE CONFIG ***
         const firebaseConfig = {
             apiKey: "AIzaSyC4kR_HiywObXho8Zh20JyzC40iVrZq3lo",
             authDomain: "kasifix-5b102.firebaseapp.com",
@@ -205,119 +756,381 @@
             appId: "1:800882399249:web:f8ecdfb12fa98d7a5779b0"
         };
 
-        firebase.initializeApp(firebaseConfig);
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
         const db = firebase.database();
 
         let allHustlers = [];
-        let categories = new Set();
+        let viewAll = false;
+        let currentUser = null;
+        let currentUserProfileKey = null;
 
-        // Load verified hustlers + collect categories
-        db.ref('hustlers').on('value', (snapshot) => {
-            allHustlers = [];
-            const data = snapshot.val();
-            if (data) {
-                Object.keys(data).forEach(key => {
-                    const h = data[key];
-                    if (h.verified === true) {
-                        allHustlers.push({ id: key, ...h });
-                        if (h.category) categories.add(h.category.trim());
-                    }
-                });
-            }
-            populateCategoryFilter();
-            filterFeatured(); // initial render
-        });
+        // Flag to ignore the next snapshot after creating a new profile
+        let ignoreNextSnapshot = false;
 
-        function populateCategoryFilter() {
-            const select = document.getElementById('search-category');
-            // Clear existing options except first
-            while (select.options.length > 1) select.remove(1);
+        // ────────────────────────────────────────────────
+        //  MODAL HELPERS (modern style)
+        // ────────────────────────────────────────────────
 
-            [...categories].sort().forEach(cat => {
-                const opt = document.createElement('option');
-                opt.value = cat;
-                opt.textContent = cat;
-                select.appendChild(opt);
-            });
+        function openModal(modalId) {
+            const modal = document.getElementById(modalId);
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            setTimeout(() => modal.classList.add('show'), 10);
+            document.body.classList.add('no-scroll');
         }
 
-        function toggleAdvanced() {
-            const panel = document.getElementById('advanced-panel');
-            panel.classList.toggle('open');
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            modal.classList.remove('show');
+            setTimeout(() => {
+                modal.classList.remove('flex');
+                modal.classList.add('hidden');
+                document.body.classList.remove('no-scroll');
+            }, 400);
         }
 
-        // Live filtering
-        function filterFeatured() {
-            const keyword   = document.getElementById('search-keyword').value.toLowerCase().trim();
-            const location  = document.getElementById('search-location').value.toLowerCase().trim();
-            const category  = document.getElementById('search-category').value.trim();
-            const minRate   = parseInt(document.getElementById('search-min-rate').value) || 0;
-            const verifiedOnly = document.getElementById('search-verified-only').checked;
-
-            const filtered = allHustlers.filter(h => {
-                const nameMatch     = (h.name || '').toLowerCase().includes(keyword);
-                const catMatch      = (h.category || '').toLowerCase().includes(keyword);
-                const bioMatch      = (h.bio || '').toLowerCase().includes(keyword);
-                const locMatch      = !location || (h.location || '').toLowerCase().includes(location);
-
-                const categoryMatch = !category || (h.category || '').trim() === category;
-                const rateMatch     = !minRate || (parseInt(h.rate) || 0) >= minRate;
-                const verifiedMatch = !verifiedOnly || h.verified === true;
-
-                return (nameMatch || catMatch || bioMatch) && locMatch && categoryMatch && rateMatch && verifiedMatch;
-            });
-
-            renderFeatured(filtered);
+        function openLoginModal() {
+            openModal('loginModal');
         }
 
-        function renderFeatured(hustlers) {
-            const grid = document.getElementById('hustlers-grid');
+        function closeLoginModal() {
+            closeModal('loginModal');
+            document.getElementById('loginForm').reset();
+        }
 
-            if (hustlers.length === 0) {
-                grid.innerHTML = `
-                    <div class="col-span-full text-center py-20 text-gray-600">
-                        <i class="fa-solid fa-search text-6xl mb-6 text-gray-300"></i>
-                        <p class="text-xl">No matching hustlers found.<br/>Try adjusting your filters.</p>
-                    </div>`;
+        function closeSuccessModal() {
+            closeModal('successModal');
+        }
+
+        // ────────────────────────────────────────────────
+        //  LOGIN LOGIC
+        // ────────────────────────────────────────────────
+
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value.trim().toLowerCase();
+
+            const found = allHustlers.find(h => h.email?.toLowerCase() === email);
+
+            if (!found) {
+                alert("No hustler profile found with this email.\nPlease create a profile first.");
                 return;
             }
 
-            grid.innerHTML = '';
-            hustlers.slice(0, 9).forEach(h => {
-                const card = `
-                <div class="bg-white rounded-2xl shadow-lg overflow-hidden card-hover">
-                    <div class="p-6">
-                        <div class="flex items-center mb-4">
-                            ${h.imageUrl ? 
-                                `<img src="${h.imageUrl}" alt="${h.name}" class="w-16 h-16 rounded-full object-cover mr-4">` :
-                                `<div class="w-16 h-16 rounded-full bg-gray-200 flex items-center justify-center text-2xl font-bold text-gray-600 mr-4">${h.name?.charAt(0) || '?'}</div>`
-                            }
-                            <div>
-                                <h3 class="font-bold text-lg">${h.name || 'Unnamed'}</h3>
-                                <p class="text-[#f97316] font-medium">${h.category || '—'}</p>
-                            </div>
-                        </div>
-                        <p class="text-gray-600 mb-4 line-clamp-3">${h.bio || 'No bio available'}</p>
-                        <div class="flex justify-between items-center">
-                            <span class="font-bold text-xl">R${h.rate || '—'}/hr</span>
-                            <a href="https://wa.me/${h.phone?.replace(/\D/g,'')}" target="_blank" 
-                               class="bg-green-600 text-white px-5 py-2 rounded-full text-sm font-medium hover:bg-green-700 transition">
-                                <i class="fab fa-whatsapp mr-1"></i> Chat
-                            </a>
-                        </div>
-                    </div>
-                </div>`;
-                grid.innerHTML += card;
-            });
+            currentUser = { email: found.email, key: found.id, data: found };
+            currentUserProfileKey = found.id;
+
+            closeLoginModal();
+            showDashboard();
+            alert("Welcome back, " + found.name + "!");
+        });
+
+        // ────────────────────────────────────────────────
+        //  DASHBOARD & PAGE SWITCHING
+        // ────────────────────────────────────────────────
+
+        function handleLogout() {
+            currentUser = null;
+            currentUserProfileKey = null;
+            showMainPage();
+            alert("You have been logged out.");
         }
 
-        // Category cards still auto-fill keyword
-        function filterCategory(cat) {
-            document.getElementById('search-keyword').value = cat;
-            document.getElementById('search-category').value = cat;
-            filterFeatured();
-            document.getElementById('featured').scrollIntoView({ behavior: 'smooth' });
+        function showDashboard() {
+            document.getElementById('main-content').style.display = 'none';
+            document.getElementById('dashboard-section').style.display = 'block';
+            document.getElementById('login-btn').classList.add('hidden');
+            document.getElementById('dashboard-btn').classList.remove('hidden');
+
+            if (currentUserProfileKey) {
+                const h = allHustlers.find(item => item.id === currentUserProfileKey);
+                if (h) {
+                    document.getElementById('editKey').value = h.id;
+                    document.getElementById('editName').value = h.name || '';
+                    document.getElementById('editEmail').value = h.email || '';
+                    document.getElementById('editPhone').value = h.phone || '';
+                    document.getElementById('editCategory').value = h.category || '';
+                    document.getElementById('editLocation').value = h.location || '';
+                    document.getElementById('editRate').value = h.rate || '';
+                    document.getElementById('editBio').value = h.bio || '';
+                }
+            }
         }
+
+        function showMainPage() {
+            document.getElementById('main-content').style.display = 'block';
+            document.getElementById('dashboard-section').style.display = 'none';
+            document.getElementById('login-btn').classList.remove('hidden');
+            document.getElementById('dashboard-btn').classList.add('hidden');
+        }
+
+        // ────────────────────────────────────────────────
+        //  PROFILE EDIT
+        // ────────────────────────────────────────────────
+
+        document.getElementById('editForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            if (!currentUserProfileKey) {
+                alert("You must be logged in to update your profile.");
+                return;
+            }
+
+            const updates = {
+                name: document.getElementById('editName').value,
+                email: document.getElementById('editEmail').value,
+                phone: document.getElementById('editPhone').value,
+                category: document.getElementById('editCategory').value,
+                location: document.getElementById('editLocation').value,
+                rate: document.getElementById('editRate').value,
+                bio: document.getElementById('editBio').value
+            };
+
+            db.ref('hustlers/' + currentUserProfileKey).update(updates)
+                .then(() => {
+                    alert("Profile updated successfully!");
+                    const idx = allHustlers.findIndex(h => h.id === currentUserProfileKey);
+                    if (idx !== -1) {
+                        allHustlers[idx] = { ...allHustlers[idx], ...updates };
+                    }
+                    performSearch();
+                })
+                .catch(err => alert("Error: " + err.message));
+        });
+
+        // ────────────────────────────────────────────────
+        //  PROFILE CREATION & DISPLAY LOGIC
+        // ────────────────────────────────────────────────
+
+        const container = document.getElementById('hustlers-container');
+        const termsCheckbox = document.getElementById('termsCheckbox');
+        const submitBtn = document.getElementById('submitBtn');
+        const fileInput = document.getElementById('fileInput');
+
+        termsCheckbox.addEventListener('change', function() {
+            submitBtn.disabled = !this.checked;
+        });
+
+        fileInput.addEventListener('change', function() {
+            if(this.files && this.files[0]) {
+                document.getElementById('file-label').innerText = "Selected: " + this.files[0].name;
+            }
+        });
+
+        async function uploadImageToCloudinary(file) {
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('upload_preset', UPLOAD_PRESET);
+
+            try {
+                const response = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.json();
+                return data.secure_url; 
+            } catch (error) {
+                console.error("Cloudinary upload error:", error);
+                return null;
+            }
+        }
+
+        function performSearch() {
+            const keyword = document.getElementById('search-keyword').value.toLowerCase();
+            const locationInput = document.getElementById('search-location').value.toLowerCase();
+            const featuredTitle = document.getElementById('featured-subtext');
+
+            let filtered = allHustlers.filter(h => {
+                const matchesKeyword = h.name.toLowerCase().includes(keyword) ||
+                                     h.category.toLowerCase().includes(keyword) || 
+                                     h.bio.toLowerCase().includes(keyword);
+                const hLocation = (h.location || '').toLowerCase();
+                const matchesLocation = locationInput === '' ? true : hLocation.includes(locationInput);
+                return matchesKeyword && matchesLocation;
+            });
+
+            if (keyword) {
+                featuredTitle.innerText = `Results for "${keyword}"`;
+                viewAll = true; 
+            } else {
+                featuredTitle.innerText = "Verified professionals in your area.";
+            }
+
+            renderHustlers(filtered);
+        }
+
+        function renderHustlers(hustlersToRender) {
+            container.innerHTML = ''; 
+
+            if (hustlersToRender.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-3 text-center py-10">
+                        <div class="bg-gray-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                            <i class="fa-regular fa-folder-open text-gray-400 text-2xl"></i>
+                        </div>
+                        <p class="text-gray-500 font-medium">No hustlers found matching your criteria.</p>
+                        <button onclick="document.getElementById('search-keyword').value=''; performSearch()" class="pill-btn secondary-pill text-sm px-6 py-2 rounded-full font-bold mt-2 hover:bg-blue-900 transition">Clear Filters</button>
+                    </div>
+                `;
+                return;
+            }
+
+            const displayList = viewAll ? hustlersToRender : hustlersToRender.slice(0, 3);
+
+            displayList.forEach(h => {
+                const initial = h.name.charAt(0).toUpperCase();
+                const rating = h.rating || (4 + Math.random()).toFixed(1); 
+                
+                let imageHtml = h.imageUrl 
+                    ? `<img src="${h.imageUrl}" alt="${h.name}" class="card-image w-14 h-14 rounded-2xl object-cover bg-gray-100">`
+                    : `<div class="bg-gray-100 w-14 h-14 rounded-2xl flex items-center justify-center font-bold text-xl text-gray-600">${initial}</div>`;
+
+                const cardHTML = `
+                <div class="hustler-card bg-white rounded-3xl overflow-hidden shadow-lg border border-gray-200 flex flex-col h-full transform transition">
+                    <div class="p-8 flex-grow relative z-10">
+                        <div class="flex justify-between mb-4">
+                            ${imageHtml}
+                            <span class="bg-green-100 text-green-700 text-xs font-bold px-3 py-1 rounded-full flex items-center h-fit">
+                                <i class="fa-solid fa-shield-check mr-1"></i> LISTED
+                            </span>
+                        </div>
+                        <h4 class="text-xl font-bold text-gray-900 line-clamp-1">${h.name}</h4>
+                        <p class="text-orange-500 font-semibold mb-2 text-sm">${h.category}</p>
+                        <p class="text-gray-500 text-xs mb-2"><i class="fa-solid fa-map-marker-alt mr-1"></i> ${h.location}</p>
+                        <p class="text-gray-500 text-xs mb-4 line-clamp-2 min-h-[2.5em]">${h.bio}</p>
+                        <div class="flex items-center text-gray-500 text-sm mb-6">
+                            <i class="fa-solid fa-star text-yellow-400 mr-1"></i> ${rating} (24 Reviews)
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center border-t border-gray-100 bg-gray-50 px-8 py-4 mt-auto">
+                        <span class="text-xl font-bold text-gray-900">R${h.rate}<small class="text-xs font-normal text-gray-500">/hr</small></span>
+                        <button onclick="openBookingModal('${h.id}')" class="pill-btn secondary-pill text-sm px-5 py-2 rounded-full font-bold hover:bg-blue-900 transition shadow-md">Book</button>
+                    </div>
+                </div>`;
+                container.innerHTML += cardHTML;
+            });
+
+            const seeAllBtn = document.getElementById('see-all-btn');
+            if (hustlersToRender.length <= 3) seeAllBtn.style.display = 'none';
+            else {
+                seeAllBtn.style.display = 'block';
+                seeAllBtn.innerText = viewAll ? "Show Less" : "See All";
+            }
+        }
+
+        // Listen for changes – but skip the next one after we just created a profile
+        db.ref('hustlers').on('value', (snapshot) => {
+            if (ignoreNextSnapshot) {
+                ignoreNextSnapshot = false;
+                return; // skip this snapshot (it's stale – we already have the optimistic update)
+            }
+
+            const data = snapshot.val();
+            allHustlers = [];
+            if (data) {
+                Object.keys(data).forEach(key => {
+                    allHustlers.push({ id: key, ...data[key] });
+                });
+                allHustlers.reverse();
+            }
+            performSearch(); 
+        });
+
+        function filterByCategory(category) {
+            document.getElementById('search-keyword').value = category;
+            viewAll = true; 
+            performSearch();
+            document.getElementById('featured-section').scrollIntoView({behavior: 'smooth'});
+        }
+
+        function toggleSeeAll() {
+            viewAll = !viewAll;
+            performSearch();
+        }
+
+        document.getElementById('search-keyword').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') performSearch();
+        });
+
+        const form = document.getElementById('hustleForm');
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const originalText = submitBtn.innerText;
+            submitBtn.innerText = "Creating...";
+            submitBtn.disabled = true;
+
+            let imageUrl = null;
+            if (fileInput.files.length > 0) {
+                imageUrl = await uploadImageToCloudinary(fileInput.files[0]);
+            }
+
+            const newHustler = {
+                name: document.getElementById('inputName').value,
+                email: document.getElementById('inputEmail').value,
+                phone: document.getElementById('inputPhone').value,
+                category: document.getElementById('inputCategory').value,
+                bio: document.getElementById('inputBio').value,
+                location: document.getElementById('inputLocation').value,
+                rate: document.getElementById('inputRate').value,
+                imageUrl: imageUrl,
+                timestamp: Date.now()
+            };
+
+            const newRef = db.ref('hustlers').push();
+
+            // Tell the listener to ignore the next snapshot (prevents overwrite)
+            ignoreNextSnapshot = true;
+
+            newRef.set(newHustler).then(() => {
+                // Optimistic update – add immediately
+                allHustlers.unshift({ id: newRef.key, ...newHustler });
+                performSearch(); // show it right away
+                
+                openModal('successModal');
+
+                form.reset();
+                document.getElementById('file-label').innerText = "Upload Profile Photo";
+                submitBtn.innerText = originalText;
+                submitBtn.disabled = true;
+                termsCheckbox.checked = false;
+            }).catch(err => {
+                ignoreNextSnapshot = false;
+                alert("Error: " + err.message);
+                submitBtn.innerText = originalText;
+                submitBtn.disabled = false;
+            });
+        });
+
+        function openBookingModal(hustlerId) {
+            const h = allHustlers.find(item => item.id === hustlerId);
+            if (!h) return;
+            const imgContainer = document.getElementById('modal-img-container');
+            imgContainer.innerHTML = h.imageUrl ? `<img src="${h.imageUrl}" class="w-full h-full object-cover">` : h.name.charAt(0);
+            
+            document.getElementById('modal-name').innerText = h.name;
+            document.getElementById('modal-category').innerText = h.category;
+            document.getElementById('modal-bio').innerText = h.bio;
+            document.getElementById('modal-rate').innerText = h.rate;
+            document.getElementById('modal-location').innerText = h.location;
+            
+            const waLink = `https://wa.me/${h.phone.replace(/\s/g, '').replace('0', '27')}`;
+            document.getElementById('whatsapp-link').href = waLink;
+
+            document.getElementById('bookingModal').classList.remove('hidden');
+            document.getElementById('bookingModal').classList.add('flex');
+            document.body.classList.add('no-scroll');
+        }
+
+        function closeBookingModal() {
+            document.getElementById('bookingModal').classList.add('hidden');
+            document.getElementById('bookingModal').classList.remove('flex');
+            document.body.classList.remove('no-scroll');
+        }
+
+        // Initial state
+        showMainPage();
     </script>
 </body>
 </html>
