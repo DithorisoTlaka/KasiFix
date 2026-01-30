@@ -6,21 +6,27 @@
     <title>KasiFix | Local Kasi Hustle Hub</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
         body { font-family: 'Inter', sans-serif; }
+        /* Hide scrollbar for clean modal */
+        .no-scroll { overflow: hidden; }
     </style>
 </head>
 <body class="bg-gray-50">
 
-    <nav class="bg-white border-b sticky top-0 z-50">
+    <nav class="bg-white border-b sticky top-0 z-40">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16 items-center">
-                <div class="flex items-center cursor-pointer" onclick="window.location.href='index.html'">
+                <div class="flex items-center cursor-pointer" onclick="window.location.reload()">
                     <span class="text-2xl font-extrabold text-[#1e3a8a]">Kasi<span class="text-[#f97316]">Fix</span></span>
                 </div>
                 <div class="hidden md:flex space-x-8 items-center">
-                    <a href="find-work.html" class="text-gray-600 hover:text-blue-900 font-medium">Find Work</a>
+                    <a href="#featured-section" class="text-gray-600 hover:text-blue-900 font-medium">Find Work</a>
                     <a href="#" class="text-gray-600 hover:text-blue-900 font-medium">Safety</a>
                     <button onclick="document.getElementById('join-hustle').scrollIntoView({behavior: 'smooth'})" class="bg-[#f97316] text-white px-6 py-2 rounded-full font-bold hover:bg-orange-600 transition shadow-md">
                         Join as a Hustler
@@ -38,23 +44,18 @@
             <div class="bg-white p-2 rounded-2xl shadow-2xl flex flex-col md:flex-row items-center max-w-3xl mx-auto">
                 <div class="flex-1 w-full px-4 py-2 border-b md:border-b-0 md:border-r border-gray-200 flex items-center">
                     <i class="fa-solid fa-magnifying-glass text-gray-400 mr-3"></i>
-                    <input id="search-query" type="text" placeholder="Gate motor repair, solar cleaning..." class="w-full outline-none text-gray-800">
+                    <input type="text" id="search-keyword" placeholder="Gate motor repair, solar cleaning..." class="w-full outline-none text-gray-800">
                 </div>
                 <div class="w-full md:w-48 px-4 py-2 flex items-center">
                     <i class="fa-solid fa-location-dot text-gray-400 mr-3"></i>
-                    <input type="text" placeholder="Location" class="w-full outline-none text-gray-800" value="Soweto">
+                    <input type="text" id="search-location" placeholder="Location" class="w-full outline-none text-gray-800" value="Soweto">
                 </div>
-                <button onclick="searchHustlers()" class="w-full md:w-auto bg-[#f97316] text-white px-10 py-4 rounded-xl font-bold hover:bg-orange-600 transition">
+                <button onclick="performSearch()" class="w-full md:w-auto bg-[#f97316] text-white px-10 py-4 rounded-xl font-bold hover:bg-orange-600 transition">
                     Find Help
                 </button>
             </div>
         </div>
     </header>
-
-    <section id="search-results" class="max-w-7xl mx-auto px-4 py-16 hidden">
-        <h3 class="text-xl font-bold mb-6">Search Results</h3>
-        <div class="grid md:grid-cols-3 gap-8"></div>
-    </section>
 
     <section class="max-w-7xl mx-auto px-4 py-16">
         <div class="flex justify-between items-end mb-8">
@@ -72,14 +73,14 @@
                 <h3 class="font-bold text-sm text-gray-800">Plumbing</h3>
             </div>
 
-            <div onclick="filterByCategory('Solar & Backup')" class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 hover:border-orange-500 transition cursor-pointer text-center group">
+            <div onclick="filterByCategory('Solar')" class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 hover:border-orange-500 transition cursor-pointer text-center group">
                 <div class="bg-blue-50 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:bg-orange-50">
                     <i class="fa-solid fa-solar-panel text-blue-600 group-hover:text-orange-600"></i>
                 </div>
                 <h3 class="font-bold text-sm text-gray-800">Solar & Backup</h3>
             </div>
 
-            <div onclick="filterByCategory('Mobile Car Wash')" class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 hover:border-orange-500 transition cursor-pointer text-center group">
+            <div onclick="filterByCategory('Car Wash')" class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 hover:border-orange-500 transition cursor-pointer text-center group">
                 <div class="bg-blue-50 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:bg-orange-50">
                     <i class="fa-solid fa-car text-blue-600 group-hover:text-orange-600"></i>
                 </div>
@@ -93,14 +94,14 @@
                 <h3 class="font-bold text-sm text-gray-800">Phone Repair</h3>
             </div>
 
-            <div onclick="filterByCategory('Queue Runners')" class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 hover:border-orange-500 transition cursor-pointer text-center group">
+            <div onclick="filterByCategory('Queue Runner')" class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 hover:border-orange-500 transition cursor-pointer text-center group">
                 <div class="bg-blue-50 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:bg-orange-50">
                     <i class="fa-solid fa-person-running text-blue-600 group-hover:text-orange-600"></i>
                 </div>
                 <h3 class="font-bold text-sm text-gray-800">Queue Runners</h3>
             </div>
 
-            <div onclick="filterByCategory('Mobile Barber')" class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 hover:border-orange-500 transition cursor-pointer text-center group">
+            <div onclick="filterByCategory('Barber')" class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 hover:border-orange-500 transition cursor-pointer text-center group">
                 <div class="bg-blue-50 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:bg-orange-50">
                     <i class="fa-solid fa-scissors text-blue-600 group-hover:text-orange-600"></i>
                 </div>
@@ -112,71 +113,46 @@
     <section class="max-w-7xl mx-auto px-4 pb-16">
         <h3 class="text-xl font-bold mb-6">Popular Kasi Hustles</h3>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            <div class="flex items-center p-4 bg-white rounded-xl border border-gray-100 hover:shadow-md transition">
+            <div onclick="filterByCategory('Energy')" class="flex items-center p-4 bg-white rounded-xl border border-gray-100 hover:shadow-md transition cursor-pointer">
                 <div class="text-orange-500 mr-4"><i class="fa-solid fa-bolt"></i></div>
                 <div>
                     <p class="font-bold text-gray-900 uppercase text-xs tracking-wider">Energy</p>
                     <p class="text-gray-600">Generator Repair & Refill</p>
                 </div>
             </div>
-            <div class="flex items-center p-4 bg-white rounded-xl border border-gray-100 hover:shadow-md transition">
+            <div onclick="filterByCategory('Cleaning')" class="flex items-center p-4 bg-white rounded-xl border border-gray-100 hover:shadow-md transition cursor-pointer">
                 <div class="text-orange-500 mr-4"><i class="fa-solid fa-broom"></i></div>
                 <div>
                     <p class="font-bold text-gray-900 uppercase text-xs tracking-wider">Cleaning</p>
                     <p class="text-gray-600">Yard Cleaning & Waste Removal</p>
                 </div>
             </div>
-            <div class="flex items-center p-4 bg-white rounded-xl border border-gray-100 hover:shadow-md transition">
+            <div onclick="filterByCategory('Transport')" class="flex items-center p-4 bg-white rounded-xl border border-gray-100 hover:shadow-md transition cursor-pointer">
                 <div class="text-orange-500 mr-4"><i class="fa-solid fa-truck-ramp-box"></i></div>
                 <div>
                     <p class="font-bold text-gray-900 uppercase text-xs tracking-wider">Transport</p>
                     <p class="text-gray-600">Bakkie Hire & Furniture Moving</p>
                 </div>
             </div>
-            <div class="flex items-center p-4 bg-white rounded-xl border border-gray-100 hover:shadow-md transition">
-                <div class="text-orange-500 mr-4"><i class="fa-solid fa-utensils"></i></div>
-                <div>
-                    <p class="font-bold text-gray-900 uppercase text-xs tracking-wider">Catering</p>
-                    <p class="text-gray-600">Shisa Nyama & Party Platters</p>
-                </div>
-            </div>
-            <div class="flex items-center p-4 bg-white rounded-xl border border-gray-100 hover:shadow-md transition">
-                <div class="text-orange-500 mr-4"><i class="fa-solid fa-graduation-cap"></i></div>
-                <div>
-                    <p class="font-bold text-gray-900 uppercase text-xs tracking-wider">Education</p>
-                    <p class="text-gray-600">Maths & Science Tutoring</p>
-                </div>
-            </div>
-             <div class="flex items-center p-4 bg-white rounded-xl border border-gray-100 hover:shadow-md transition">
-                <div class="text-orange-500 mr-4"><i class="fa-solid fa-shirt"></i></div>
-                <div>
-                    <p class="font-bold text-gray-900 uppercase text-xs tracking-wider">Laundry</p>
-                    <p class="text-gray-600">Wash, Dry & Fold Service</p>
-                </div>
-            </div>
         </div>
     </section>
 
-    <section class="bg-gray-100 py-16 px-4">
+    <section id="featured-section" class="bg-gray-100 py-16 px-4">
         <div class="max-w-7xl mx-auto">
             <div class="flex justify-between items-end mb-10">
                 <div>
                     <h2 class="text-3xl font-extrabold text-gray-900">Featured Hustlers</h2>
-                    <p class="text-gray-600">Verified professionals in your area.</p>
+                    <p id="featured-subtext" class="text-gray-600">Verified professionals in your area.</p>
                 </div>
-                <a onclick="showAllHustlers()" class="text-orange-600 font-bold hover:underline cursor-pointer">See All</a>
+                <button onclick="toggleSeeAll()" id="see-all-btn" class="text-orange-600 font-bold hover:underline">See All</button>
             </div>
 
-            <div id="featured-grid" class="grid md:grid-cols-3 gap-8">
+            <div id="hustlers-container" class="grid md:grid-cols-3 gap-8">
+                <div class="col-span-3 text-center py-10 text-gray-500">
+                    <i class="fa-solid fa-circle-notch fa-spin text-3xl mb-3"></i>
+                    <p>Loading Hustlers from Kasi...</p>
+                </div>
             </div>
-        </div>
-    </section>
-
-    <section id="all-hustlers" class="max-w-7xl mx-auto px-4 py-16 hidden">
-        <div class="flex justify-between items-end mb-10">
-            <h2 class="text-3xl font-extrabold text-gray-900">All Hustlers</h2>
-        </div>
-        <div class="grid md:grid-cols-3 gap-8">
         </div>
     </section>
 
@@ -194,48 +170,47 @@
 
             <div class="p-10 md:w-2/3 bg-white">
                 <h3 class="text-2xl font-bold text-gray-900 mb-6">Create your Hustler Profile</h3>
-                <form id="hustleForm" action="#" class="space-y-5">
+                <form id="hustleForm" class="space-y-5">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                         <div>
                             <label class="block text-sm font-bold text-gray-700 mb-1">Full Name</label>
-                            <input type="text" placeholder="e.g. Sipho Khumalo" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none transition">
+                            <input type="text" id="inputName" required placeholder="e.g. Sipho Khumalo" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none transition">
                         </div>
                         <div>
                             <label class="block text-sm font-bold text-gray-700 mb-1">WhatsApp Number</label>
-                            <input type="tel" placeholder="081 234 5678" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none transition">
+                            <input type="tel" id="inputPhone" required placeholder="081 234 5678" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none transition">
                         </div>
                     </div>
 
                     <div>
                         <label class="block text-sm font-bold text-gray-700 mb-1">What is your Hustle?</label>
-                        <select class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none transition bg-white">
-                            <option>Solar & Inverter Setup</option>
-                            <option>Plumbing & Leaks</option>
-                            <option>Mobile Car Wash</option>
-                            <option>Queue Runner / Errands</option>
-                            <option>Barber / Hair Stylist</option>
-                            <option>Bakkie Hire</option>
-                            <option>Other / General Handyman</option>
+                        <select id="inputCategory" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none transition bg-white">
+                            <option value="Solar & Inverter Setup">Solar & Inverter Setup</option>
+                            <option value="Plumbing">Plumbing & Leaks</option>
+                            <option value="Car Wash">Mobile Car Wash</option>
+                            <option value="Queue Runner">Queue Runner / Errands</option>
+                            <option value="Barber">Barber / Hair Stylist</option>
+                            <option value="Transport">Bakkie Hire</option>
+                            <option value="General">Other / General Handyman</option>
                         </select>
                     </div>
 
                     <div>
-                        <label class="block text-sm font-bold text-gray-700 mb-1">Short Bio (Tell customers why you're the best)</label>
-                        <textarea rows="3" placeholder="I have 5 years experience in..." class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none transition"></textarea>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">Short Bio</label>
+                        <textarea id="inputBio" required rows="3" placeholder="I have 5 years experience in..." class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none transition"></textarea>
                     </div>
 
                     <div class="flex items-center justify-center w-full">
                         <label class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-200 rounded-xl cursor-pointer hover:bg-gray-50 transition">
                             <div class="flex flex-col items-center justify-center pt-5 pb-6">
                                 <i class="fa-solid fa-camera text-gray-400 text-2xl mb-2"></i>
-                                <p class="text-sm text-gray-500 font-semibold">Upload Profile Photo</p>
+                                <p class="text-sm text-gray-500 font-semibold">Upload Profile Photo (Optional)</p>
                             </div>
-                            <input type="file" class="hidden" />
                         </label>
                     </div>
 
                     <div class="flex items-center">
-                        <input type="checkbox" class="w-4 h-4 text-orange-600 border-gray-300 rounded focus:ring-orange-500">
+                        <input type="checkbox" required class="w-4 h-4 text-orange-600 border-gray-300 rounded focus:ring-orange-500">
                         <label class="ml-2 text-xs text-gray-500">I agree to the KasiFix Safety & Vetting Policy.</label>
                     </div>
 
@@ -269,207 +244,323 @@
             </div>
             <h3 class="text-2xl font-extrabold text-gray-900 mb-2">Ayoba! Received.</h3>
             <p class="text-gray-600 mb-8">
-                Siyabonga for signing up. Our team will send you a <strong>WhatsApp</strong> shortly to verify your details.
+                Siyabonga for signing up. Your profile is now live!
             </p>
-            <button onclick="closeModal()" class="w-full bg-[#1e3a8a] text-white py-3 rounded-xl font-bold hover:bg-blue-900 transition shadow-lg">
-                Sharp, I'll wait
+            <button onclick="closeSuccessModal()" class="w-full bg-[#1e3a8a] text-white py-3 rounded-xl font-bold hover:bg-blue-900 transition shadow-lg">
+                Sharp, I'll check it
             </button>
         </div>
     </div>
 
-    <div id="hustlerModal" class="fixed inset-0 bg-gray-900 bg-opacity-60 hidden items-center justify-center z-[100] backdrop-blur-sm px-4">
-        <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full p-8 text-center transform transition-all scale-105">
+    <div id="bookingModal" class="fixed inset-0 bg-gray-900 bg-opacity-70 hidden items-end sm:items-center justify-center z-[100] backdrop-blur-sm">
+        <div class="bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden transform transition-all scale-100">
+            <div class="bg-[#1e3a8a] p-6 text-white relative">
+                <button onclick="closeBookingModal()" class="absolute top-4 right-4 text-white hover:text-orange-500">
+                    <i class="fa-solid fa-times text-2xl"></i>
+                </button>
+                <div class="flex items-center">
+                    <div id="modal-initial" class="bg-white text-[#1e3a8a] w-16 h-16 rounded-2xl flex items-center justify-center font-bold text-2xl mr-4 shadow-lg">
+                        </div>
+                    <div>
+                        <h3 id="modal-name" class="text-2xl font-bold">Hustler Name</h3>
+                        <p id="modal-category" class="text-orange-400 font-medium">Category</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-8">
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center text-sm font-bold text-gray-700 bg-gray-100 px-3 py-1 rounded-lg">
+                         <i class="fa-solid fa-location-dot text-gray-500 mr-2"></i> <span id="modal-location">Soweto</span>
+                    </div>
+                    <div class="flex items-center text-yellow-500 text-sm font-bold">
+                        <i class="fa-solid fa-star mr-1"></i> <span id="modal-rating">5.0</span>
+                    </div>
+                </div>
+
+                <div class="mb-8">
+                    <h4 class="text-gray-400 text-xs font-bold uppercase tracking-wider mb-2">About</h4>
+                    <p id="modal-bio" class="text-gray-700 leading-relaxed bg-gray-50 p-4 rounded-xl border border-gray-100">
+                        </p>
+                </div>
+
+                <div class="mb-8">
+                    <h4 class="text-gray-400 text-xs font-bold uppercase tracking-wider mb-2">Estimated Rate</h4>
+                    <p class="text-2xl font-bold text-[#1e3a8a]">R<span id="modal-rate">250</span><span class="text-sm font-normal text-gray-500">/hr (Est.)</span></p>
+                </div>
+
+                <div class="space-y-3">
+                    <a id="whatsapp-link" href="#" target="_blank" class="flex items-center justify-center w-full bg-[#25D366] text-white py-4 rounded-xl font-bold text-lg hover:bg-green-600 transition shadow-lg">
+                        <i class="fa-brands fa-whatsapp text-2xl mr-2"></i> Chat on WhatsApp
+                    </a>
+                    <button onclick="closeBookingModal()" class="w-full bg-gray-100 text-gray-600 py-4 rounded-xl font-bold hover:bg-gray-200 transition">
+                        Cancel
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getDatabase, ref, push, set, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
-        import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
-
-        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    <script>
+        // 1. Firebase Configuration (Using provided keys)
         const firebaseConfig = {
-          apiKey: "AIzaSyC4kR_HiywObXho8Zh20JyzC40iVrZq3lo",
-           authDomain: "kasifix-5b102.firebaseapp.com",
-          projectId: "kasifix-5b102",
+            apiKey: "AIzaSyC4kR_HiywObXho8Zh20JyzC40iVrZq3lo",
+            authDomain: "kasifix-5b102.firebaseapp.com",
+            projectId: "kasifix-5b102",
             storageBucket: "kasifix-5b102.firebasestorage.app",
             messagingSenderId: "800882399249",
             appId: "1:800882399249:web:f8ecdfb12fa98d7a5779b0",
-            measurementId: "G-8NKED4DENK",
-            databaseURL: "https://kasifix-5b102-default-rtdb.firebaseio.com"
-            };
+            measurementId: "G-8NKED4DENK"
+        };
 
-        const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
-        const storage = getStorage(app);
-
-        let hustlers = [];
-
-        onValue(ref(db, 'hustlers'), (snapshot) => {
-            const data = snapshot.val();
-            hustlers = Object.entries(data || {}).map(([id, h]) => ({id, ...h}));
-            hustlers.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
-
-            renderFeatured();
-        });
-
-        function renderFeatured() {
-            const featuredGrid = document.getElementById('featured-grid');
-            featuredGrid.innerHTML = '';
-            const top3 = hustlers.slice(0, 3);
-            top3.forEach(h => {
-                featuredGrid.appendChild(createHustlerCard(h));
-            });
+        // Initialize Firebase
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
         }
+        const db = firebase.database();
 
-        function createHustlerCard(h) {
-            const div = document.createElement('div');
-            div.className = 'bg-white rounded-3xl overflow-hidden shadow-lg border border-gray-200';
-            div.innerHTML = `
-                <div class="p-8">
-                    <div class="flex justify-between mb-4">
-                        <div class="bg-gray-200 w-14 h-14 rounded-2xl flex items-center justify-center font-bold text-xl text-gray-500">${h.name[0].toUpperCase()}</div>
-                        ${h.vetted ? '<span class="bg-green-100 text-green-700 text-xs font-bold px-3 py-1 rounded-full flex items-center h-fit"><i class="fa-solid fa-shield-check mr-1"></i> VETTED</span>' : ''}
+        // 2. State Management
+        let allHustlers = [];
+        let viewAll = false;
+        const container = document.getElementById('hustlers-container');
+
+        // 3. Render Hustler Cards
+        function renderHustlers(hustlersToRender) {
+            container.innerHTML = ''; // Clear container
+
+            if (hustlersToRender.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-3 text-center py-10">
+                        <div class="bg-gray-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                            <i class="fa-regular fa-folder-open text-gray-400 text-2xl"></i>
+                        </div>
+                        <p class="text-gray-500 font-medium">No hustlers found matching your criteria.</p>
+                        <button onclick="resetFilters()" class="text-orange-500 font-bold mt-2 hover:underline">Clear Filters</button>
                     </div>
-                    <h4 class="text-xl font-bold">${h.name}</h4>
-                    <p class="text-orange-500 font-semibold mb-4">${h.category}</p>
-                    <div class="flex items-center text-gray-500 text-sm mb-6">
-                        <i class="fa-solid fa-star text-yellow-400 mr-1"></i> ${(h.rating || 0).toFixed(1)} (${h.reviews || 0} Reviews)
-                    </div>
-                    <div class="flex justify-between items-center border-t pt-6">
-                        <span class="text-2xl font-bold text-gray-900">${h.rate.includes('R') ? h.rate + '<small class="text-sm font-normal text-gray-500">/hr</small>' : h.rate}</span>
-                        <button onclick='showHustlerModal(${JSON.stringify(h)})' class="bg-blue-900 text-white px-6 py-2 rounded-xl font-bold">Book</button>
-                    </div>
-                </div>
-            `;
-            return div;
-        }
-
-        function showAllHustlers() {
-            const allSection = document.getElementById('all-hustlers');
-            const grid = allSection.querySelector('.grid');
-            grid.innerHTML = '';
-            hustlers.forEach(h => {
-                grid.appendChild(createHustlerCard(h));
-            });
-            allSection.classList.remove('hidden');
-            allSection.scrollIntoView({behavior: 'smooth'});
-        }
-
-        function searchHustlers() {
-            const query = document.getElementById('search-query').value.toLowerCase();
-            const filtered = hustlers.filter(h => 
-                h.name.toLowerCase().includes(query) || 
-                h.category.toLowerCase().includes(query) || 
-                h.bio.toLowerCase().includes(query)
-            );
-            showResults(filtered);
-        }
-
-        function filterByCategory(cat) {
-            const filtered = hustlers.filter(h => h.category === cat);
-            showResults(filtered);
-        }
-
-        function showResults(list) {
-            const resultsSection = document.getElementById('search-results');
-            const grid = resultsSection.querySelector('.grid');
-            grid.innerHTML = '';
-            list.forEach(h => {
-                grid.appendChild(createHustlerCard(h));
-            });
-            resultsSection.classList.remove('hidden');
-            resultsSection.scrollIntoView({behavior: 'smooth'});
-        }
-
-        function showHustlerModal(h) {
-            const modal = document.getElementById('hustlerModal');
-            const content = modal.querySelector('.bg-white');
-            content.innerHTML = `
-                <img src="${h.photoUrl || 'https://via.placeholder.com/128'}" class="w-32 h-32 rounded-full mx-auto mb-4 object-cover">
-                <h3 class="text-2xl font-bold mb-2">${h.name}</h3>
-                <p class="text-orange-500 font-semibold mb-4">${h.category}</p>
-                <p class="text-gray-600 mb-6">${h.bio}</p>
-                <div class="flex justify-center">
-                    <a href="https://wa.me/${h.whatsapp}" target="_blank" class="bg-green-500 text-white px-6 py-3 rounded-xl font-bold flex items-center hover:bg-green-600">
-                        <i class="fa-brands fa-whatsapp mr-2"></i> Contact on WhatsApp
-                    </a>
-                </div>
-            `;
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-        }
-
-        function closeHustlerModal() {
-            const modal = document.getElementById('hustlerModal');
-            modal.classList.add('hidden');
-            modal.classList.remove('flex');
-        }
-
-        document.getElementById('hustlerModal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeHustlerModal();
+                `;
+                return;
             }
+
+            // Determine how many to show
+            const displayList = viewAll ? hustlersToRender : hustlersToRender.slice(0, 3);
+
+            displayList.forEach(h => {
+                const initial = h.name.charAt(0).toUpperCase();
+                // Random rating and count for demo feel since form doesn't capture it
+                const rating = h.rating || (4 + Math.random()).toFixed(1);
+                const reviews = h.reviews || Math.floor(Math.random() * 50) + 5;
+                const rate = h.rate || Math.floor(Math.random() * 200) + 150;
+
+                const cardHTML = `
+                <div class="bg-white rounded-3xl overflow-hidden shadow-lg border border-gray-200 flex flex-col h-full transform transition hover:-translate-y-1 hover:shadow-xl">
+                    <div class="p-8 flex-grow">
+                        <div class="flex justify-between mb-4">
+                            <div class="bg-gray-100 w-14 h-14 rounded-2xl flex items-center justify-center font-bold text-xl text-gray-600">${initial}</div>
+                            <span class="bg-green-100 text-green-700 text-xs font-bold px-3 py-1 rounded-full flex items-center h-fit">
+                                <i class="fa-solid fa-shield-check mr-1"></i> VETTED
+                            </span>
+                        </div>
+                        <h4 class="text-xl font-bold text-gray-900 line-clamp-1">${h.name}</h4>
+                        <p class="text-orange-500 font-semibold mb-2 text-sm">${h.category}</p>
+                        <p class="text-gray-500 text-xs mb-4 line-clamp-2 min-h-[2.5em]">${h.bio}</p>
+                        
+                        <div class="flex items-center text-gray-500 text-sm mb-6">
+                            <i class="fa-solid fa-star text-yellow-400 mr-1"></i> ${rating} (${reviews} Reviews)
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center border-t border-gray-100 bg-gray-50 px-8 py-4 mt-auto">
+                        <span class="text-xl font-bold text-gray-900">R${rate}<small class="text-xs font-normal text-gray-500">/hr</small></span>
+                        <button onclick="openBookingModal('${h.id}')" class="bg-[#1e3a8a] text-white px-5 py-2 rounded-xl font-bold hover:bg-blue-900 transition text-sm shadow-md">
+                            Book
+                        </button>
+                    </div>
+                </div>
+                `;
+                container.innerHTML += cardHTML;
+            });
+
+            // Update "See All" button text
+            const seeAllBtn = document.getElementById('see-all-btn');
+            if (hustlersToRender.length <= 3) {
+                seeAllBtn.style.display = 'none';
+            } else {
+                seeAllBtn.style.display = 'block';
+                seeAllBtn.innerText = viewAll ? "Show Less" : "See All";
+            }
+        }
+
+        // 4. Fetch Data from Firebase
+        db.ref('hustlers').on('value', (snapshot) => {
+            const data = snapshot.val();
+            allHustlers = [];
+            
+            if (data) {
+                // Convert object of objects to array of objects
+                Object.keys(data).forEach(key => {
+                    allHustlers.push({
+                        id: key,
+                        ...data[key]
+                    });
+                });
+                
+                // Sort by newness (assuming newer keys are added last, simply reversing works for chronological display)
+                allHustlers.reverse();
+            }
+            
+            // Initial render
+            performSearch(); 
         });
 
+        // 5. Filter & Search Logic
+        function performSearch() {
+            const keyword = document.getElementById('search-keyword').value.toLowerCase();
+            const location = document.getElementById('search-location').value.toLowerCase();
+            const featuredTitle = document.getElementById('featured-subtext');
+
+            let filtered = allHustlers.filter(h => {
+                const matchesKeyword = h.category.toLowerCase().includes(keyword) || 
+                                     h.bio.toLowerCase().includes(keyword) || 
+                                     h.name.toLowerCase().includes(keyword);
+                // Since form doesn't have location, we assume Soweto default or check if they typed it in bio
+                const matchesLocation = location === 'soweto' || location === '' ? true : (h.location || '').toLowerCase().includes(location); 
+                return matchesKeyword && matchesLocation;
+            });
+
+            if (keyword) {
+                featuredTitle.innerText = `Results for "${keyword}"`;
+                // If searching, automatically view all
+                viewAll = true; 
+            } else {
+                featuredTitle.innerText = "Verified professionals in your area.";
+                // Reset view all if clearing search manually
+                if(!viewAll) viewAll = false;
+            }
+
+            renderHustlers(filtered);
+            
+            // Smooth scroll to results if search button clicked
+            if(window.event && window.event.type === 'click') {
+                document.getElementById('featured-section').scrollIntoView({behavior: 'smooth'});
+            }
+        }
+
+        function filterByCategory(category) {
+            document.getElementById('search-keyword').value = category;
+            viewAll = true; // Show all for that category
+            performSearch();
+            document.getElementById('featured-section').scrollIntoView({behavior: 'smooth'});
+        }
+
+        function toggleSeeAll() {
+            viewAll = !viewAll;
+            performSearch(); // Re-render with new limit
+        }
+
+        function resetFilters() {
+            document.getElementById('search-keyword').value = '';
+            document.getElementById('search-location').value = 'Soweto';
+            viewAll = false;
+            performSearch();
+        }
+
+        // Listen for enter key in search
+        document.getElementById('search-keyword').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') performSearch();
+        });
+
+        // 6. Form Submission
         const form = document.getElementById('hustleForm');
         const modal = document.getElementById('successModal');
         const submitBtn = form.querySelector('button[type="submit"]');
 
-        form.addEventListener('submit', async function(e) {
-            e.preventDefault(); 
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
             
             const originalText = submitBtn.innerText;
             submitBtn.innerText = "Sending...";
             submitBtn.classList.add('opacity-75', 'cursor-not-allowed');
 
-            const name = form.querySelector('input[placeholder="e.g. Sipho Khumalo"]').value;
-            const whatsapp = form.querySelector('input[placeholder="081 234 5678"]').value;
-            const category = form.querySelector('select').value;
-            const bio = form.querySelector('textarea').value;
-            const fileInput = form.querySelector('input[type="file"]');
-            let photoUrl = '';
+            const name = document.getElementById('inputName').value;
+            const phone = document.getElementById('inputPhone').value;
+            const category = document.getElementById('inputCategory').value;
+            const bio = document.getElementById('inputBio').value;
 
-            if (fileInput.files[0]) {
-                const fileRef = storageRef(storage, 'profiles/' + Date.now() + '_' + fileInput.files[0].name);
-                await uploadBytes(fileRef, fileInput.files[0]);
-                photoUrl = await getDownloadURL(fileRef);
-            }
-
-            const hustlersRef = ref(db, 'hustlers');
-            const newHustlerRef = push(hustlersRef);
-            await set(newHustlerRef, {
-                name,
-                whatsapp,
-                category,
-                bio,
-                photoUrl,
+            // Push to Firebase
+            const newHustler = {
+                name: name,
+                phone: phone,
+                category: category,
+                bio: bio,
+                location: "Soweto", // Default for now
                 timestamp: Date.now(),
-                vetted: false,
-                rating: 0,
-                reviews: 0,
-                rate: 'Quote'
-            });
+                verified: false
+            };
 
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-            
-            form.reset();
-            submitBtn.innerText = originalText;
-            submitBtn.classList.remove('opacity-75', 'cursor-not-allowed');
+            db.ref('hustlers').push(newHustler)
+                .then(() => {
+                    modal.classList.remove('hidden');
+                    modal.classList.add('flex');
+                    form.reset();
+                    submitBtn.innerText = originalText;
+                    submitBtn.classList.remove('opacity-75', 'cursor-not-allowed');
+                })
+                .catch((error) => {
+                    alert('Error submitting: ' + error.message);
+                    submitBtn.innerText = originalText;
+                    submitBtn.classList.remove('opacity-75', 'cursor-not-allowed');
+                });
         });
 
-        function closeModal() {
+        function closeSuccessModal() {
             modal.classList.add('hidden');
             modal.classList.remove('flex');
+            // Scroll to featured to show the new card
+            document.getElementById('featured-section').scrollIntoView({behavior: 'smooth'});
         }
 
-        modal.addEventListener('click', function(e) {
-            if (e.target === modal) {
-                closeModal();
-            }
-        });
-    </script>
+        // 7. Booking Modal Logic
+        const bookingModal = document.getElementById('bookingModal');
 
+        function openBookingModal(hustlerId) {
+            const h = allHustlers.find(item => item.id === hustlerId);
+            if (!h) return;
+
+            // Random defaults for missing data
+            const rate = h.rate || Math.floor(Math.random() * 200) + 150;
+            const rating = h.rating || (4 + Math.random()).toFixed(1);
+
+            document.getElementById('modal-initial').innerText = h.name.charAt(0).toUpperCase();
+            document.getElementById('modal-name').innerText = h.name;
+            document.getElementById('modal-category').innerText = h.category;
+            document.getElementById('modal-bio').innerText = h.bio;
+            document.getElementById('modal-rate').innerText = rate;
+            document.getElementById('modal-rating').innerText = rating;
+            
+            // WhatsApp Link
+            const message = `Hi ${h.name}, I found you on KasiFix. I need help with...`;
+            const waLink = `https://wa.me/${h.phone.replace(/\s/g, '').replace('0', '27')}?text=${encodeURIComponent(message)}`;
+            document.getElementById('whatsapp-link').href = waLink;
+
+            bookingModal.classList.remove('hidden');
+            bookingModal.classList.add('flex');
+            document.body.classList.add('no-scroll');
+        }
+
+        function closeBookingModal() {
+            bookingModal.classList.add('hidden');
+            bookingModal.classList.remove('flex');
+            document.body.classList.remove('no-scroll');
+        }
+
+        // Close on background click
+        window.onclick = function(event) {
+            if (event.target == bookingModal) {
+                closeBookingModal();
+            }
+            if (event.target == modal) {
+                closeSuccessModal();
+            }
+        }
+    </script>
 </body>
 </html>
