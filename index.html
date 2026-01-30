@@ -221,6 +221,52 @@
             background: linear-gradient(135deg, #fef3c7 0%, #fed7aa 100%);
             transform: scale(1.02);
         }
+
+        /* Modern Modal Styles */
+        .modern-modal-overlay {
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            transition: opacity 0.4s ease;
+        }
+        .modern-modal-content {
+            background: white;
+            border-radius: 1.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            transform: scale(0.95);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            max-width: 420px;
+            width: 90%;
+            overflow: hidden;
+        }
+        .modern-modal.show .modern-modal-content {
+            transform: scale(1);
+            opacity: 1;
+        }
+        .modern-modal-header {
+            background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+            color: white;
+            padding: 1.75rem 2rem;
+        }
+        .modern-modal-body {
+            padding: 2rem;
+        }
+        .modern-modal-footer {
+            padding: 1.25rem 2rem;
+            border-top: 1px solid #e5e7eb;
+            background: #f8fafc;
+        }
+        .modern-success-icon {
+            width: 5rem;
+            height: 5rem;
+            background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+            border-radius: 9999px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.4);
+        }
     </style>
 </head>
 <body class="bg-gray-50 flex flex-col min-h-screen">
@@ -250,17 +296,17 @@
         </div>
     </nav>
 
-    <!-- Login Modal -->
-    <div id="loginModal" class="fixed inset-0 bg-gray-900 bg-opacity-70 hidden items-center justify-center z-[200] backdrop-blur-sm p-4">
-        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden relative">
-            <button onclick="closeLoginModal()" class="absolute top-4 right-4 text-gray-600 hover:text-gray-900">
-                <i class="fa-solid fa-times text-2xl"></i>
-            </button>
-            <div class="bg-[#1e3a8a] p-8 text-white text-center">
-                <h3 class="text-2xl font-bold">Hustler Login</h3>
-                <p class="text-blue-100 mt-2 text-sm">Only registered hustlers can access the dashboard</p>
+    <!-- Login Modal - Modern style -->
+    <div id="loginModal" class="modern-modal-overlay fixed inset-0 hidden flex items-center justify-center z-[200] transition-opacity duration-400">
+        <div class="modern-modal-content">
+            <div class="modern-modal-header relative">
+                <button onclick="closeLoginModal()" class="absolute top-4 right-5 text-white hover:text-gray-200 transition">
+                    <i class="fa-solid fa-times text-xl"></i>
+                </button>
+                <h3 class="text-2xl font-bold text-center">Hustler Login</h3>
+                <p class="text-blue-100 mt-2 text-center text-sm opacity-90">Access your dashboard • Registered hustlers only</p>
             </div>
-            <div class="p-8">
+            <div class="modern-modal-body">
                 <form id="loginForm" class="space-y-6">
                     <div>
                         <label class="block text-sm font-bold text-gray-700 mb-2">Email</label>
@@ -270,18 +316,19 @@
                         <label class="block text-sm font-bold text-gray-700 mb-2">Password</label>
                         <input type="password" id="loginPassword" required placeholder="••••••••" class="form-input w-full px-4 py-3 rounded-xl border focus:border-[#f97316] outline-none bg-gray-50">
                     </div>
-                    <button type="submit" class="pill-btn primary-pill w-full text-white py-4 rounded-xl font-bold hover:bg-orange-600 transition shadow-lg">
+                    <button type="submit" class="pill-btn primary-pill w-full text-white py-4 rounded-2xl font-bold hover:bg-orange-600 transition shadow-lg">
                         Login to Dashboard
                     </button>
                 </form>
-                <p class="text-center text-sm text-gray-500 mt-6">
-                    Not registered yet? <a href="#join-hustle" onclick="closeLoginModal()" class="text-[#f97316] font-medium hover:underline">Create profile here</a>
-                </p>
+            </div>
+            <div class="modern-modal-footer text-center text-sm text-gray-600">
+                Not registered yet? 
+                <a href="#join-hustle" onclick="closeLoginModal()" class="text-[#f97316] font-medium hover:underline">Create profile here</a>
             </div>
         </div>
     </div>
 
-    <!-- Main Content (hidden when dashboard is shown) -->
+    <!-- Main Content -->
     <div id="main-content">
 
         <header class="bg-[#1e3a8a] py-20 px-4">
@@ -532,7 +579,7 @@
 
     </div>
 
-    <!-- Dashboard Section (hidden by default) -->
+    <!-- Dashboard Section -->
     <div id="dashboard-section" class="min-h-screen bg-gray-50">
         <div class="max-w-6xl mx-auto px-4 py-10">
             <div class="flex justify-between items-center mb-10">
@@ -551,7 +598,6 @@
             </div>
 
             <div class="grid md:grid-cols-3 gap-8">
-                <!-- Profile Edit -->
                 <div class="bg-white rounded-2xl shadow-lg p-8 border border-gray-200">
                     <h2 class="text-xl font-bold mb-6 flex items-center">
                         <i class="fa-solid fa-user-edit text-[#f97316] mr-3 text-2xl"></i> My Profile
@@ -600,7 +646,6 @@
                     </form>
                 </div>
 
-                <!-- Analytics & Activity Placeholder -->
                 <div class="md:col-span-2 space-y-8">
                     <div class="bg-white rounded-2xl shadow-lg p-8 border border-gray-200">
                         <h2 class="text-xl font-bold mb-6 flex items-center">
@@ -638,20 +683,30 @@
         </div>
     </div>
 
-    <!-- Modals (success & booking) remain the same -->
-    <div id="successModal" class="fixed inset-0 bg-gray-900 bg-opacity-60 hidden items-center justify-center z-[100] backdrop-blur-sm px-4">
-        <div class="bg-white rounded-3xl shadow-2xl max-w-sm w-full p-8 text-center transform transition-all scale-105">
-            <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <i class="fa-solid fa-check text-4xl text-green-600"></i>
+    <!-- Success Modal - Modern style -->
+    <div id="successModal" class="modern-modal-overlay fixed inset-0 hidden flex items-center justify-center z-[100] transition-opacity duration-400">
+        <div class="modern-modal-content text-center">
+            <div class="modern-modal-header relative">
+                <button onclick="closeSuccessModal()" class="absolute top-4 right-5 text-white hover:text-gray-200 transition">
+                    <i class="fa-solid fa-times text-xl"></i>
+                </button>
+                <h3 class="text-2xl font-bold">Ayoba! Profile Received</h3>
             </div>
-            <h3 class="text-2xl font-extrabold text-gray-900 mb-2">Ayoba! Received.</h3>
-            <p class="text-gray-600 mb-8">Siyabonga. Your profile is now live!</p>
-            <button onclick="closeSuccessModal()" class="pill-btn primary-pill w-full text-white py-3 rounded-2xl font-bold hover:bg-orange-600 transition shadow-lg">
-                Sharp, I'll check it
-            </button>
+            <div class="modern-modal-body">
+                <div class="modern-success-icon mx-auto">
+                    <i class="fa-solid fa-check text-white text-5xl"></i>
+                </div>
+                <p class="text-gray-700 text-lg mb-6">Siyabonga! Your profile is now live and visible in the Featured section.</p>
+            </div>
+            <div class="modern-modal-footer">
+                <button onclick="closeSuccessModal()" class="pill-btn primary-pill w-full text-white py-4 rounded-2xl font-bold hover:bg-orange-600 transition shadow-lg">
+                    Sharp, I'll check it
+                </button>
+            </div>
         </div>
     </div>
 
+    <!-- Booking Modal (kept original style for consistency with content) -->
     <div id="bookingModal" class="fixed inset-0 bg-gray-900 bg-opacity-70 hidden items-center justify-center z-[100] backdrop-blur-sm p-4">
         <div class="bg-white rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden transform transition-all relative">
             <button onclick="closeBookingModal()" class="absolute top-4 right-4 text-white hover:text-orange-500 z-10">
@@ -712,29 +767,53 @@
 
         let allHustlers = [];
         let viewAll = false;
-        let currentUser = null;           // {email, key, data}
+        let currentUser = null;
         let currentUserProfileKey = null;
 
         // ────────────────────────────────────────────────
-        //  LOGIN / LOGOUT / PAGE SWITCHING
+        //  MODAL HELPERS (modern style)
         // ────────────────────────────────────────────────
 
+        function openModal(modalId) {
+            const modal = document.getElementById(modalId);
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            // Small delay for animation
+            setTimeout(() => modal.classList.add('show'), 10);
+            document.body.classList.add('no-scroll');
+        }
+
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            modal.classList.remove('show');
+            setTimeout(() => {
+                modal.classList.remove('flex');
+                modal.classList.add('hidden');
+                document.body.classList.remove('no-scroll');
+            }, 400);
+        }
+
         function openLoginModal() {
-            document.getElementById('loginModal').classList.remove('hidden');
-            document.getElementById('loginModal').classList.add('flex');
+            openModal('loginModal');
         }
 
         function closeLoginModal() {
-            document.getElementById('loginModal').classList.add('hidden');
-            document.getElementById('loginModal').classList.remove('flex');
+            closeModal('loginModal');
             document.getElementById('loginForm').reset();
         }
+
+        function closeSuccessModal() {
+            closeModal('successModal');
+        }
+
+        // ────────────────────────────────────────────────
+        //  LOGIN LOGIC
+        // ────────────────────────────────────────────────
 
         document.getElementById('loginForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const email = document.getElementById('loginEmail').value.trim().toLowerCase();
 
-            // Simple check: does this email exist in hustlers?
             const found = allHustlers.find(h => h.email?.toLowerCase() === email);
 
             if (!found) {
@@ -742,7 +821,6 @@
                 return;
             }
 
-            // Simulate successful login (in real app → use Firebase Auth + password check)
             currentUser = { email: found.email, key: found.id, data: found };
             currentUserProfileKey = found.id;
 
@@ -750,6 +828,10 @@
             showDashboard();
             alert("Welcome back, " + found.name + "!");
         });
+
+        // ────────────────────────────────────────────────
+        //  DASHBOARD & PAGE SWITCHING
+        // ────────────────────────────────────────────────
 
         function handleLogout() {
             currentUser = null;
@@ -787,7 +869,7 @@
         }
 
         // ────────────────────────────────────────────────
-        //  PROFILE EDIT (from dashboard)
+        //  PROFILE EDIT
         // ────────────────────────────────────────────────
 
         document.getElementById('editForm').addEventListener('submit', function(e) {
@@ -810,7 +892,6 @@
             db.ref('hustlers/' + currentUserProfileKey).update(updates)
                 .then(() => {
                     alert("Profile updated successfully!");
-                    // Update local data too
                     const idx = allHustlers.findIndex(h => h.id === currentUserProfileKey);
                     if (idx !== -1) {
                         allHustlers[idx] = { ...allHustlers[idx], ...updates };
@@ -821,7 +902,7 @@
         });
 
         // ────────────────────────────────────────────────
-        //  Rest remains unchanged (profile creation, search, render, etc.)
+        //  PROFILE CREATION & OTHER LOGIC (unchanged)
         // ────────────────────────────────────────────────
 
         const container = document.getElementById('hustlers-container');
@@ -899,7 +980,7 @@
 
             const displayList = viewAll ? hustlersToRender : hustlersToRender.slice(0, 3);
 
-            displayList.forEach((h, index) => {
+            displayList.forEach(h => {
                 const initial = h.name.charAt(0).toUpperCase();
                 const rating = h.rating || (4 + Math.random()).toFixed(1); 
                 
@@ -968,7 +1049,6 @@
             if (e.key === 'Enter') performSearch();
         });
 
-        // Create Profile
         const form = document.getElementById('hustleForm');
         form.addEventListener('submit', async function(e) {
             e.preventDefault();
@@ -1000,8 +1080,8 @@
                 allHustlers.unshift({ id: newRef.key, ...newHustler });
                 performSearch();
                 
-                document.getElementById('successModal').classList.remove('hidden');
-                document.getElementById('successModal').classList.add('flex');
+                // Show modern success modal
+                openModal('successModal');
 
                 form.reset();
                 document.getElementById('file-label').innerText = "Upload Profile Photo";
@@ -1014,11 +1094,6 @@
                 submitBtn.disabled = false;
             });
         });
-
-        function closeSuccessModal() {
-            document.getElementById('successModal').classList.add('hidden');
-            document.getElementById('successModal').classList.remove('flex');
-        }
 
         function openBookingModal(hustlerId) {
             const h = allHustlers.find(item => item.id === hustlerId);
