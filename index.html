@@ -10,6 +10,7 @@
     <!-- Firebase v8 (compat mode) -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
@@ -179,6 +180,9 @@
                     <button onclick="document.getElementById('hustler-signup-modal').classList.remove('hidden')"
                             class="pill-btn bg-[#f97316] text-white px-6 py-2.5 font-bold hover:bg-orange-600 transition shadow">
                         Become a Hustler
+                    </button>
+                    <button id="hustler-login-btn" class="pill-btn bg-blue-600 text-white px-6 py-2.5 font-bold hover:bg-blue-700 transition shadow ml-3">
+                        Hustler Login
                     </button>
                 </div>
             </div>
@@ -360,8 +364,49 @@
         </div>
     </div>
 
+    <!-- Simple Dashboard Placeholder (in real app this would be separate page) -->
+    <div id="dashboard-modal" class="fixed inset-0 modal-backdrop flex items-center justify-center z-50 hidden">
+        <div class="modal-content bg-white rounded-3xl p-8 max-w-4xl w-full m-6 relative max-h-[90vh] overflow-y-auto shadow-2xl border border-gray-100">
+            <button onclick="document.getElementById('dashboard-modal').classList.add('hidden')"
+                    class="absolute top-5 right-5 text-gray-500 hover:text-gray-800 transition">
+                <i class="fa-solid fa-times text-2xl"></i>
+            </button>
+            <h2 class="text-3xl font-bold mb-6 text-center text-gray-900">Hustler Dashboard</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                <div class="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-2xl shadow">
+                    <h3 class="text-lg font-semibold text-blue-800">Total Views</h3>
+                    <p class="text-4xl font-bold text-blue-600 mt-2">1,248</p>
+                </div>
+                <div class="bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-2xl shadow">
+                    <h3 class="text-lg font-semibold text-green-800">Enquiries</h3>
+                    <p class="text-4xl font-bold text-green-600 mt-2">87</p>
+                </div>
+                <div class="bg-gradient-to-br from-orange-50 to-orange-100 p-6 rounded-2xl shadow">
+                    <h3 class="text-lg font-semibold text-orange-800">Earnings (est.)</h3>
+                    <p class="text-4xl font-bold text-orange-600 mt-2">R12,450</p>
+                </div>
+            </div>
+            <div class="bg-gray-50 p-6 rounded-2xl">
+                <h3 class="text-xl font-bold mb-4">Recent Activity</h3>
+                <ul class="space-y-3 text-gray-700">
+                    <li class="flex justify-between"><span>Plumbing job in Benoni</span><span class="text-green-600">+R450</span></li>
+                    <li class="flex justify-between"><span>Barber booking</span><span class="text-green-600">+R180</span></li>
+                    <li class="flex justify-between"><span>New profile view</span><span class="text-blue-600">+12 views</span></li>
+                </ul>
+            </div>
+            <div class="mt-8 text-center">
+                <button onclick="firebase.auth().signOut().then(() => location.reload())"
+                        class="pill-btn bg-red-600 text-white px-8 py-3 rounded-full font-bold hover:bg-red-700 transition">
+                    Sign Out
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script>
+        // ────────────────────────────────────────────────
         // Firebase Config
+        // ────────────────────────────────────────────────
         const firebaseConfig = {
             apiKey: "AIzaSyC4kR_HiywObXho8Zh20JyzC40iVrZq3lo",
             authDomain: "kasifix-5b102.firebaseapp.com",
@@ -373,10 +418,12 @@
 
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
+        const auth = firebase.auth();
 
         let allHustlers = [];
         let categories = new Set();
 
+        // Real-time listener for hustlers (public verified ones)
         db.ref('hustlers').on('value', snapshot => {
             allHustlers = [];
             categories.clear();
@@ -549,7 +596,9 @@
             document.getElementById('hustler-detail-modal').classList.remove('hidden');
         }
 
+        // ────────────────────────────────────────────────
         // Cloudinary Unsigned Upload + Progress
+        // ────────────────────────────────────────────────
         const CLOUD_NAME    = 'dv5bsbydu';
         const UPLOAD_PRESET = 'admin_tlaka';
         const CLOUDINARY_URL = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`;
@@ -655,6 +704,40 @@
                 document.getElementById('photo-preview').classList.add('hidden');
             }
         });
+
+        // ────────────────────────────────────────────────
+        // Google Login for Hustlers + Dashboard
+        // ────────────────────────────────────────────────
+        const hustlerLoginBtn = document.getElementById('hustler-login-btn');
+
+        hustlerLoginBtn.addEventListener('click', () => {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            auth.signInWithPopup(provider)
+                .then((result) => {
+                    const user = result.user;
+                    // In a real app you would check if this Google account is linked to a hustler profile
+                    // For demo we just show the dashboard
+                    showDashboard(user);
+                })
+                .catch((error) => {
+                    console.error("Google sign-in error:", error);
+                    alert("Login failed: " + error.message);
+                });
+        });
+
+        // Listen for auth state (useful if already logged in)
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                // Optionally auto-show dashboard or change button text
+                // hustlerLoginBtn.textContent = "Dashboard";
+            }
+        });
+
+        function showDashboard(user) {
+            document.getElementById('dashboard-modal').classList.remove('hidden');
+            // In real app: fetch real stats from Firebase using user.uid
+            console.log("Logged in user:", user.displayName, user.email);
+        }
 
         // Initial render
         renderAllHustlers([]);
