@@ -13,8 +13,14 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-        body { font-family: 'Inter', sans-serif; }
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Syne:wght@400;500;600;700;800&display=swap');
+        body { 
+            font-family: 'Outfit', sans-serif;
+        }
+        
+        .heading-font {
+            font-family: 'Syne', sans-serif;
+        }
 
         .hero-bg {
             background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
@@ -154,7 +160,7 @@
         }
 
         /* Dashboard full page styling */
-        #dashboard-page {
+        #admin-dashboard-page, #hustler-dashboard-page {
             display: none;
             min-height: 100vh;
             background: linear-gradient(to bottom, #f8fafc, #e5e7eb);
@@ -199,6 +205,61 @@
             font-size: 2.5rem;
             color: #f97316;
         }
+
+        /* Dashboard Stats Cards */
+        .stat-card {
+            background: white;
+            border-radius: 20px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border: 1px solid #f1f5f9;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px rgba(249, 115, 34, 0.15);
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .chart-container {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border: 1px solid #f1f5f9;
+        }
+
+        /* Enhanced Dashboard Animations */
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-slide-in {
+            animation: slideInUp 0.5s ease-out forwards;
+        }
+
+        .stagger-1 { animation-delay: 0.1s; opacity: 0; }
+        .stagger-2 { animation-delay: 0.2s; opacity: 0; }
+        .stagger-3 { animation-delay: 0.3s; opacity: 0; }
+        .stagger-4 { animation-delay: 0.4s; opacity: 0; }
     </style>
 </head>
 <body class="bg-gray-50">
@@ -210,7 +271,7 @@
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex justify-between h-16 items-center">
                     <div class="flex items-center cursor-pointer" onclick="window.location.href='index.html'">
-                        <span class="text-2xl font-extrabold text-[#1e3a8a]">Kasi<span class="text-[#f97316]">Fix</span></span>
+                        <span class="text-2xl font-extrabold heading-font text-[#1e3a8a]">Kasi<span class="text-[#f97316]">Fix</span></span>
                     </div>
                     <div class="hidden md:flex items-center space-x-8">
                         <a href="#all-hustlers" class="text-gray-700 hover:text-[#1e3a8a] font-medium">Find Help</a>
@@ -229,7 +290,7 @@
         <!-- Hero -->
         <section class="hero-bg text-white py-24 md:py-32">
             <div class="max-w-6xl mx-auto px-4 text-center">
-                <h1 class="text-4xl md:text-6xl font-extrabold mb-6 leading-tight">
+                <h1 class="text-4xl md:text-6xl font-extrabold heading-font mb-6 leading-tight">
                     Find Trusted Local Help<br/>Right in Your Kasi
                 </h1>
                 <p class="text-xl md:text-2xl text-blue-100 mb-10 max-w-3xl mx-auto">
@@ -289,51 +350,51 @@
         <!-- Categories Section -->
         <section id="categories" class="py-16 bg-gray-50">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <h2 class="text-3xl md:text-4xl font-extrabold text-center mb-12 text-gray-900">Popular Categories</h2>
+                <h2 class="text-3xl md:text-4xl font-extrabold heading-font text-center mb-12 text-gray-900">Popular Categories</h2>
                 <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-                    <div class="category-card p-6 text-center" onclick="selectCategory('Plumbing')">
+                    <div class="category-card p-6 text-center" onclick="showFirstHustlerInCategory('Plumbing')">
                         <div class="category-icon mb-4"><i class="fas fa-tools"></i></div>
                         <h3 class="font-bold text-lg mb-1">Plumbing</h3>
                         <p class="text-sm text-gray-600">Leaky pipes, geysers, toilets</p>
                     </div>
 
-                    <div class="category-card p-6 text-center" onclick="selectCategory('Electrical')">
+                    <div class="category-card p-6 text-center" onclick="showFirstHustlerInCategory('Electrical')">
                         <div class="category-icon mb-4"><i class="fas fa-bolt"></i></div>
                         <h3 class="font-bold text-lg mb-1">Electrical</h3>
                         <p class="text-sm text-gray-600">Wiring, lights, inverters</p>
                     </div>
 
-                    <div class="category-card p-6 text-center" onclick="selectCategory('Barber')">
+                    <div class="category-card p-6 text-center" onclick="showFirstHustlerInCategory('Barber')">
                         <div class="category-icon mb-4"><i class="fas fa-cut"></i></div>
                         <h3 class="font-bold text-lg mb-1">Barber</h3>
                         <p class="text-sm text-gray-600">Haircuts, fades, shaves</p>
                     </div>
 
-                    <div class="category-card p-6 text-center" onclick="selectCategory('Cleaning')">
+                    <div class="category-card p-6 text-center" onclick="showFirstHustlerInCategory('Cleaning')">
                         <div class="category-icon mb-4"><i class="fas fa-broom"></i></div>
                         <h3 class="font-bold text-lg mb-1">Cleaning</h3>
                         <p class="text-sm text-gray-600">House, car, office cleaning</p>
                     </div>
 
-                    <div class="category-card p-6 text-center" onclick="selectCategory('Solar')">
+                    <div class="category-card p-6 text-center" onclick="showFirstHustlerInCategory('Solar')">
                         <div class="category-icon mb-4"><i class="fas fa-solar-panel"></i></div>
                         <h3 class="font-bold text-lg mb-1">Solar</h3>
                         <p class="text-sm text-gray-600">Installation & repairs</p>
                     </div>
 
-                    <div class="category-card p-6 text-center" onclick="selectCategory('Building')">
+                    <div class="category-card p-6 text-center" onclick="showFirstHustlerInCategory('Building')">
                         <div class="category-icon mb-4"><i class="fas fa-hard-hat"></i></div>
                         <h3 class="font-bold text-lg mb-1">Building</h3>
                         <p class="text-sm text-gray-600">Bricklaying, plastering</p>
                     </div>
 
-                    <div class="category-card p-6 text-center" onclick="selectCategory('Car Wash')">
+                    <div class="category-card p-6 text-center" onclick="showFirstHustlerInCategory('Car Wash')">
                         <div class="category-icon mb-4"><i class="fas fa-car"></i></div>
                         <h3 class="font-bold text-lg mb-1">Car Wash</h3>
                         <p class="text-sm text-gray-600">Mobile & detailing</p>
                     </div>
 
-                    <div class="category-card p-6 text-center" onclick="selectCategory('Painting')">
+                    <div class="category-card p-6 text-center" onclick="showFirstHustlerInCategory('Painting')">
                         <div class="category-icon mb-4"><i class="fas fa-paint-roller"></i></div>
                         <h3 class="font-bold text-lg mb-1">Painting</h3>
                         <p class="text-sm text-gray-600">Interior & exterior</p>
@@ -345,7 +406,7 @@
         <!-- All Hustlers -->
         <section id="all-hustlers" class="py-20 bg-gray-50">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <h2 class="text-3xl md:text-4xl font-extrabold text-center mb-12 text-gray-900">Find Hustlers Near You</h2>
+                <h2 class="text-3xl md:text-4xl font-extrabold heading-font text-center mb-12 text-gray-900">Find Hustlers Near You</h2>
                 <div id="hustlers-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                     <!-- populated dynamically -->
                 </div>
@@ -357,7 +418,7 @@
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
                     <div>
-                        <h3 class="text-xl font-bold mb-4">KasiFix</h3>
+                        <h3 class="text-xl font-bold heading-font mb-4">KasiFix</h3>
                         <p class="text-blue-100">Real skills. Real people. Right in your kasi.</p>
                     </div>
                     <div>
@@ -430,11 +491,15 @@
                         class="absolute top-4 right-4 text-gray-500 hover:text-gray-800 transition">
                     <i class="fa-solid fa-times text-xl"></i>
                 </button>
-                <h2 class="text-2xl font-bold mb-6 text-center text-gray-900">Become a Hustler</h2>
+                <h2 class="text-2xl font-bold heading-font mb-6 text-center text-gray-900">Become a Hustler</h2>
                 <form id="hustler-signup-form" class="space-y-4 text-sm">
                     <div>
                         <label class="block text-gray-700 mb-1 font-medium">Full Name *</label>
                         <input type="text" name="name" required class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none transition">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 mb-1 font-medium">Email *</label>
+                        <input type="email" name="email" required class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none transition">
                     </div>
                     <div>
                         <label class="block text-gray-700 mb-1 font-medium">Phone Number (with +27) *</label>
@@ -480,13 +545,13 @@
 
     </div>
 
-    <!-- Full Page Admin Dashboard -->
-    <div id="dashboard-page" class="bg-gradient-to-b from-gray-50 to-gray-100">
+    <!-- Admin Dashboard -->
+    <div id="admin-dashboard-page" class="bg-gradient-to-b from-gray-50 to-gray-100">
         <nav class="bg-white border-b shadow-sm">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex justify-between h-16 items-center">
                     <div class="flex items-center">
-                        <span class="text-2xl font-extrabold text-[#1e3a8a]">Kasi<span class="text-[#f97316]">Fix</span> Admin Dashboard</span>
+                        <span class="text-2xl font-extrabold heading-font text-[#1e3a8a]">Kasi<span class="text-[#f97316]">Fix</span> Admin</span>
                     </div>
                     <div class="flex items-center space-x-4">
                         <button onclick="goBackToHome()"
@@ -503,10 +568,10 @@
         </nav>
 
         <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-            <h1 class="text-3xl font-bold text-gray-900 mb-8">Pending Hustler Applications</h1>
+            <h1 class="text-3xl font-bold heading-font text-gray-900 mb-8">Pending Hustler Applications</h1>
 
             <div id="pending-hustlers" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Dynamically populated with pending hustlers + join date/time -->
+                <!-- Dynamically populated -->
             </div>
 
             <div class="mt-12 text-center text-gray-500">
@@ -514,6 +579,159 @@
             </div>
         </main>
     </div>
+
+    <!-- Hustler Dashboard -->
+    <div id="hustler-dashboard-page">
+        <nav class="bg-white border-b shadow-sm sticky top-0 z-40">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between h-16 items-center">
+                    <div class="flex items-center">
+                        <span class="text-2xl font-extrabold heading-font text-[#1e3a8a]">Kasi<span class="text-[#f97316]">Fix</span> Dashboard</span>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <span id="hustler-name-nav" class="text-gray-700 font-medium hidden md:block"></span>
+                        <button onclick="goBackToHome()"
+                                class="pill-btn bg-gray-700 text-white px-6 py-2 font-medium hover:bg-gray-800 transition">
+                            Back to Home
+                        </button>
+                        <button onclick="firebase.auth().signOut().then(goBackToHome)"
+                                class="pill-btn bg-red-600 text-white px-6 py-2 font-medium hover:bg-red-700 transition">
+                            Sign Out
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+            <!-- Welcome Section -->
+            <div class="mb-10">
+                <h1 class="text-4xl font-bold heading-font text-gray-900 mb-2">Welcome back, <span id="hustler-name-header"></span>! 👋</h1>
+                <p class="text-gray-600 text-lg">Here's how your business is performing</p>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+                <div class="stat-card animate-slide-in stagger-1">
+                    <div class="stat-icon bg-blue-100 text-blue-600">
+                        <i class="fas fa-eye"></i>
+                    </div>
+                    <h3 class="text-gray-600 text-sm font-medium mb-1">Profile Views</h3>
+                    <p class="text-3xl font-bold heading-font text-gray-900" id="stat-views">0</p>
+                    <p class="text-sm text-green-600 mt-2">
+                        <i class="fas fa-arrow-up"></i> <span id="views-change">0%</span> vs last month
+                    </p>
+                </div>
+
+                <div class="stat-card animate-slide-in stagger-2">
+                    <div class="stat-icon bg-green-100 text-green-600">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <h3 class="text-gray-600 text-sm font-medium mb-1">Average Rating</h3>
+                    <p class="text-3xl font-bold heading-font text-gray-900" id="stat-rating">0.0</p>
+                    <p class="text-sm text-gray-600 mt-2">
+                        Based on <span id="total-reviews">0</span> reviews
+                    </p>
+                </div>
+
+                <div class="stat-card animate-slide-in stagger-3">
+                    <div class="stat-icon bg-orange-100 text-orange-600">
+                        <i class="fas fa-phone"></i>
+                    </div>
+                    <h3 class="text-gray-600 text-sm font-medium mb-1">Contact Clicks</h3>
+                    <p class="text-3xl font-bold heading-font text-gray-900" id="stat-contacts">0</p>
+                    <p class="text-sm text-green-600 mt-2">
+                        <i class="fas fa-arrow-up"></i> <span id="contacts-change">0%</span> this week
+                    </p>
+                </div>
+
+                <div class="stat-card animate-slide-in stagger-4">
+                    <div class="stat-icon bg-purple-100 text-purple-600">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <h3 class="text-gray-600 text-sm font-medium mb-1">Rank in Category</h3>
+                    <p class="text-3xl font-bold heading-font text-gray-900" id="stat-rank">#-</p>
+                    <p class="text-sm text-gray-600 mt-2">
+                        Out of <span id="category-total">0</span> hustlers
+                    </p>
+                </div>
+            </div>
+
+            <!-- Charts Row -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-10">
+                <div class="chart-container">
+                    <h3 class="text-xl font-bold heading-font text-gray-900 mb-6">Weekly Performance</h3>
+                    <canvas id="weeklyChart" height="250"></canvas>
+                </div>
+
+                <div class="chart-container">
+                    <h3 class="text-xl font-bold heading-font text-gray-900 mb-6">Rating Distribution</h3>
+                    <canvas id="ratingChart" height="250"></canvas>
+                </div>
+            </div>
+
+            <!-- Profile & Reviews Section -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Profile Card -->
+                <div class="chart-container lg:col-span-1">
+                    <h3 class="text-xl font-bold heading-font text-gray-900 mb-6">Your Profile</h3>
+                    <div class="text-center mb-6">
+                        <img id="dashboard-profile-pic" class="w-32 h-32 rounded-full object-cover mx-auto ring-4 ring-orange-100 mb-4" alt="Profile">
+                        <h4 class="text-xl font-bold text-gray-900" id="dashboard-name"></h4>
+                        <p class="text-orange-600 font-medium mb-1" id="dashboard-category"></p>
+                        <p class="text-gray-600 text-sm" id="dashboard-location"></p>
+                    </div>
+                    <div class="space-y-3 text-sm">
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Hourly Rate:</span>
+                            <span class="font-bold text-gray-900" id="dashboard-rate"></span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Status:</span>
+                            <span class="font-bold text-green-600" id="dashboard-status">Active</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Member Since:</span>
+                            <span class="font-medium text-gray-900" id="dashboard-member-since"></span>
+                        </div>
+                    </div>
+                    <button onclick="editProfile()" class="pill-btn w-full bg-orange-600 text-white py-3 mt-6 font-bold hover:bg-orange-700 transition">
+                        Edit Profile
+                    </button>
+                </div>
+
+                <!-- Recent Reviews -->
+                <div class="chart-container lg:col-span-2">
+                    <h3 class="text-xl font-bold heading-font text-gray-900 mb-6">Recent Reviews</h3>
+                    <div id="dashboard-reviews" class="space-y-4 max-h-96 overflow-y-auto">
+                        <!-- Populated dynamically -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tips Section -->
+            <div class="chart-container mt-6">
+                <h3 class="text-xl font-bold heading-font text-gray-900 mb-4">💡 Tips to Improve Your Business</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="p-4 bg-blue-50 rounded-xl">
+                        <h4 class="font-bold text-blue-900 mb-2">📸 Update Your Photo</h4>
+                        <p class="text-sm text-blue-800">Profiles with photos get 3x more views</p>
+                    </div>
+                    <div class="p-4 bg-green-50 rounded-xl">
+                        <h4 class="font-bold text-green-900 mb-2">⭐ Encourage Reviews</h4>
+                        <p class="text-sm text-green-800">Ask satisfied customers to leave reviews</p>
+                    </div>
+                    <div class="p-4 bg-purple-50 rounded-xl">
+                        <h4 class="font-bold text-purple-900 mb-2">⚡ Quick Responses</h4>
+                        <p class="text-sm text-purple-800">Respond to WhatsApp messages within 1 hour</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
 
     <script>
         // Firebase Config
@@ -533,8 +751,12 @@
         let allHustlers = [];
         let categories = new Set();
         let currentHustlerId = null;
+        let currentUser = null;
+        let currentUserHustlerData = null;
 
-        // Listen for all hustlers (for public + dashboard)
+        // Admin emails (you can add more)
+        const ADMIN_EMAILS = ['admin@kasifix.com', 'your-email@gmail.com'];
+
         db.ref('hustlers').on('value', snapshot => {
             allHustlers = [];
             categories.clear();
@@ -549,11 +771,7 @@
             });
 
             populateCategorySelect();
-            populateCategoryDropdown();
             renderAllHustlers(allHustlers);
-
-            // Also update admin dashboard with pending ones
-            renderPendingHustlers(data);
         });
 
         function populateCategorySelect() {
@@ -565,30 +783,6 @@
                 opt.textContent = cat;
                 select.appendChild(opt);
             });
-        }
-
-        function populateCategoryDropdown() {
-            const container = document.getElementById('category-dropdown');
-            container.innerHTML = '';
-            [...categories].sort().forEach(cat => {
-                const div = document.createElement('div');
-                div.className = 'dropdown-item text-gray-800';
-                div.textContent = cat;
-                div.onclick = () => {
-                    document.getElementById('search-category').value = cat;
-                    filterHustlers();
-                };
-                container.appendChild(div);
-            });
-
-            const allDiv = document.createElement('div');
-            allDiv.className = 'dropdown-item font-medium border-b border-gray-200 text-[#1e3a8a]';
-            allDiv.textContent = 'All Categories';
-            allDiv.onclick = () => {
-                document.getElementById('search-category').value = '';
-                filterHustlers();
-            };
-            container.insertBefore(allDiv, container.firstChild);
         }
 
         function filterHustlers() {
@@ -616,13 +810,6 @@
             });
 
             renderAllHustlers(filtered);
-        }
-
-        function selectCategory(category) {
-            document.getElementById('search-category').value = category;
-            filterHustlers();
-            document.getElementById('advanced-panel').classList.add('open');
-            window.scrollTo({ top: document.getElementById('all-hustlers').offsetTop - 80, behavior: 'smooth' });
         }
 
         function renderAllHustlers(hustlers) {
@@ -688,6 +875,9 @@
 
             currentHustlerId = id;
 
+            // Track profile view
+            trackProfileView(id);
+
             const rating = hustler.rating || 4.8;
             const reviews = hustler.reviews || Math.floor(Math.random() * 80 + 20);
 
@@ -700,7 +890,7 @@
                             ${hustler.name ? hustler.name.charAt(0).toUpperCase() : '?'}
                         </div>`
                     }
-                    <h2 class="text-3xl font-bold text-gray-900">${hustler.name || 'Unnamed Hustler'}</h2>
+                    <h2 class="text-3xl font-bold heading-font text-gray-900">${hustler.name || 'Unnamed Hustler'}</h2>
                     <p class="text-xl text-[#f97316] font-medium mt-1">${hustler.category || 'Service Provider'}</p>
 
                     <div class="flex items-center justify-center mt-3">
@@ -731,6 +921,7 @@
 
                 <div class="flex flex-col sm:flex-row gap-4 justify-center">
                     <a href="https://wa.me/${(hustler.phone || '').replace(/\D/g,'')}" target="_blank" 
+                       onclick="trackContactClick('${id}')"
                        class="pill-btn bg-green-600 text-white px-8 py-4 rounded-full font-bold hover:bg-green-700 transition flex items-center justify-center shadow">
                         <i class="fab fa-whatsapp mr-3 text-xl"></i> Chat on WhatsApp
                     </a>
@@ -746,152 +937,158 @@
             document.getElementById('hustler-detail-modal').classList.remove('hidden');
         }
 
+        function showFirstHustlerInCategory(category) {
+            const hustler = allHustlers.find(h => h.category === category && h.verified === true);
+
+            if (hustler) {
+                showHustlerDetail(hustler.id);
+            } else {
+                const content = document.getElementById('hustler-detail-content');
+                content.innerHTML = `
+                    <div class="text-center py-12">
+                        <i class="fa-solid fa-exclamation-circle text-6xl text-gray-400 mb-6"></i>
+                        <h2 class="text-2xl font-bold heading-font text-gray-900 mb-4">No Hustlers Found</h2>
+                        <p class="text-lg text-gray-600">There are currently no verified ${category.toLowerCase()} hustlers available in your area.</p>
+                        <button onclick="document.getElementById('hustler-detail-modal').classList.add('hidden')"
+                                class="mt-6 pill-btn bg-gray-200 text-gray-800 px-8 py-4 rounded-full font-bold hover:bg-gray-300 transition">
+                            Close
+                        </button>
+                    </div>
+                `;
+                document.getElementById('hustler-detail-modal').classList.remove('hidden');
+            }
+        }
+
+        // Analytics tracking functions
+        function trackProfileView(hustlerId) {
+            const today = new Date().toISOString().split('T')[0];
+            db.ref(`analytics/${hustlerId}/views/${today}`).transaction(current => (current || 0) + 1);
+        }
+
+        function trackContactClick(hustlerId) {
+            const today = new Date().toISOString().split('T')[0];
+            db.ref(`analytics/${hustlerId}/contacts/${today}`).transaction(current => (current || 0) + 1);
+        }
+
+        // Reviews functionality
         function loadReviews(hustlerId) {
-            db.ref(`reviews/${hustlerId}`).on('value', snapshot => {
+            db.ref(`reviews/${hustlerId}`).once('value', snapshot => {
                 const reviewsList = document.getElementById('reviews-list');
                 reviewsList.innerHTML = '';
-                const reviews = snapshot.val() || {};
-                Object.entries(reviews).forEach(([id, review]) => {
-                    reviewsList.innerHTML += `
-                        <div class="review-item">
-                            <div class="flex items-center mb-2">
-                                <div class="rating-stars flex mr-2">
+
+                const reviews = [];
+                snapshot.forEach(child => {
+                    reviews.push({ id: child.key, ...child.val() });
+                });
+
+                if (reviews.length === 0) {
+                    reviewsList.innerHTML = '<p class="text-gray-500 text-center py-4">No reviews yet. Be the first to review!</p>';
+                    return;
+                }
+
+                reviews.sort((a, b) => b.timestamp - a.timestamp).forEach(review => {
+                    const reviewDiv = document.createElement('div');
+                    reviewDiv.className = 'review-item';
+                    reviewDiv.innerHTML = `
+                        <div class="flex items-start justify-between mb-2">
+                            <div>
+                                <p class="font-bold text-gray-900">${review.name || 'Anonymous'}</p>
+                                <div class="rating-stars flex text-sm">
                                     ${Array(5).fill().map((_, i) => 
                                         `<i class="fa-solid fa-star ${i < review.rating ? 'text-yellow-400' : 'text-gray-300'}"></i>`
                                     ).join('')}
                                 </div>
-                                <span class="text-sm text-gray-500">${review.name || 'Anonymous'} • ${new Date(review.timestamp).toLocaleDateString()}</span>
                             </div>
-                            <p class="text-gray-700">${review.comment}</p>
+                            <span class="text-xs text-gray-500">${new Date(review.timestamp).toLocaleDateString()}</span>
                         </div>
+                        <p class="text-gray-700">${review.comment}</p>
                     `;
+                    reviewsList.appendChild(reviewDiv);
                 });
-                updateAverageRating(hustlerId);
             });
         }
 
         function setupReviewForm(hustlerId) {
             const stars = document.querySelectorAll('#review-rating i');
+            const selectedRating = document.getElementById('selected-rating');
+
             stars.forEach(star => {
-                star.addEventListener('mouseover', () => {
-                    const rating = star.dataset.rating;
-                    stars.forEach(s => {
-                        s.classList.toggle('text-yellow-400', s.dataset.rating <= rating);
-                        s.classList.toggle('text-gray-300', s.dataset.rating > rating);
+                star.onclick = () => {
+                    const rating = parseInt(star.dataset.rating);
+                    selectedRating.value = rating;
+
+                    stars.forEach((s, i) => {
+                        if (i < rating) {
+                            s.classList.remove('fa-regular');
+                            s.classList.add('fa-solid');
+                        } else {
+                            s.classList.remove('fa-solid');
+                            s.classList.add('fa-regular');
+                        }
                     });
-                });
-                star.addEventListener('mouseout', () => {
-                    const selected = document.getElementById('selected-rating').value;
-                    stars.forEach(s => {
-                        s.classList.toggle('text-yellow-400', s.dataset.rating <= selected);
-                        s.classList.toggle('text-gray-300', s.dataset.rating > selected);
-                    });
-                });
-                star.addEventListener('click', () => {
-                    document.getElementById('selected-rating').value = star.dataset.rating;
-                });
+                };
             });
 
-            document.getElementById('review-form').addEventListener('submit', e => {
+            document.getElementById('review-form').onsubmit = (e) => {
                 e.preventDefault();
-                const rating = Number(document.getElementById('selected-rating').value);
+                const rating = parseInt(selectedRating.value);
                 const comment = document.getElementById('review-comment').value.trim();
                 const name = document.getElementById('review-name').value.trim();
 
-                if (rating === 0 || comment === '') {
-                    alert('Please select a rating and write a comment.');
+                if (rating === 0) {
+                    alert('Please select a rating');
                     return;
                 }
 
-                db.ref(`reviews/${hustlerId}`).push({
+                if (!comment) {
+                    alert('Please write a review');
+                    return;
+                }
+
+                const reviewData = {
                     rating,
                     comment,
-                    name,
+                    name: name || 'Anonymous',
                     timestamp: Date.now()
-                }).then(() => {
-                    document.getElementById('review-form').reset();
-                    document.getElementById('selected-rating').value = 0;
-                    stars.forEach(s => s.classList.replace('text-yellow-400', 'text-gray-300'));
-                }).catch(err => alert('Error submitting review: ' + err.message));
-            });
+                };
+
+                db.ref(`reviews/${hustlerId}`).push(reviewData)
+                    .then(() => {
+                        alert('Thank you for your review!');
+                        document.getElementById('review-form').reset();
+                        selectedRating.value = 0;
+                        stars.forEach(s => {
+                            s.classList.remove('fa-solid');
+                            s.classList.add('fa-regular');
+                        });
+                        loadReviews(hustlerId);
+                        updateHustlerRating(hustlerId);
+                    })
+                    .catch(err => alert('Error submitting review: ' + err.message));
+            };
         }
 
-        function updateAverageRating(hustlerId) {
+        function updateHustlerRating(hustlerId) {
             db.ref(`reviews/${hustlerId}`).once('value', snapshot => {
-                const reviews = snapshot.val() || {};
-                const ratings = Object.values(reviews).map(r => r.rating);
-                const average = ratings.length > 0 ? ratings.reduce((a, b) => a + b, 0) / ratings.length : 0;
-                db.ref(`hustlers/${hustlerId}`).update({ rating: average.toFixed(1), reviews: ratings.length });
-            });
-        }
+                let totalRating = 0;
+                let count = 0;
 
-        // ────────────────────────────────────────────────
-        // Admin Dashboard: Show pending hustlers with join date/time
-        // ────────────────────────────────────────────────
-        function renderPendingHustlers(allData) {
-            const container = document.getElementById('pending-hustlers');
-            container.innerHTML = '';
+                snapshot.forEach(child => {
+                    totalRating += child.val().rating;
+                    count++;
+                });
 
-            Object.entries(allData).forEach(([id, h]) => {
-                if (h.verified !== true) {  // only show unverified / pending
-                    const joinDate = h.createdAt 
-                        ? new Date(h.createdAt).toLocaleString('en-ZA', {
-                            dateStyle: 'medium',
-                            timeStyle: 'short'
-                          })
-                        : 'Unknown date';
-
-                    container.innerHTML += `
-                    <div class="bg-white p-6 rounded-2xl shadow-lg border border-gray-200">
-                        <h3 class="text-xl font-bold text-gray-900 mb-2">${h.name || 'Unnamed'}</h3>
-                        <p class="text-sm text-gray-600 mb-1"><strong>Category:</strong> ${h.category || '—'}</p>
-                        <p class="text-sm text-gray-600 mb-1"><strong>Location:</strong> ${h.location || '—'}</p>
-                        <p class="text-sm text-gray-600 mb-1"><strong>Rate:</strong> R${h.rate || '—'}/hr</p>
-                        <p class="text-sm text-gray-500 mt-3">
-                            <i class="fa-solid fa-calendar-alt mr-1"></i> Joined: ${joinDate}
-                        </p>
-                        <div class="mt-4 flex gap-3">
-                            <button onclick="approveHustler('${id}')" 
-                                    class="pill-btn bg-green-600 text-white px-5 py-2 text-sm font-medium hover:bg-green-700">
-                                Approve
-                            </button>
-                            <button onclick="deleteHustler('${id}')" 
-                                    class="pill-btn bg-red-600 text-white px-5 py-2 text-sm font-medium hover:bg-red-700">
-                                Delete
-                            </button>
-                        </div>
-                    </div>`;
+                if (count > 0) {
+                    const avgRating = (totalRating / count).toFixed(1);
+                    db.ref(`hustlers/${hustlerId}`).update({
+                        rating: parseFloat(avgRating),
+                        reviews: count
+                    });
                 }
             });
-
-            if (container.innerHTML === '') {
-                container.innerHTML = `
-                    <div class="col-span-full text-center py-16 text-gray-500">
-                        <i class="fa-solid fa-check-circle text-6xl mb-4 text-green-400"></i>
-                        <p class="text-xl">No pending applications at the moment.</p>
-                    </div>`;
-            }
         }
 
-        function approveHustler(id) {
-            if (confirm("Approve this hustler?")) {
-                db.ref(`hustlers/${id}`).update({ verified: true })
-                    .then(() => alert("Hustler approved!"))
-                    .catch(err => alert("Error: " + err.message));
-            }
-        }
-
-        function deleteHustler(id) {
-            if (confirm("Delete this application permanently?")) {
-                db.ref(`hustlers/${id}`).remove()
-                    .then(() => alert("Application deleted."))
-                    .catch(err => alert("Error: " + err.message));
-            }
-        }
-
-        // ────────────────────────────────────────────────
-        // Cloudinary Upload (unchanged)
-        // ────────────────────────────────────────────────
+        // Cloudinary Upload
         const CLOUD_NAME    = 'dv5bsbydu';
         const UPLOAD_PRESET = 'admin_tlaka';
         const CLOUDINARY_URL = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`;
@@ -967,6 +1164,7 @@
 
             const data = {
                 name: form.name.value.trim(),
+                email: form.email.value.trim(),
                 phone: form.phone.value.trim(),
                 category: form.category.value.trim(),
                 rate: Number(form.rate.value) || 0,
@@ -980,7 +1178,7 @@
 
             db.ref('hustlers').push(data)
                 .then(() => {
-                    alert('Thank you! Your profile has been submitted for review.');
+                    alert('Thank you! Your profile has been submitted for review. You will receive an email when approved.');
                     form.reset();
                     document.getElementById('photo-preview').classList.add('hidden');
                     resetProgress();
@@ -989,22 +1187,15 @@
                 .catch(err => alert('Error submitting profile: ' + err.message));
         });
 
-        document.getElementById('hustler-signup-modal').addEventListener('transitionend', e => {
-            if (document.getElementById('hustler-signup-modal').classList.contains('hidden')) {
-                resetProgress();
-                document.getElementById('photo-preview').classList.add('hidden');
-            }
-        });
-
-        // Google Login + Dashboard
+        // Authentication
         const hustlerLoginBtn = document.getElementById('hustler-login-btn');
 
         hustlerLoginBtn.addEventListener('click', () => {
             const provider = new firebase.auth.GoogleAuthProvider();
             auth.signInWithPopup(provider)
                 .then((result) => {
-                    const user = result.user;
-                    showDashboard(user);
+                    currentUser = result.user;
+                    checkUserRole(currentUser);
                 })
                 .catch((error) => {
                     console.error("Google sign-in error:", error);
@@ -1014,19 +1205,378 @@
 
         auth.onAuthStateChanged((user) => {
             if (user) {
-                // Optional: auto-show dashboard if already logged in
+                currentUser = user;
             }
         });
 
-        function showDashboard(user) {
+        function checkUserRole(user) {
+            // Check if admin
+            if (ADMIN_EMAILS.includes(user.email)) {
+                showAdminDashboard();
+                return;
+            }
+
+            // Check if registered hustler
+            db.ref('hustlers').orderByChild('email').equalTo(user.email).once('value', snapshot => {
+                if (snapshot.exists()) {
+                    const hustlerData = Object.entries(snapshot.val())[0];
+                    currentUserHustlerData = { id: hustlerData[0], ...hustlerData[1] };
+                    
+                    if (currentUserHustlerData.verified) {
+                        showHustlerDashboard(currentUserHustlerData);
+                    } else {
+                        alert('Your profile is pending verification. You will receive an email when approved.');
+                        goBackToHome();
+                    }
+                } else {
+                    alert('No hustler profile found for this email. Please sign up first.');
+                    goBackToHome();
+                }
+            });
+        }
+
+        function showAdminDashboard() {
             document.getElementById('main-content').classList.add('hidden');
-            document.getElementById('dashboard-page').style.display = 'block';
-            console.log("Dashboard loaded for:", user.displayName, user.email);
+            document.getElementById('admin-dashboard-page').style.display = 'block';
+            loadPendingHustlers();
+        }
+
+        function loadPendingHustlers() {
+            db.ref('hustlers').orderByChild('verified').equalTo(false).on('value', snapshot => {
+                const container = document.getElementById('pending-hustlers');
+                container.innerHTML = '';
+
+                if (!snapshot.exists()) {
+                    container.innerHTML = '<div class="col-span-full text-center py-10 text-gray-500">No pending applications</div>';
+                    return;
+                }
+
+                snapshot.forEach(child => {
+                    const h = child.val();
+                    const id = child.key;
+
+                    container.innerHTML += `
+                        <div class="bg-white rounded-xl shadow-md p-6 border border-gray-200">
+                            <div class="flex items-center mb-4">
+                                ${h.imageUrl ? 
+                                    `<img src="${h.imageUrl}" class="w-16 h-16 rounded-full object-cover mr-4">` :
+                                    `<div class="w-16 h-16 rounded-full bg-gray-300 flex items-center justify-center text-2xl font-bold text-gray-600 mr-4">${h.name.charAt(0)}</div>`
+                                }
+                                <div>
+                                    <h3 class="font-bold text-lg">${h.name}</h3>
+                                    <p class="text-orange-600">${h.category}</p>
+                                </div>
+                            </div>
+                            <div class="mb-4 text-sm space-y-1">
+                                <p><strong>Email:</strong> ${h.email || 'N/A'}</p>
+                                <p><strong>Phone:</strong> ${h.phone}</p>
+                                <p><strong>Location:</strong> ${h.location}</p>
+                                <p><strong>Rate:</strong> R${h.rate}/hr</p>
+                                <p><strong>Bio:</strong> ${h.bio || 'N/A'}</p>
+                            </div>
+                            <div class="flex gap-2">
+                                <button onclick="approveHustler('${id}')" class="flex-1 bg-green-600 text-white py-2 rounded-lg font-bold hover:bg-green-700">
+                                    Approve
+                                </button>
+                                <button onclick="rejectHustler('${id}')" class="flex-1 bg-red-600 text-white py-2 rounded-lg font-bold hover:bg-red-700">
+                                    Reject
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+            });
+        }
+
+        function approveHustler(id) {
+            if (confirm('Approve this hustler?')) {
+                db.ref(`hustlers/${id}`).update({ verified: true })
+                    .then(() => alert('Hustler approved!'))
+                    .catch(err => alert('Error: ' + err.message));
+            }
+        }
+
+        function rejectHustler(id) {
+            if (confirm('Reject and delete this application?')) {
+                db.ref(`hustlers/${id}`).remove()
+                    .then(() => alert('Application rejected'))
+                    .catch(err => alert('Error: ' + err.message));
+            }
+        }
+
+        function showHustlerDashboard(hustlerData) {
+            document.getElementById('main-content').classList.add('hidden');
+            document.getElementById('hustler-dashboard-page').style.display = 'block';
+            
+            populateHustlerDashboard(hustlerData);
+        }
+
+        function populateHustlerDashboard(hustlerData) {
+            // Set basic info
+            document.getElementById('hustler-name-nav').textContent = hustlerData.name;
+            document.getElementById('hustler-name-header').textContent = hustlerData.name.split(' ')[0];
+            document.getElementById('dashboard-name').textContent = hustlerData.name;
+            document.getElementById('dashboard-category').textContent = hustlerData.category;
+            document.getElementById('dashboard-location').textContent = hustlerData.location;
+            document.getElementById('dashboard-rate').textContent = `R${hustlerData.rate}/hr`;
+            
+            if (hustlerData.imageUrl) {
+                document.getElementById('dashboard-profile-pic').src = hustlerData.imageUrl;
+            } else {
+                document.getElementById('dashboard-profile-pic').src = `https://ui-avatars.com/api/?name=${encodeURIComponent(hustlerData.name)}&size=200&background=f97316&color=fff&bold=true`;
+            }
+
+            document.getElementById('dashboard-member-since').textContent = 
+                new Date(hustlerData.createdAt || Date.now()).toLocaleDateString('en-ZA', { month: 'short', year: 'numeric' });
+
+            // Load analytics
+            loadHustlerAnalytics(hustlerData.id);
+            
+            // Load reviews
+            loadDashboardReviews(hustlerData.id);
+
+            // Calculate rank in category
+            calculateCategoryRank(hustlerData);
+        }
+
+        function loadHustlerAnalytics(hustlerId) {
+            // Get views for last 30 days
+            db.ref(`analytics/${hustlerId}/views`).once('value', viewsSnapshot => {
+                let totalViews = 0;
+                let last7DaysViews = 0;
+                let prev7DaysViews = 0;
+                const today = new Date();
+                const views7DaysAgo = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
+                const views14DaysAgo = new Date(today.getTime() - 14 * 24 * 60 * 60 * 1000);
+
+                viewsSnapshot.forEach(child => {
+                    const date = new Date(child.key);
+                    const count = child.val();
+                    totalViews += count;
+
+                    if (date >= views7DaysAgo) {
+                        last7DaysViews += count;
+                    } else if (date >= views14DaysAgo) {
+                        prev7DaysViews += count;
+                    }
+                });
+
+                document.getElementById('stat-views').textContent = totalViews;
+                
+                const viewsChange = prev7DaysViews > 0 
+                    ? Math.round(((last7DaysViews - prev7DaysViews) / prev7DaysViews) * 100)
+                    : (last7DaysViews > 0 ? 100 : 0);
+                
+                document.getElementById('views-change').textContent = `${viewsChange}%`;
+
+                // Create weekly chart
+                createWeeklyChart(viewsSnapshot.val() || {});
+            });
+
+            // Get contacts
+            db.ref(`analytics/${hustlerId}/contacts`).once('value', contactsSnapshot => {
+                let totalContacts = 0;
+                let last7DaysContacts = 0;
+                let prev7DaysContacts = 0;
+                const today = new Date();
+                const contacts7DaysAgo = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
+                const contacts14DaysAgo = new Date(today.getTime() - 14 * 24 * 60 * 60 * 1000);
+
+                contactsSnapshot.forEach(child => {
+                    const date = new Date(child.key);
+                    const count = child.val();
+                    totalContacts += count;
+
+                    if (date >= contacts7DaysAgo) {
+                        last7DaysContacts += count;
+                    } else if (date >= contacts14DaysAgo) {
+                        prev7DaysContacts += count;
+                    }
+                });
+
+                document.getElementById('stat-contacts').textContent = totalContacts;
+                
+                const contactsChange = prev7DaysContacts > 0 
+                    ? Math.round(((last7DaysContacts - prev7DaysContacts) / prev7DaysContacts) * 100)
+                    : (last7DaysContacts > 0 ? 100 : 0);
+                
+                document.getElementById('contacts-change').textContent = `${contactsChange}%`;
+            });
+
+            // Get rating
+            db.ref(`reviews/${hustlerId}`).once('value', reviewsSnapshot => {
+                let totalRating = 0;
+                let reviewCount = 0;
+                const ratingDistribution = [0, 0, 0, 0, 0];
+
+                reviewsSnapshot.forEach(child => {
+                    const rating = child.val().rating;
+                    totalRating += rating;
+                    reviewCount++;
+                    ratingDistribution[rating - 1]++;
+                });
+
+                const avgRating = reviewCount > 0 ? (totalRating / reviewCount).toFixed(1) : 0;
+                document.getElementById('stat-rating').textContent = avgRating;
+                document.getElementById('total-reviews').textContent = reviewCount;
+
+                createRatingChart(ratingDistribution);
+            });
+        }
+
+        function createWeeklyChart(viewsData) {
+            const ctx = document.getElementById('weeklyChart');
+            if (!ctx) return;
+
+            const last7Days = [];
+            const viewCounts = [];
+            
+            for (let i = 6; i >= 0; i--) {
+                const date = new Date();
+                date.setDate(date.getDate() - i);
+                const dateStr = date.toISOString().split('T')[0];
+                last7Days.push(date.toLocaleDateString('en-ZA', { weekday: 'short' }));
+                viewCounts.push(viewsData[dateStr] || 0);
+            }
+
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: last7Days,
+                    datasets: [{
+                        label: 'Profile Views',
+                        data: viewCounts,
+                        borderColor: '#f97316',
+                        backgroundColor: 'rgba(249, 115, 22, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function createRatingChart(distribution) {
+            const ctx = document.getElementById('ratingChart');
+            if (!ctx) return;
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['1★', '2★', '3★', '4★', '5★'],
+                    datasets: [{
+                        label: 'Number of Reviews',
+                        data: distribution,
+                        backgroundColor: [
+                            '#ef4444',
+                            '#f97316',
+                            '#eab308',
+                            '#84cc16',
+                            '#22c55e'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function loadDashboardReviews(hustlerId) {
+            db.ref(`reviews/${hustlerId}`).once('value', snapshot => {
+                const container = document.getElementById('dashboard-reviews');
+                container.innerHTML = '';
+
+                if (!snapshot.exists()) {
+                    container.innerHTML = '<p class="text-gray-500 text-center py-8">No reviews yet</p>';
+                    return;
+                }
+
+                const reviews = [];
+                snapshot.forEach(child => {
+                    reviews.push(child.val());
+                });
+
+                reviews.sort((a, b) => b.timestamp - a.timestamp).slice(0, 5).forEach(review => {
+                    container.innerHTML += `
+                        <div class="p-4 bg-gray-50 rounded-xl">
+                            <div class="flex justify-between items-start mb-2">
+                                <div>
+                                    <p class="font-bold text-gray-900">${review.name || 'Anonymous'}</p>
+                                    <div class="rating-stars flex text-sm">
+                                        ${Array(5).fill().map((_, i) => 
+                                            `<i class="fa-solid fa-star ${i < review.rating ? 'text-yellow-400' : 'text-gray-300'}"></i>`
+                                        ).join('')}
+                                    </div>
+                                </div>
+                                <span class="text-xs text-gray-500">${new Date(review.timestamp).toLocaleDateString()}</span>
+                            </div>
+                            <p class="text-gray-700 text-sm">${review.comment}</p>
+                        </div>
+                    `;
+                });
+            });
+        }
+
+        function calculateCategoryRank(hustlerData) {
+            db.ref('hustlers').orderByChild('category').equalTo(hustlerData.category).once('value', snapshot => {
+                const categoryHustlers = [];
+                snapshot.forEach(child => {
+                    if (child.val().verified) {
+                        categoryHustlers.push({ id: child.key, ...child.val() });
+                    }
+                });
+
+                // Sort by rating
+                categoryHustlers.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+                
+                const rank = categoryHustlers.findIndex(h => h.id === hustlerData.id) + 1;
+                
+                document.getElementById('stat-rank').textContent = `#${rank}`;
+                document.getElementById('category-total').textContent = categoryHustlers.length;
+            });
+        }
+
+        function editProfile() {
+            alert('Profile editing feature coming soon!');
         }
 
         function goBackToHome() {
-            document.getElementById('dashboard-page').style.display = 'none';
+            document.getElementById('admin-dashboard-page').style.display = 'none';
+            document.getElementById('hustler-dashboard-page').style.display = 'none';
             document.getElementById('main-content').classList.remove('hidden');
+            currentUser = null;
+            currentUserHustlerData = null;
         }
 
         // Initial render
