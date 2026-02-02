@@ -28,7 +28,6 @@
             box-shadow: 0 20px 40px -10px rgba(249, 115, 22, 0.25);
         }
 
-        /* Modern pill button */
         .pill-btn {
             border-radius: 9999px;
             transition: all 0.3s ease;
@@ -54,7 +53,6 @@
             transform: translateX(100%);
         }
 
-        /* Modern search bar */
         .search-container {
             position: relative;
             max-width: 1100px;
@@ -100,7 +98,6 @@
             opacity: 1;
         }
 
-        /* Modern modal */
         .modal-backdrop {
             backdrop-filter: blur(8px);
             background: rgba(0,0,0,0.65);
@@ -115,7 +112,6 @@
             opacity: 1;
         }
 
-        /* Dropdown */
         .dropdown:hover .dropdown-menu {
             display: block;
         }
@@ -141,7 +137,6 @@
             color: white;
         }
 
-        /* Progress bar */
         .progress-container {
             height: 6px;
             background: #e5e7eb;
@@ -155,258 +150,319 @@
             background: linear-gradient(90deg, #f97316, #fb923c);
             transition: width 0.2s ease;
         }
+
+        /* Dashboard full page styling */
+        #dashboard-page {
+            display: none;
+            min-height: 100vh;
+            background: linear-gradient(to bottom, #f8fafc, #e5e7eb);
+        }
+        #main-content.hidden {
+            display: none;
+        }
     </style>
 </head>
 <body class="bg-gray-50">
 
-    <!-- Navigation -->
-    <nav class="bg-white border-b sticky top-0 z-50 shadow-sm">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16 items-center">
-                <div class="flex items-center cursor-pointer" onclick="window.location.href='index.html'">
-                    <span class="text-2xl font-extrabold text-[#1e3a8a]">Kasi<span class="text-[#f97316]">Fix</span></span>
-                </div>
-                <div class="hidden md:flex items-center space-x-8">
-                    <a href="#how-it-works" class="text-gray-700 hover:text-[#1e3a8a] font-medium">How it Works</a>
-                    <div class="relative dropdown">
-                        <button class="text-gray-700 hover:text-[#1e3a8a] font-medium flex items-center">
-                            Categories <i class="fa-solid fa-chevron-down ml-1 text-xs"></i>
+    <div id="main-content">
+
+        <!-- Navigation -->
+        <nav class="bg-white border-b sticky top-0 z-50 shadow-sm">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between h-16 items-center">
+                    <div class="flex items-center cursor-pointer" onclick="window.location.href='index.html'">
+                        <span class="text-2xl font-extrabold text-[#1e3a8a]">Kasi<span class="text-[#f97316]">Fix</span></span>
+                    </div>
+                    <div class="hidden md:flex items-center space-x-8">
+                        <a href="#how-it-works" class="text-gray-700 hover:text-[#1e3a8a] font-medium">How it Works</a>
+                        <div class="relative dropdown">
+                            <button class="text-gray-700 hover:text-[#1e3a8a] font-medium flex items-center">
+                                Categories <i class="fa-solid fa-chevron-down ml-1 text-xs"></i>
+                            </button>
+                            <div class="dropdown-menu hidden">
+                                <div id="category-dropdown" class="py-2"></div>
+                            </div>
+                        </div>
+                        <a href="#all-hustlers" class="text-gray-700 hover:text-[#1e3a8a] font-medium">Find Help</a>
+                        <button onclick="document.getElementById('hustler-signup-modal').classList.remove('hidden')"
+                                class="pill-btn bg-[#f97316] text-white px-6 py-2.5 font-bold hover:bg-orange-600 transition shadow">
+                            Become a Hustler
                         </button>
-                        <div class="dropdown-menu hidden">
-                            <div id="category-dropdown" class="py-2"></div>
+                        <button id="hustler-login-btn" class="pill-btn bg-blue-600 text-white px-6 py-2.5 font-bold hover:bg-blue-700 transition shadow ml-3">
+                            Hustler Login
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Hero -->
+        <section class="hero-bg text-white py-24 md:py-32">
+            <div class="max-w-6xl mx-auto px-4 text-center">
+                <h1 class="text-4xl md:text-6xl font-extrabold mb-6 leading-tight">
+                    Find Trusted Local Help<br/>Right in Your Kasi
+                </h1>
+                <p class="text-xl md:text-2xl text-blue-100 mb-10 max-w-3xl mx-auto">
+                    Plumbers, electricians, car washers, barbers, builders — real people, real skills, real fast.
+                </p>
+
+                <div class="search-container">
+                    <div class="flex flex-col md:flex-row gap-3">
+                        <div class="flex-1 input-wrapper flex items-center px-5 py-3">
+                            <i class="fa-solid fa-search text-gray-400 mr-3 text-xl"></i>
+                            <input type="text" id="search-keyword" placeholder="Plumber in Soweto, barber..." 
+                                   class="search-input flex-1 text-lg outline-none" oninput="filterHustlers()">
+                        </div>
+                        <div class="md:w-64 input-wrapper flex items-center px-5 py-3">
+                            <i class="fa-solid fa-location-dot text-gray-400 mr-3 text-xl"></i>
+                            <input type="text" id="search-location" placeholder="Location (e.g. Soweto)" 
+                                   class="search-input flex-1 text-lg outline-none" value="Johannesburg" oninput="filterHustlers()">
+                        </div>
+                        <button onclick="document.getElementById('advanced-panel').classList.toggle('open')"
+                                class="pill-btn bg-white text-gray-800 px-6 py-3 font-medium hover:bg-gray-100 transition shadow flex items-center justify-center min-w-[140px]">
+                            <i class="fa-solid fa-sliders mr-2"></i> Advanced
+                        </button>
+                    </div>
+
+                    <div id="advanced-panel" class="advanced-panel mt-4 px-2">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-5 bg-white/80 backdrop-blur-sm p-5 rounded-2xl border border-gray-100">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Category</label>
+                                <select id="search-category" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-[#f97316] outline-none bg-white" onchange="filterHustlers()">
+                                    <option value="">All Categories</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Min Hourly Rate (R)</label>
+                                <input type="number" id="search-min-rate" min="0" placeholder="e.g. 150" 
+                                       class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-[#f97316] outline-none bg-white" oninput="filterHustlers()">
+                            </div>
+                            <div class="flex items-end">
+                                <label class="flex items-center cursor-pointer">
+                                    <input type="checkbox" id="search-verified-only" class="w-5 h-5 text-[#f97316] border-gray-300 rounded focus:ring-[#f97316]" onchange="filterHustlers()" checked>
+                                    <span class="ml-3 text-gray-700 font-medium">Verified hustlers only</span>
+                                </label>
+                            </div>
                         </div>
                     </div>
-                    <a href="#all-hustlers" class="text-gray-700 hover:text-[#1e3a8a] font-medium">Find Help</a>
-                    <button onclick="document.getElementById('hustler-signup-modal').classList.remove('hidden')"
-                            class="pill-btn bg-[#f97316] text-white px-6 py-2.5 font-bold hover:bg-orange-600 transition shadow">
-                        Become a Hustler
+                </div>
+
+                <div class="flex flex-col sm:flex-row justify-center gap-5 mt-10 max-w-xl mx-auto">
+                    <a href="#all-hustlers" 
+                       class="pill-btn border-2 border-white text-white px-10 py-5 text-lg font-bold hover:bg-white hover:text-[#1e3a8a] transition shadow-lg">
+                        Browse All Hustlers
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- All Hustlers -->
+        <section id="all-hustlers" class="py-20 bg-gray-50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <h2 class="text-3xl md:text-4xl font-extrabold text-center mb-12 text-gray-900">Find Hustlers Near You</h2>
+                <div id="hustlers-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- populated dynamically -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="bg-[#1e3a8a] text-white py-12">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                    <div>
+                        <h3 class="text-xl font-bold mb-4">KasiFix</h3>
+                        <p class="text-blue-100">Real skills. Real people. Right in your kasi.</p>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold mb-4">Quick Links</h3>
+                        <ul class="space-y-2">
+                            <li><a href="#how-it-works" class="hover:text-[#f97316]">How it Works</a></li>
+                            <li><a href="#all-hustlers" class="hover:text-[#f97316]">Find Help</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold mb-4">Support</h3>
+                        <ul class="space-y-2">
+                            <li><a href="#" class="hover:text-[#f97316]">FAQ</a></li>
+                            <li><a href="#" class="hover:text-[#f97316]">Contact</a></li>
+                            <li><a href="#" class="hover:text-[#f97316]">Privacy Policy</a></li>
+                            <li><a href="#" class="hover:text-[#f97316]">Terms</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold mb-4">Follow Us</h3>
+                        <div class="flex space-x-4 text-2xl">
+                            <a href="#" class="hover:text-[#f97316]"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="hover:text-[#f97316]"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="hover:text-[#f97316]"><i class="fab fa-instagram"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-12 pt-8 border-t border-blue-800 text-center text-blue-200">
+                    © 2026 KasiFix. Built for the community.
+                </div>
+            </div>
+        </footer>
+
+        <!-- Hustler Detail Modal -->
+        <div id="hustler-detail-modal" class="fixed inset-0 modal-backdrop flex items-center justify-center z-50 hidden">
+            <div class="modal-content bg-white rounded-3xl p-8 max-w-2xl w-full m-6 relative max-h-[90vh] overflow-y-auto shadow-2xl border border-gray-100">
+                <button onclick="document.getElementById('hustler-detail-modal').classList.add('hidden')"
+                        class="absolute top-5 right-5 text-gray-500 hover:text-gray-800 transition">
+                    <i class="fa-solid fa-times text-2xl"></i>
+                </button>
+                <div id="hustler-detail-content"></div>
+            </div>
+        </div>
+
+        <!-- Become a Hustler Modal -->
+        <div id="hustler-signup-modal" class="fixed inset-0 modal-backdrop flex items-center justify-center z-50 hidden">
+            <div class="modal-content bg-white rounded-3xl p-7 max-w-md w-full m-6 relative max-h-[90vh] overflow-y-auto shadow-2xl border border-gray-100">
+                <button onclick="document.getElementById('hustler-signup-modal').classList.add('hidden')"
+                        class="absolute top-4 right-4 text-gray-500 hover:text-gray-800 transition">
+                    <i class="fa-solid fa-times text-xl"></i>
+                </button>
+                <h2 class="text-2xl font-bold mb-6 text-center text-gray-900">Become a Hustler</h2>
+                <form id="hustler-signup-form" class="space-y-4 text-sm">
+                    <div>
+                        <label class="block text-gray-700 mb-1 font-medium">Full Name *</label>
+                        <input type="text" name="name" required class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none transition">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 mb-1 font-medium">Phone Number (with +27) *</label>
+                        <input type="tel" name="phone" required placeholder="+27123456789" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none transition">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 mb-1 font-medium">Category / Service *</label>
+                        <input type="text" name="category" required placeholder="e.g. Plumbing, Barber" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none transition">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 mb-1 font-medium">Hourly Rate (R) *</label>
+                        <input type="number" name="rate" required min="50" placeholder="150" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none transition">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 mb-1 font-medium">Location (e.g. Soweto) *</label>
+                        <input type="text" name="location" required class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none transition">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 mb-1 font-medium">Short Bio</label>
+                        <textarea name="bio" rows="3" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none transition"></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 mb-1 font-medium">Profile Photo</label>
+                        <input type="file" id="profile-photo" accept="image/*" class="w-full px-3 py-2 rounded-lg border border-gray-200">
+                        
+                        <div id="progress-container" class="progress-container hidden mt-2">
+                            <div id="progress-bar" class="progress-bar"></div>
+                        </div>
+                        <p id="progress-text" class="text-xs text-gray-600 mt-1 text-center hidden">Uploading...</p>
+
+                        <div id="photo-preview" class="mt-3 hidden">
+                            <img id="preview-img" class="w-20 h-20 object-cover rounded-xl mx-auto shadow-sm" alt="Preview">
+                            <p class="text-xs text-gray-500 mt-1 text-center">Uploaded successfully</p>
+                        </div>
+                        <input type="hidden" name="imageUrl" id="imageUrlField">
+                    </div>
+                    <button type="submit" class="pill-btn w-full bg-[#f97316] text-white py-3.5 rounded-full font-bold hover:bg-orange-600 transition shadow mt-2">
+                        Submit & Join KasiFix
                     </button>
-                    <button id="hustler-login-btn" class="pill-btn bg-blue-600 text-white px-6 py-2.5 font-bold hover:bg-blue-700 transition shadow ml-3">
-                        Hustler Login
-                    </button>
-                </div>
+                </form>
             </div>
         </div>
-    </nav>
 
-    <!-- Hero -->
-    <section class="hero-bg text-white py-24 md:py-32">
-        <div class="max-w-6xl mx-auto px-4 text-center">
-            <h1 class="text-4xl md:text-6xl font-extrabold mb-6 leading-tight">
-                Find Trusted Local Help<br/>Right in Your Kasi
-            </h1>
-            <p class="text-xl md:text-2xl text-blue-100 mb-10 max-w-3xl mx-auto">
-                Plumbers, electricians, car washers, barbers, builders — real people, real skills, real fast.
-            </p>
-
-            <div class="search-container">
-                <div class="flex flex-col md:flex-row gap-3">
-                    <div class="flex-1 input-wrapper flex items-center px-5 py-3">
-                        <i class="fa-solid fa-search text-gray-400 mr-3 text-xl"></i>
-                        <input type="text" id="search-keyword" placeholder="Plumber in Soweto, barber..." 
-                               class="search-input flex-1 text-lg outline-none" oninput="filterHustlers()">
-                    </div>
-                    <div class="md:w-64 input-wrapper flex items-center px-5 py-3">
-                        <i class="fa-solid fa-location-dot text-gray-400 mr-3 text-xl"></i>
-                        <input type="text" id="search-location" placeholder="Location (e.g. Soweto)" 
-                               class="search-input flex-1 text-lg outline-none" value="Johannesburg" oninput="filterHustlers()">
-                    </div>
-                    <button onclick="document.getElementById('advanced-panel').classList.toggle('open')"
-                            class="pill-btn bg-white text-gray-800 px-6 py-3 font-medium hover:bg-gray-100 transition shadow flex items-center justify-center min-w-[140px]">
-                        <i class="fa-solid fa-sliders mr-2"></i> Advanced
-                    </button>
-                </div>
-
-                <div id="advanced-panel" class="advanced-panel mt-4 px-2">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 bg-white/80 backdrop-blur-sm p-5 rounded-2xl border border-gray-100">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Category</label>
-                            <select id="search-category" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-[#f97316] outline-none bg-white" onchange="filterHustlers()">
-                                <option value="">All Categories</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Min Hourly Rate (R)</label>
-                            <input type="number" id="search-min-rate" min="0" placeholder="e.g. 150" 
-                                   class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-[#f97316] outline-none bg-white" oninput="filterHustlers()">
-                        </div>
-                        <div class="flex items-end">
-                            <label class="flex items-center cursor-pointer">
-                                <input type="checkbox" id="search-verified-only" class="w-5 h-5 text-[#f97316] border-gray-300 rounded focus:ring-[#f97316]" onchange="filterHustlers()" checked>
-                                <span class="ml-3 text-gray-700 font-medium">Verified hustlers only</span>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="flex flex-col sm:flex-row justify-center gap-5 mt-10 max-w-xl mx-auto">
-                <a href="#all-hustlers" 
-                   class="pill-btn border-2 border-white text-white px-10 py-5 text-lg font-bold hover:bg-white hover:text-[#1e3a8a] transition shadow-lg">
-                    Browse All Hustlers
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- All Hustlers -->
-    <section id="all-hustlers" class="py-20 bg-gray-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="text-3xl md:text-4xl font-extrabold text-center mb-12 text-gray-900">Find Hustlers Near You</h2>
-            <div id="hustlers-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- populated dynamically -->
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="bg-[#1e3a8a] text-white py-12">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-                <div>
-                    <h3 class="text-xl font-bold mb-4">KasiFix</h3>
-                    <p class="text-blue-100">Real skills. Real people. Right in your kasi.</p>
-                </div>
-                <div>
-                    <h3 class="text-xl font-bold mb-4">Quick Links</h3>
-                    <ul class="space-y-2">
-                        <li><a href="#how-it-works" class="hover:text-[#f97316]">How it Works</a></li>
-                        <li><a href="#all-hustlers" class="hover:text-[#f97316]">Find Help</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h3 class="text-xl font-bold mb-4">Support</h3>
-                    <ul class="space-y-2">
-                        <li><a href="#" class="hover:text-[#f97316]">FAQ</a></li>
-                        <li><a href="#" class="hover:text-[#f97316]">Contact</a></li>
-                        <li><a href="#" class="hover:text-[#f97316]">Privacy Policy</a></li>
-                        <li><a href="#" class="hover:text-[#f97316]">Terms</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h3 class="text-xl font-bold mb-4">Follow Us</h3>
-                    <div class="flex space-x-4 text-2xl">
-                        <a href="#" class="hover:text-[#f97316]"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#" class="hover:text-[#f97316]"><i class="fab fa-twitter"></i></a>
-                        <a href="#" class="hover:text-[#f97316]"><i class="fab fa-instagram"></i></a>
-                    </div>
-                </div>
-            </div>
-            <div class="mt-12 pt-8 border-t border-blue-800 text-center text-blue-200">
-                © 2026 KasiFix. Built for the community.
-            </div>
-        </div>
-    </footer>
-
-    <!-- Hustler Detail Modal -->
-    <div id="hustler-detail-modal" class="fixed inset-0 modal-backdrop flex items-center justify-center z-50 hidden">
-        <div class="modal-content bg-white rounded-3xl p-8 max-w-2xl w-full m-6 relative max-h-[90vh] overflow-y-auto shadow-2xl border border-gray-100">
-            <button onclick="document.getElementById('hustler-detail-modal').classList.add('hidden')"
-                    class="absolute top-5 right-5 text-gray-500 hover:text-gray-800 transition">
-                <i class="fa-solid fa-times text-2xl"></i>
-            </button>
-            <div id="hustler-detail-content"></div>
-        </div>
     </div>
 
-    <!-- Become a Hustler Modal -->
-    <div id="hustler-signup-modal" class="fixed inset-0 modal-backdrop flex items-center justify-center z-50 hidden">
-        <div class="modal-content bg-white rounded-3xl p-7 max-w-md w-full m-6 relative max-h-[90vh] overflow-y-auto shadow-2xl border border-gray-100">
-            <button onclick="document.getElementById('hustler-signup-modal').classList.add('hidden')"
-                    class="absolute top-4 right-4 text-gray-500 hover:text-gray-800 transition">
-                <i class="fa-solid fa-times text-xl"></i>
-            </button>
-            <h2 class="text-2xl font-bold mb-6 text-center text-gray-900">Become a Hustler</h2>
-            <form id="hustler-signup-form" class="space-y-4 text-sm">
-                <div>
-                    <label class="block text-gray-700 mb-1 font-medium">Full Name *</label>
-                    <input type="text" name="name" required class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none transition">
-                </div>
-                <div>
-                    <label class="block text-gray-700 mb-1 font-medium">Phone Number (with +27) *</label>
-                    <input type="tel" name="phone" required placeholder="+27123456789" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none transition">
-                </div>
-                <div>
-                    <label class="block text-gray-700 mb-1 font-medium">Category / Service *</label>
-                    <input type="text" name="category" required placeholder="e.g. Plumbing, Barber" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none transition">
-                </div>
-                <div>
-                    <label class="block text-gray-700 mb-1 font-medium">Hourly Rate (R) *</label>
-                    <input type="number" name="rate" required min="50" placeholder="150" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none transition">
-                </div>
-                <div>
-                    <label class="block text-gray-700 mb-1 font-medium">Location (e.g. Soweto) *</label>
-                    <input type="text" name="location" required class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none transition">
-                </div>
-                <div>
-                    <label class="block text-gray-700 mb-1 font-medium">Short Bio</label>
-                    <textarea name="bio" rows="3" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none transition"></textarea>
-                </div>
-                <div>
-                    <label class="block text-gray-700 mb-1 font-medium">Profile Photo</label>
-                    <input type="file" id="profile-photo" accept="image/*" class="w-full px-3 py-2 rounded-lg border border-gray-200">
-                    
-                    <div id="progress-container" class="progress-container hidden mt-2">
-                        <div id="progress-bar" class="progress-bar"></div>
+    <!-- Full Page Dashboard -->
+    <div id="dashboard-page" class="bg-gradient-to-b from-gray-50 to-gray-100">
+        <nav class="bg-white border-b shadow-sm">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between h-16 items-center">
+                    <div class="flex items-center">
+                        <span class="text-2xl font-extrabold text-[#1e3a8a]">Kasi<span class="text-[#f97316]">Fix</span> Dashboard</span>
                     </div>
-                    <p id="progress-text" class="text-xs text-gray-600 mt-1 text-center hidden">Uploading...</p>
-
-                    <div id="photo-preview" class="mt-3 hidden">
-                        <img id="preview-img" class="w-20 h-20 object-cover rounded-xl mx-auto shadow-sm" alt="Preview">
-                        <p class="text-xs text-gray-500 mt-1 text-center">Uploaded successfully</p>
+                    <div class="flex items-center space-x-4">
+                        <button onclick="goBackToHome()"
+                                class="pill-btn bg-gray-700 text-white px-6 py-2 font-medium hover:bg-gray-800 transition">
+                            Back to Home
+                        </button>
+                        <button onclick="firebase.auth().signOut().then(goBackToHome)"
+                                class="pill-btn bg-red-600 text-white px-6 py-2 font-medium hover:bg-red-700 transition">
+                            Sign Out
+                        </button>
                     </div>
-                    <input type="hidden" name="imageUrl" id="imageUrlField">
                 </div>
-                <button type="submit" class="pill-btn w-full bg-[#f97316] text-white py-3.5 rounded-full font-bold hover:bg-orange-600 transition shadow mt-2">
-                    Submit & Join KasiFix
-                </button>
-            </form>
-        </div>
-    </div>
+            </div>
+        </nav>
 
-    <!-- Simple Dashboard Placeholder (in real app this would be separate page) -->
-    <div id="dashboard-modal" class="fixed inset-0 modal-backdrop flex items-center justify-center z-50 hidden">
-        <div class="modal-content bg-white rounded-3xl p-8 max-w-4xl w-full m-6 relative max-h-[90vh] overflow-y-auto shadow-2xl border border-gray-100">
-            <button onclick="document.getElementById('dashboard-modal').classList.add('hidden')"
-                    class="absolute top-5 right-5 text-gray-500 hover:text-gray-800 transition">
-                <i class="fa-solid fa-times text-2xl"></i>
-            </button>
-            <h2 class="text-3xl font-bold mb-6 text-center text-gray-900">Hustler Dashboard</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-                <div class="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-2xl shadow">
-                    <h3 class="text-lg font-semibold text-blue-800">Total Views</h3>
-                    <p class="text-4xl font-bold text-blue-600 mt-2">1,248</p>
+        <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+            <h1 class="text-3xl font-bold text-gray-900 mb-8">Welcome to Your Dashboard</h1>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+                <div class="bg-white p-6 rounded-2xl shadow-lg border border-gray-100">
+                    <h3 class="text-lg font-semibold text-gray-700">Profile Views</h3>
+                    <p class="text-4xl font-bold text-[#1e3a8a] mt-2">1,487</p>
+                    <p class="text-sm text-gray-500 mt-1">+18% this month</p>
                 </div>
-                <div class="bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-2xl shadow">
-                    <h3 class="text-lg font-semibold text-green-800">Enquiries</h3>
-                    <p class="text-4xl font-bold text-green-600 mt-2">87</p>
+                <div class="bg-white p-6 rounded-2xl shadow-lg border border-gray-100">
+                    <h3 class="text-lg font-semibold text-gray-700">Enquiries / Chats</h3>
+                    <p class="text-4xl font-bold text-[#f97316] mt-2">124</p>
+                    <p class="text-sm text-gray-500 mt-1">This month</p>
                 </div>
-                <div class="bg-gradient-to-br from-orange-50 to-orange-100 p-6 rounded-2xl shadow">
-                    <h3 class="text-lg font-semibold text-orange-800">Earnings (est.)</h3>
-                    <p class="text-4xl font-bold text-orange-600 mt-2">R12,450</p>
+                <div class="bg-white p-6 rounded-2xl shadow-lg border border-gray-100">
+                    <h3 class="text-lg font-semibold text-gray-700">Estimated Earnings</h3>
+                    <p class="text-4xl font-bold text-green-600 mt-2">R18,920</p>
+                    <p class="text-sm text-gray-500 mt-1">Based on completed jobs</p>
                 </div>
             </div>
-            <div class="bg-gray-50 p-6 rounded-2xl">
-                <h3 class="text-xl font-bold mb-4">Recent Activity</h3>
-                <ul class="space-y-3 text-gray-700">
-                    <li class="flex justify-between"><span>Plumbing job in Benoni</span><span class="text-green-600">+R450</span></li>
-                    <li class="flex justify-between"><span>Barber booking</span><span class="text-green-600">+R180</span></li>
-                    <li class="flex justify-between"><span>New profile view</span><span class="text-blue-600">+12 views</span></li>
-                </ul>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="bg-white p-6 rounded-2xl shadow-lg border border-gray-100">
+                    <h3 class="text-xl font-bold mb-4">Recent Activity</h3>
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center border-b pb-3">
+                            <div>
+                                <p class="font-medium">Plumbing repair – Daveyton</p>
+                                <p class="text-sm text-gray-500">Yesterday • R650</p>
+                            </div>
+                            <span class="text-green-600 font-medium">Completed</span>
+                        </div>
+                        <div class="flex justify-between items-center border-b pb-3">
+                            <div>
+                                <p class="font-medium">Haircut + beard trim</p>
+                                <p class="text-sm text-gray-500">2 days ago • R220</p>
+                            </div>
+                            <span class="text-green-600 font-medium">Completed</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <p class="font-medium">New enquiry from Tembisa</p>
+                                <p class="text-sm text-gray-500">Today • Solar installation</p>
+                            </div>
+                            <span class="text-blue-600 font-medium">Pending</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-2xl shadow-lg border border-gray-100">
+                    <h3 class="text-xl font-bold mb-4">Quick Stats</h3>
+                    <ul class="space-y-3 text-gray-700">
+                        <li class="flex justify-between"><span>Jobs Completed</span><span class="font-bold">42</span></li>
+                        <li class="flex justify-between"><span>Average Rating</span><span class="font-bold">4.8 ★</span></li>
+                        <li class="flex justify-between"><span>Response Time</span><span class="font-bold">~45 min</span></li>
+                        <li class="flex justify-between"><span>Repeat Customers</span><span class="font-bold">11</span></li>
+                    </ul>
+                </div>
             </div>
-            <div class="mt-8 text-center">
-                <button onclick="firebase.auth().signOut().then(() => location.reload())"
-                        class="pill-btn bg-red-600 text-white px-8 py-3 rounded-full font-bold hover:bg-red-700 transition">
-                    Sign Out
-                </button>
+
+            <div class="mt-10 text-center">
+                <p class="text-gray-500">This is a placeholder dashboard. In a real app, these stats would be pulled from your Firebase data linked to your account.</p>
             </div>
-        </div>
+        </main>
     </div>
 
     <script>
-        // ────────────────────────────────────────────────
         // Firebase Config
-        // ────────────────────────────────────────────────
         const firebaseConfig = {
             apiKey: "AIzaSyC4kR_HiywObXho8Zh20JyzC40iVrZq3lo",
             authDomain: "kasifix-5b102.firebaseapp.com",
@@ -423,7 +479,6 @@
         let allHustlers = [];
         let categories = new Set();
 
-        // Real-time listener for hustlers (public verified ones)
         db.ref('hustlers').on('value', snapshot => {
             allHustlers = [];
             categories.clear();
@@ -596,9 +651,7 @@
             document.getElementById('hustler-detail-modal').classList.remove('hidden');
         }
 
-        // ────────────────────────────────────────────────
-        // Cloudinary Unsigned Upload + Progress
-        // ────────────────────────────────────────────────
+        // Cloudinary Upload
         const CLOUD_NAME    = 'dv5bsbydu';
         const UPLOAD_PRESET = 'admin_tlaka';
         const CLOUDINARY_URL = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`;
@@ -664,7 +717,6 @@
             document.getElementById('progress-text').classList.add('hidden');
         }
 
-        // Hustler signup form
         document.getElementById('hustler-signup-form').addEventListener('submit', e => {
             e.preventDefault();
             const form = e.target;
@@ -697,7 +749,6 @@
                 .catch(err => alert('Error submitting profile: ' + err.message));
         });
 
-        // Reset progress when modal closes
         document.getElementById('hustler-signup-modal').addEventListener('transitionend', e => {
             if (document.getElementById('hustler-signup-modal').classList.contains('hidden')) {
                 resetProgress();
@@ -706,7 +757,7 @@
         });
 
         // ────────────────────────────────────────────────
-        // Google Login for Hustlers + Dashboard
+        // Google Login + Full Page Dashboard
         // ────────────────────────────────────────────────
         const hustlerLoginBtn = document.getElementById('hustler-login-btn');
 
@@ -715,8 +766,6 @@
             auth.signInWithPopup(provider)
                 .then((result) => {
                     const user = result.user;
-                    // In a real app you would check if this Google account is linked to a hustler profile
-                    // For demo we just show the dashboard
                     showDashboard(user);
                 })
                 .catch((error) => {
@@ -725,18 +774,23 @@
                 });
         });
 
-        // Listen for auth state (useful if already logged in)
         auth.onAuthStateChanged((user) => {
             if (user) {
-                // Optionally auto-show dashboard or change button text
-                // hustlerLoginBtn.textContent = "Dashboard";
+                // Optional: auto-show dashboard if already logged in
+                // showDashboard(user);
             }
         });
 
         function showDashboard(user) {
-            document.getElementById('dashboard-modal').classList.remove('hidden');
-            // In real app: fetch real stats from Firebase using user.uid
-            console.log("Logged in user:", user.displayName, user.email);
+            document.getElementById('main-content').classList.add('hidden');
+            document.getElementById('dashboard-page').style.display = 'block';
+            console.log("Dashboard loaded for:", user.displayName, user.email);
+            // In real app: fetch real data using user.uid
+        }
+
+        function goBackToHome() {
+            document.getElementById('dashboard-page').style.display = 'none';
+            document.getElementById('main-content').classList.remove('hidden');
         }
 
         // Initial render
