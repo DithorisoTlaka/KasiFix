@@ -258,6 +258,36 @@
         body.dark .review-item {
             border-bottom-color: #4b5563;
         }
+
+        /* Categories Section */
+        .category-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            border: 1px solid #f1f5f9;
+        }
+
+        body.dark .category-card {
+            background: #1f2937;
+            border-color: #374151;
+        }
+
+        .category-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 15px 30px rgba(249, 115, 34, 0.18);
+        }
+
+        .category-icon {
+            font-size: 2.5rem;
+            color: #f97316;
+        }
+
+        body.dark .category-icon {
+            color: #fb923c;
+        }
     </style>
 </head>
 <body class="bg-gray-50">
@@ -347,6 +377,62 @@
                        class="pill-btn border-2 border-white text-white px-10 py-5 text-lg font-bold hover:bg-white hover:text-[#1e3a8a] transition shadow-lg">
                         Browse All Hustlers
                     </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Categories Section -->
+        <section id="categories" class="py-16 bg-gray-50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <h2 class="text-3xl md:text-4xl font-extrabold text-center mb-12 text-gray-900">Popular Categories</h2>
+                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+                    <div class="category-card p-6 text-center" onclick="selectCategory('Plumbing')">
+                        <div class="category-icon mb-4"><i class="fas fa-tools"></i></div>
+                        <h3 class="font-bold text-lg mb-1">Plumbing</h3>
+                        <p class="text-sm text-gray-600">Leaky pipes, geysers, toilets</p>
+                    </div>
+
+                    <div class="category-card p-6 text-center" onclick="selectCategory('Electrical')">
+                        <div class="category-icon mb-4"><i class="fas fa-bolt"></i></div>
+                        <h3 class="font-bold text-lg mb-1">Electrical</h3>
+                        <p class="text-sm text-gray-600">Wiring, lights, inverters</p>
+                    </div>
+
+                    <div class="category-card p-6 text-center" onclick="selectCategory('Barber')">
+                        <div class="category-icon mb-4"><i class="fas fa-cut"></i></div>
+                        <h3 class="font-bold text-lg mb-1">Barber</h3>
+                        <p class="text-sm text-gray-600">Haircuts, fades, shaves</p>
+                    </div>
+
+                    <div class="category-card p-6 text-center" onclick="selectCategory('Cleaning')">
+                        <div class="category-icon mb-4"><i class="fas fa-broom"></i></div>
+                        <h3 class="font-bold text-lg mb-1">Cleaning</h3>
+                        <p class="text-sm text-gray-600">House, car, office cleaning</p>
+                    </div>
+
+                    <div class="category-card p-6 text-center" onclick="selectCategory('Solar')">
+                        <div class="category-icon mb-4"><i class="fas fa-solar-panel"></i></div>
+                        <h3 class="font-bold text-lg mb-1">Solar</h3>
+                        <p class="text-sm text-gray-600">Installation & repairs</p>
+                    </div>
+
+                    <div class="category-card p-6 text-center" onclick="selectCategory('Building')">
+                        <div class="category-icon mb-4"><i class="fas fa-hard-hat"></i></div>
+                        <h3 class="font-bold text-lg mb-1">Building</h3>
+                        <p class="text-sm text-gray-600">Bricklaying, plastering</p>
+                    </div>
+
+                    <div class="category-card p-6 text-center" onclick="selectCategory('Car Wash')">
+                        <div class="category-icon mb-4"><i class="fas fa-car"></i></div>
+                        <h3 class="font-bold text-lg mb-1">Car Wash</h3>
+                        <p class="text-sm text-gray-600">Mobile & detailing</p>
+                    </div>
+
+                    <div class="category-card p-6 text-center" onclick="selectCategory('Painting')">
+                        <div class="category-icon mb-4"><i class="fas fa-paint-roller"></i></div>
+                        <h3 class="font-bold text-lg mb-1">Painting</h3>
+                        <p class="text-sm text-gray-600">Interior & exterior</p>
+                    </div>
                 </div>
             </div>
         </section>
@@ -489,7 +575,7 @@
 
     </div>
 
-    <!-- Full Page Dashboard (unchanged) -->
+    <!-- Full Page Dashboard -->
     <div id="dashboard-page" class="bg-gradient-to-b from-gray-50 to-gray-100">
         <nav class="bg-white border-b shadow-sm">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -676,6 +762,13 @@
             renderAllHustlers(filtered);
         }
 
+        function selectCategory(category) {
+            document.getElementById('search-category').value = category;
+            filterHustlers();
+            document.getElementById('advanced-panel').classList.add('open');
+            window.scrollTo({ top: document.getElementById('all-hustlers').offsetTop - 80, behavior: 'smooth' });
+        }
+
         function renderAllHustlers(hustlers) {
             const container = document.getElementById('hustlers-grid');
             container.innerHTML = '';
@@ -831,6 +924,13 @@
                         s.classList.toggle('text-gray-300', s.dataset.rating > rating);
                     });
                 });
+                star.addEventListener('mouseout', () => {
+                    const selected = document.getElementById('selected-rating').value;
+                    stars.forEach(s => {
+                        s.classList.toggle('text-yellow-400', s.dataset.rating <= selected);
+                        s.classList.toggle('text-gray-300', s.dataset.rating > selected);
+                    });
+                });
                 star.addEventListener('click', () => {
                     document.getElementById('selected-rating').value = star.dataset.rating;
                 });
@@ -974,7 +1074,7 @@
             }
         });
 
-        // Google Login + Dashboard (unchanged)
+        // Google Login + Dashboard
         const hustlerLoginBtn = document.getElementById('hustler-login-btn');
 
         hustlerLoginBtn.addEventListener('click', () => {
