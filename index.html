@@ -112,6 +112,21 @@
             background: #f97316;
             color: white;
         }
+
+        /* Progress bar */
+        .progress-container {
+            height: 6px;
+            background: #e5e7eb;
+            border-radius: 9999px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: #f97316;
+            transition: width 0.2s ease;
+        }
     </style>
 </head>
 <body class="bg-gray-50">
@@ -169,7 +184,7 @@
                     </div>
                     <button onclick="document.getElementById('advanced-panel').classList.toggle('open')"
                             class="pill-btn bg-gray-100 text-gray-700 px-6 py-4 rounded-2xl font-medium hover:bg-gray-200 transition flex items-center justify-center md:w-48">
-                            <i class="fa-solid fa-sliders mr-2"></i> Advanced
+                        <i class="fa-solid fa-sliders mr-2"></i> Advanced
                     </button>
                 </div>
 
@@ -266,42 +281,54 @@
 
     <!-- Become a Hustler Modal -->
     <div id="hustler-signup-modal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 hidden">
-        <div class="bg-white rounded-2xl p-8 max-w-lg w-full m-4 relative">
+        <div class="bg-white rounded-2xl p-6 max-w-md w-full m-4 relative max-h-[90vh] overflow-y-auto">
             <button onclick="document.getElementById('hustler-signup-modal').classList.add('hidden')"
-                    class="absolute top-4 right-4 text-gray-600 hover:text-gray-800">
-                <i class="fa-solid fa-times text-2xl"></i>
+                    class="absolute top-3 right-3 text-gray-600 hover:text-gray-800">
+                <i class="fa-solid fa-times text-xl"></i>
             </button>
-            <h2 class="text-2xl font-bold mb-6 text-center text-gray-900">Become a KasiFix Hustler</h2>
-            <form id="hustler-signup-form" class="space-y-5">
+            <h2 class="text-xl font-bold mb-5 text-center text-gray-900">Become a KasiFix Hustler</h2>
+            <form id="hustler-signup-form" class="space-y-4 text-sm">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Full Name *</label>
-                    <input type="text" name="name" required class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-[#f97316] outline-none">
+                    <label class="block text-gray-700 mb-1 font-medium">Full Name *</label>
+                    <input type="text" name="name" required class="w-full px-3 py-2.5 rounded-lg border border-gray-300 focus:border-[#f97316] outline-none">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Phone Number (with +27) *</label>
-                    <input type="tel" name="phone" required placeholder="+27123456789" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-[#f97316] outline-none">
+                    <label class="block text-gray-700 mb-1 font-medium">Phone Number (with +27) *</label>
+                    <input type="tel" name="phone" required placeholder="+27123456789" class="w-full px-3 py-2.5 rounded-lg border border-gray-300 focus:border-[#f97316] outline-none">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Category / Service *</label>
-                    <input type="text" name="category" required placeholder="e.g. Plumbing, Hair Cutting, Solar Installation" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-[#f97316] outline-none">
+                    <label class="block text-gray-700 mb-1 font-medium">Category / Service *</label>
+                    <input type="text" name="category" required placeholder="e.g. Plumbing, Barber" class="w-full px-3 py-2.5 rounded-lg border border-gray-300 focus:border-[#f97316] outline-none">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Hourly Rate (R) *</label>
-                    <input type="number" name="rate" required min="50" placeholder="150" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-[#f97316] outline-none">
+                    <label class="block text-gray-700 mb-1 font-medium">Hourly Rate (R) *</label>
+                    <input type="number" name="rate" required min="50" placeholder="150" class="w-full px-3 py-2.5 rounded-lg border border-gray-300 focus:border-[#f97316] outline-none">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Location (e.g. Soweto, Tembisa) *</label>
-                    <input type="text" name="location" required class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-[#f97316] outline-none">
+                    <label class="block text-gray-700 mb-1 font-medium">Location (e.g. Soweto) *</label>
+                    <input type="text" name="location" required class="w-full px-3 py-2.5 rounded-lg border border-gray-300 focus:border-[#f97316] outline-none">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Short Bio / What you do</label>
-                    <textarea name="bio" rows="4" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-[#f97316] outline-none"></textarea>
+                    <label class="block text-gray-700 mb-1 font-medium">Short Bio</label>
+                    <textarea name="bio" rows="3" class="w-full px-3 py-2.5 rounded-lg border border-gray-300 focus:border-[#f97316] outline-none"></textarea>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Profile Photo URL (optional)</label>
-                    <input type="url" name="imageUrl" placeholder="https://..." class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-[#f97316] outline-none">
+                    <label class="block text-gray-700 mb-1 font-medium">Profile Photo</label>
+                    <input type="file" id="profile-photo" accept="image/*" class="w-full px-3 py-2 rounded-lg border border-gray-300">
+                    
+                    <!-- Progress bar -->
+                    <div id="progress-container" class="progress-container hidden">
+                        <div id="progress-bar" class="progress-bar"></div>
+                    </div>
+                    <p id="progress-text" class="text-xs text-gray-600 mt-1 text-center hidden">Uploading...</p>
+
+                    <div id="photo-preview" class="mt-3 hidden">
+                        <img id="preview-img" class="w-20 h-20 object-cover rounded-md mx-auto" alt="Preview">
+                        <p class="text-xs text-gray-500 mt-1 text-center">Uploaded successfully</p>
+                    </div>
+                    <input type="hidden" name="imageUrl" id="imageUrlField">
                 </div>
-                <button type="submit" class="w-full bg-[#f97316] text-white py-4 rounded-xl font-bold text-lg hover:bg-orange-600 transition">
+                <button type="submit" class="w-full bg-[#f97316] text-white py-3 rounded-xl font-bold hover:bg-orange-600 transition text-base">
                     Submit & Join KasiFix
                 </button>
             </form>
@@ -327,9 +354,7 @@
         let allHustlers = [];
         let categories = new Set();
 
-        // ────────────────────────────────────────────────
         // Real-time listener for hustlers
-        // ────────────────────────────────────────────────
         db.ref('hustlers').on('value', snapshot => {
             allHustlers = [];
             categories.clear();
@@ -373,7 +398,6 @@
                 container.appendChild(div);
             });
 
-            // Add "All Categories" option
             const allDiv = document.createElement('div');
             allDiv.className = 'dropdown-item font-medium border-b border-gray-200 text-[#1e3a8a]';
             allDiv.textContent = 'All Categories';
@@ -500,10 +524,86 @@
             document.getElementById('hustler-detail-modal').classList.remove('hidden');
         }
 
+        // ────────────────────────────────────────────────
+        // Cloudinary Unsigned Upload + Progress
+        // ────────────────────────────────────────────────
+        const CLOUD_NAME    = 'your-cloud-name';          // ← CHANGE THIS
+        const UPLOAD_PRESET = 'your-upload-preset';       // ← CHANGE THIS (unsigned preset)
+
+        const CLOUDINARY_URL = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`;
+
+        document.getElementById('profile-photo').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            // Reset UI
+            document.getElementById('progress-container').classList.remove('hidden');
+            document.getElementById('progress-bar').style.width = '0%';
+            document.getElementById('progress-text').classList.remove('hidden');
+            document.getElementById('progress-text').textContent = 'Uploading... 0%';
+            document.getElementById('photo-preview').classList.add('hidden');
+
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('upload_preset', UPLOAD_PRESET);
+
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', CLOUDINARY_URL, true);
+
+            xhr.upload.onprogress = function(event) {
+                if (event.lengthComputable) {
+                    const percentComplete = Math.round((event.loaded / event.total) * 100);
+                    document.getElementById('progress-bar').style.width = percentComplete + '%';
+                    document.getElementById('progress-text').textContent = `Uploading... ${percentComplete}%`;
+                }
+            };
+
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    const data = JSON.parse(xhr.responseText);
+                    if (data.secure_url) {
+                        document.getElementById('imageUrlField').value = data.secure_url;
+                        const preview = document.getElementById('preview-img');
+                        preview.src = data.secure_url;
+                        document.getElementById('photo-preview').classList.remove('hidden');
+                        document.getElementById('progress-text').textContent = 'Upload complete!';
+                        setTimeout(() => {
+                            document.getElementById('progress-container').classList.add('hidden');
+                            document.getElementById('progress-text').classList.add('hidden');
+                        }, 1500);
+                    } else {
+                        alert('Upload failed: ' + (data.error?.message || 'Unknown error'));
+                        resetProgress();
+                    }
+                } else {
+                    alert('Server error: ' + xhr.status);
+                    resetProgress();
+                }
+            };
+
+            xhr.onerror = function() {
+                alert('Network error during upload');
+                resetProgress();
+            };
+
+            xhr.send(formData);
+        });
+
+        function resetProgress() {
+            document.getElementById('progress-bar').style.width = '0%';
+            document.getElementById('progress-container').classList.add('hidden');
+            document.getElementById('progress-text').classList.add('hidden');
+        }
+
         // Hustler signup form
         document.getElementById('hustler-signup-form').addEventListener('submit', e => {
             e.preventDefault();
             const form = e.target;
+
+            if (!form.imageUrl.value && !confirm('No photo uploaded. Continue without profile picture?')) {
+                return;
+            }
+
             const data = {
                 name: form.name.value.trim(),
                 phone: form.phone.value.trim(),
@@ -512,7 +612,7 @@
                 location: form.location.value.trim(),
                 bio: form.bio.value.trim(),
                 imageUrl: form.imageUrl.value.trim() || null,
-                verified: false,           // admin must verify
+                verified: false,
                 featured: false,
                 createdAt: Date.now()
             };
@@ -521,9 +621,18 @@
                 .then(() => {
                     alert('Thank you! Your profile has been submitted for review.');
                     form.reset();
+                    document.getElementById('photo-preview').classList.add('hidden');
+                    resetProgress();
                     document.getElementById('hustler-signup-modal').classList.add('hidden');
                 })
                 .catch(err => alert('Error submitting profile: ' + err.message));
+        });
+
+        // Reset progress when modal closes
+        document.getElementById('hustler-signup-modal').addEventListener('transitionend', e => {
+            if (!document.getElementById('hustler-signup-modal').classList.contains('hidden')) return;
+            resetProgress();
+            document.getElementById('photo-preview').classList.add('hidden');
         });
 
         // Initial render
