@@ -14,21 +14,7 @@
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-        body { font-family: 'Inter', sans-serif; transition: background-color 0.3s, color 0.3s; }
-        
-        body.dark {
-            background-color: #111827;
-            color: #f3f4f6;
-        }
-        body.dark .bg-gray-50 { background-color: #111827; }
-        body.dark .bg-white { background-color: #1f2937; color: #f3f4f6; }
-        body.dark .text-gray-900 { color: #f3f4f6; }
-        body.dark .text-gray-700 { color: #d1d5db; }
-        body.dark .text-gray-600 { color: #9ca3af; }
-        body.dark .text-gray-500 { color: #6b7280; }
-        body.dark .border-gray-100 { border-color: #374151; }
-        body.dark .border-gray-200 { border-color: #4b5563; }
-        body.dark .bg-gradient-to-b.from-gray-50.to-gray-100 { background: linear-gradient(to bottom, #111827, #1f2937); }
+        body { font-family: 'Inter', sans-serif; }
 
         .hero-bg {
             background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
@@ -77,31 +63,16 @@
             padding: 8px;
             box-shadow: 0 10px 40px -10px rgba(0,0,0,0.15);
             border: 1px solid rgba(249,115,34,0.1);
-            transition: all 0.3s;
-        }
-
-        body.dark .search-container {
-            background: rgba(31, 41, 55, 0.95);
-            border-color: rgba(249,115,34,0.2);
         }
 
         .search-input {
             background: transparent;
             border: none;
-            transition: all 0.3s ease;
             color: #111827;
-        }
-
-        body.dark .search-input {
-            color: #f3f4f6;
         }
 
         .search-input::placeholder {
             color: #9ca3af;
-        }
-
-        body.dark .search-input::placeholder {
-            color: #6b7280;
         }
 
         .input-wrapper {
@@ -109,10 +80,6 @@
             border-radius: 9999px;
             border: 2px solid transparent;
             transition: all 0.3s ease;
-        }
-
-        body.dark .input-wrapper {
-            background: #374151;
         }
 
         .input-wrapper:focus-within {
@@ -162,11 +129,6 @@
             margin-top: 8px;
         }
 
-        body.dark .dropdown-menu {
-            background: #1f2937;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-        }
-
         .dropdown-item {
             padding: 10px 16px;
             cursor: pointer;
@@ -191,19 +153,11 @@
             transition: width 0.2s ease;
         }
 
-        body.dark .progress-container {
-            background: #4b5563;
-        }
-
         /* Dashboard full page styling */
         #dashboard-page {
             display: none;
             min-height: 100vh;
             background: linear-gradient(to bottom, #f8fafc, #e5e7eb);
-        }
-
-        body.dark #dashboard-page {
-            background: linear-gradient(to bottom, #111827, #1f2937);
         }
 
         #main-content.hidden {
@@ -212,36 +166,6 @@
 
         .rating-stars {
             color: #f59e0b;
-        }
-
-        .rating-stars .fa-star {
-            cursor: pointer;
-            transition: color 0.2s;
-        }
-
-        .rating-stars .fa-star.hover {
-            color: #fbbf24;
-        }
-
-        .dark-mode-toggle {
-            position: fixed;
-            top: 1rem;
-            right: 1rem;
-            z-index: 1000;
-            background: rgba(255,255,255,0.9);
-            backdrop-filter: blur(10px);
-            border-radius: 9999px;
-            padding: 0.75rem 1rem;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
-        }
-
-        body.dark .dark-mode-toggle {
-            background: rgba(31,41,55,0.9);
-        }
-
-        .dark-mode-toggle:hover {
-            transform: scale(1.05);
         }
 
         .reviews-list {
@@ -255,10 +179,6 @@
             margin-bottom: 1rem;
         }
 
-        body.dark .review-item {
-            border-bottom-color: #4b5563;
-        }
-
         /* Categories Section */
         .category-card {
             transition: all 0.3s ease;
@@ -270,11 +190,6 @@
             border: 1px solid #f1f5f9;
         }
 
-        body.dark .category-card {
-            background: #1f2937;
-            border-color: #374151;
-        }
-
         .category-card:hover {
             transform: translateY(-6px);
             box-shadow: 0 15px 30px rgba(249, 115, 34, 0.18);
@@ -284,51 +199,11 @@
             font-size: 2.5rem;
             color: #f97316;
         }
-
-        body.dark .category-icon {
-            color: #fb923c;
-        }
     </style>
 </head>
 <body class="bg-gray-50">
-    
-    <!-- Dark Mode Toggle -->
-<button id="dark-mode-toggle" class="dark-mode-toggle flex items-center space-x-2 text-gray-800 hover:text-[#f97316] transition">
-    <i class="fa-solid fa-moon text-lg"></i>
-    <span class="text-sm font-medium">Dark Mode</span>
-</button>
 
-<style>
-    .dark-mode-toggle {
-        position: fixed;
-        top: 1rem;
-        right: 1rem;
-        z-index: 1000;
-        background: rgba(255,255,255,0.92);
-        backdrop-filter: blur(12px);
-        border-radius: 9999px;
-        padding: 0.5rem 1rem;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.12);
-        transition: all 0.3s ease;
-        border: 1px solid rgba(249,115,34,0.15);
-        font-size: 0.95rem;
-    }
-
-    body.dark .dark-mode-toggle {
-        background: rgba(31,41,55,0.92);
-        border-color: rgba(249,115,34,0.25);
-        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-    }
-
-    .dark-mode-toggle:hover {
-        transform: scale(1.08);
-        box-shadow: 0 6px 18px rgba(249,115,34,0.3);
-    }
-
-    body.dark .dark-mode-toggle:hover {
-        box-shadow: 0 6px 18px rgba(251,146,60,0.4);
-    }
-</style>
+    <div id="main-content">
 
         <!-- Navigation -->
         <nav class="bg-white border-b sticky top-0 z-50 shadow-sm">
@@ -605,13 +480,13 @@
 
     </div>
 
-    <!-- Full Page Dashboard -->
+    <!-- Full Page Admin Dashboard -->
     <div id="dashboard-page" class="bg-gradient-to-b from-gray-50 to-gray-100">
         <nav class="bg-white border-b shadow-sm">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex justify-between h-16 items-center">
                     <div class="flex items-center">
-                        <span class="text-2xl font-extrabold text-[#1e3a8a]">Kasi<span class="text-[#f97316]">Fix</span> Dashboard</span>
+                        <span class="text-2xl font-extrabold text-[#1e3a8a]">Kasi<span class="text-[#f97316]">Fix</span> Admin Dashboard</span>
                     </div>
                     <div class="flex items-center space-x-4">
                         <button onclick="goBackToHome()"
@@ -628,67 +503,14 @@
         </nav>
 
         <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-            <h1 class="text-3xl font-bold text-gray-900 mb-8">Welcome to Your Dashboard</h1>
+            <h1 class="text-3xl font-bold text-gray-900 mb-8">Pending Hustler Applications</h1>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-                <div class="bg-white p-6 rounded-2xl shadow-lg border border-gray-100">
-                    <h3 class="text-lg font-semibold text-gray-700">Profile Views</h3>
-                    <p class="text-4xl font-bold text-[#1e3a8a] mt-2">1,487</p>
-                    <p class="text-sm text-gray-500 mt-1">+18% this month</p>
-                </div>
-                <div class="bg-white p-6 rounded-2xl shadow-lg border border-gray-100">
-                    <h3 class="text-lg font-semibold text-gray-700">Enquiries / Chats</h3>
-                    <p class="text-4xl font-bold text-[#f97316] mt-2">124</p>
-                    <p class="text-sm text-gray-500 mt-1">This month</p>
-                </div>
-                <div class="bg-white p-6 rounded-2xl shadow-lg border border-gray-100">
-                    <h3 class="text-lg font-semibold text-gray-700">Estimated Earnings</h3>
-                    <p class="text-4xl font-bold text-green-600 mt-2">R18,920</p>
-                    <p class="text-sm text-gray-500 mt-1">Based on completed jobs</p>
-                </div>
+            <div id="pending-hustlers" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Dynamically populated with pending hustlers + join date/time -->
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <div class="bg-white p-6 rounded-2xl shadow-lg border border-gray-100">
-                    <h3 class="text-xl font-bold mb-4">Recent Activity</h3>
-                    <div class="space-y-4">
-                        <div class="flex justify-between items-center border-b pb-3">
-                            <div>
-                                <p class="font-medium">Plumbing repair – Daveyton</p>
-                                <p class="text-sm text-gray-500">Yesterday • R650</p>
-                            </div>
-                            <span class="text-green-600 font-medium">Completed</span>
-                        </div>
-                        <div class="flex justify-between items-center border-b pb-3">
-                            <div>
-                                <p class="font-medium">Haircut + beard trim</p>
-                                <p class="text-sm text-gray-500">2 days ago • R220</p>
-                            </div>
-                            <span class="text-green-600 font-medium">Completed</span>
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <div>
-                                <p class="font-medium">New enquiry from Tembisa</p>
-                                <p class="text-sm text-gray-500">Today • Solar installation</p>
-                            </div>
-                            <span class="text-blue-600 font-medium">Pending</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="bg-white p-6 rounded-2xl shadow-lg border border-gray-100">
-                    <h3 class="text-xl font-bold mb-4">Quick Stats</h3>
-                    <ul class="space-y-3 text-gray-700">
-                        <li class="flex justify-between"><span>Jobs Completed</span><span class="font-bold">42</span></li>
-                        <li class="flex justify-between"><span>Average Rating</span><span class="font-bold">4.8 ★</span></li>
-                        <li class="flex justify-between"><span>Response Time</span><span class="font-bold">~45 min</span></li>
-                        <li class="flex justify-between"><span>Repeat Customers</span><span class="font-bold">11</span></li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="mt-10 text-center">
-                <p class="text-gray-500">This is a placeholder dashboard. In a real app, these stats would be pulled from your Firebase data linked to your account.</p>
+            <div class="mt-12 text-center text-gray-500">
+                <p>Note: Only unverified (pending) hustlers are shown here for admin review.</p>
             </div>
         </main>
     </div>
@@ -712,6 +534,7 @@
         let categories = new Set();
         let currentHustlerId = null;
 
+        // Listen for all hustlers (for public + dashboard)
         db.ref('hustlers').on('value', snapshot => {
             allHustlers = [];
             categories.clear();
@@ -728,6 +551,9 @@
             populateCategorySelect();
             populateCategoryDropdown();
             renderAllHustlers(allHustlers);
+
+            // Also update admin dashboard with pending ones
+            renderPendingHustlers(data);
         });
 
         function populateCategorySelect() {
@@ -999,7 +825,73 @@
             });
         }
 
+        // ────────────────────────────────────────────────
+        // Admin Dashboard: Show pending hustlers with join date/time
+        // ────────────────────────────────────────────────
+        function renderPendingHustlers(allData) {
+            const container = document.getElementById('pending-hustlers');
+            container.innerHTML = '';
+
+            Object.entries(allData).forEach(([id, h]) => {
+                if (h.verified !== true) {  // only show unverified / pending
+                    const joinDate = h.createdAt 
+                        ? new Date(h.createdAt).toLocaleString('en-ZA', {
+                            dateStyle: 'medium',
+                            timeStyle: 'short'
+                          })
+                        : 'Unknown date';
+
+                    container.innerHTML += `
+                    <div class="bg-white p-6 rounded-2xl shadow-lg border border-gray-200">
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">${h.name || 'Unnamed'}</h3>
+                        <p class="text-sm text-gray-600 mb-1"><strong>Category:</strong> ${h.category || '—'}</p>
+                        <p class="text-sm text-gray-600 mb-1"><strong>Location:</strong> ${h.location || '—'}</p>
+                        <p class="text-sm text-gray-600 mb-1"><strong>Rate:</strong> R${h.rate || '—'}/hr</p>
+                        <p class="text-sm text-gray-500 mt-3">
+                            <i class="fa-solid fa-calendar-alt mr-1"></i> Joined: ${joinDate}
+                        </p>
+                        <div class="mt-4 flex gap-3">
+                            <button onclick="approveHustler('${id}')" 
+                                    class="pill-btn bg-green-600 text-white px-5 py-2 text-sm font-medium hover:bg-green-700">
+                                Approve
+                            </button>
+                            <button onclick="deleteHustler('${id}')" 
+                                    class="pill-btn bg-red-600 text-white px-5 py-2 text-sm font-medium hover:bg-red-700">
+                                Delete
+                            </button>
+                        </div>
+                    </div>`;
+                }
+            });
+
+            if (container.innerHTML === '') {
+                container.innerHTML = `
+                    <div class="col-span-full text-center py-16 text-gray-500">
+                        <i class="fa-solid fa-check-circle text-6xl mb-4 text-green-400"></i>
+                        <p class="text-xl">No pending applications at the moment.</p>
+                    </div>`;
+            }
+        }
+
+        function approveHustler(id) {
+            if (confirm("Approve this hustler?")) {
+                db.ref(`hustlers/${id}`).update({ verified: true })
+                    .then(() => alert("Hustler approved!"))
+                    .catch(err => alert("Error: " + err.message));
+            }
+        }
+
+        function deleteHustler(id) {
+            if (confirm("Delete this application permanently?")) {
+                db.ref(`hustlers/${id}`).remove()
+                    .then(() => alert("Application deleted."))
+                    .catch(err => alert("Error: " + err.message));
+            }
+        }
+
+        // ────────────────────────────────────────────────
         // Cloudinary Upload (unchanged)
+        // ────────────────────────────────────────────────
         const CLOUD_NAME    = 'dv5bsbydu';
         const UPLOAD_PRESET = 'admin_tlaka';
         const CLOUDINARY_URL = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`;
@@ -1136,23 +1028,6 @@
             document.getElementById('dashboard-page').style.display = 'none';
             document.getElementById('main-content').classList.remove('hidden');
         }
-
-        // Dark Mode Toggle
-        const darkModeToggle = document.getElementById('dark-mode-toggle');
-        const icon = darkModeToggle.querySelector('i');
-
-        darkModeToggle.addEventListener('click', () => {
-            document.body.classList.toggle('dark');
-            if (document.body.classList.contains('dark')) {
-                icon.classList.remove('fa-moon');
-                icon.classList.add('fa-sun');
-                darkModeToggle.querySelector('span').textContent = 'Light Mode';
-            } else {
-                icon.classList.remove('fa-sun');
-                icon.classList.add('fa-moon');
-                darkModeToggle.querySelector('span').textContent = 'Dark Mode';
-            }
-        });
 
         // Initial render
         renderAllHustlers([]);
