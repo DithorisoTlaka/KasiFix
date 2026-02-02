@@ -291,14 +291,44 @@
     </style>
 </head>
 <body class="bg-gray-50">
-
+    
     <!-- Dark Mode Toggle -->
-    <button id="dark-mode-toggle" class="dark-mode-toggle flex items-center space-x-2 text-gray-800 hover:text-[#f97316] transition">
-        <i class="fa-solid fa-moon text-xl"></i>
-        <span class="font-medium">Dark Mode</span>
-    </button>
+<button id="dark-mode-toggle" class="dark-mode-toggle flex items-center space-x-2 text-gray-800 hover:text-[#f97316] transition">
+    <i class="fa-solid fa-moon text-lg"></i>
+    <span class="text-sm font-medium">Dark Mode</span>
+</button>
 
-    <div id="main-content">
+<style>
+    .dark-mode-toggle {
+        position: fixed;
+        top: 1rem;
+        right: 1rem;
+        z-index: 1000;
+        background: rgba(255,255,255,0.92);
+        backdrop-filter: blur(12px);
+        border-radius: 9999px;
+        padding: 0.5rem 1rem;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+        transition: all 0.3s ease;
+        border: 1px solid rgba(249,115,34,0.15);
+        font-size: 0.95rem;
+    }
+
+    body.dark .dark-mode-toggle {
+        background: rgba(31,41,55,0.92);
+        border-color: rgba(249,115,34,0.25);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+
+    .dark-mode-toggle:hover {
+        transform: scale(1.08);
+        box-shadow: 0 6px 18px rgba(249,115,34,0.3);
+    }
+
+    body.dark .dark-mode-toggle:hover {
+        box-shadow: 0 6px 18px rgba(251,146,60,0.4);
+    }
+</style>
 
         <!-- Navigation -->
         <nav class="bg-white border-b sticky top-0 z-50 shadow-sm">
