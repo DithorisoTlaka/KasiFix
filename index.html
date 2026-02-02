@@ -199,52 +199,6 @@
             font-size: 2.5rem;
             color: #f97316;
         }
-
-        /* All Hustlers by Category */
-        .category-group {
-            margin-bottom: 2.5rem;
-            background: white;
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.06);
-            border: 1px solid #f1f5f9;
-        }
-
-        .category-header {
-            padding: 1.25rem 1.5rem;
-            background: #f8fafc;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: background 0.2s;
-        }
-
-        .category-header:hover {
-            background: #f1f5f9;
-        }
-
-        .category-content {
-            padding: 1.5rem;
-            display: none;
-        }
-
-        .category-content.open {
-            display: block;
-        }
-
-        .hustler-mini-card {
-            background: #ffffff;
-            border: 1px solid #e5e7eb;
-            border-radius: 12px;
-            padding: 1rem;
-            transition: all 0.2s;
-        }
-
-        .hustler-mini-card:hover {
-            border-color: #f97316;
-            box-shadow: 0 4px 12px rgba(249,115,34,0.1);
-        }
     </style>
 </head>
 <body class="bg-gray-50">
@@ -385,26 +339,10 @@
                         <p class="text-sm text-gray-600">Interior & exterior</p>
                     </div>
                 </div>
-
-                <!-- See All Hustlers Button -->
-                <div class="text-center mt-12">
-                    <button onclick="showAllHustlersByCategory()"
-                            class="pill-btn bg-[#1e3a8a] text-white px-10 py-4 text-lg font-bold hover:bg-blue-900 transition shadow-lg">
-                        See All Hustlers
-                    </button>
-                </div>
             </div>
         </section>
 
-        <!-- All Hustlers by Category (hidden until button clicked) -->
-        <section id="all-hustlers-by-category" class="py-16 bg-white hidden">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <h2 class="text-3xl md:text-4xl font-extrabold text-center mb-12 text-gray-900">All Hustlers by Category</h2>
-                <div id="category-groups-container" class="space-y-8"></div>
-            </div>
-        </section>
-
-        <!-- All Hustlers (regular view) -->
+        <!-- All Hustlers -->
         <section id="all-hustlers" class="py-20 bg-gray-50">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <h2 class="text-3xl md:text-4xl font-extrabold text-center mb-12 text-gray-900">Find Hustlers Near You</h2>
@@ -542,13 +480,13 @@
 
     </div>
 
-    <!-- Full Page Dashboard -->
+    <!-- Full Page Admin Dashboard -->
     <div id="dashboard-page" class="bg-gradient-to-b from-gray-50 to-gray-100">
         <nav class="bg-white border-b shadow-sm">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex justify-between h-16 items-center">
                     <div class="flex items-center">
-                        <span class="text-2xl font-extrabold text-[#1e3a8a]">Kasi<span class="text-[#f97316]">Fix</span> Dashboard</span>
+                        <span class="text-2xl font-extrabold text-[#1e3a8a]">Kasi<span class="text-[#f97316]">Fix</span> Admin Dashboard</span>
                     </div>
                     <div class="flex items-center space-x-4">
                         <button onclick="goBackToHome()"
@@ -568,7 +506,7 @@
             <h1 class="text-3xl font-bold text-gray-900 mb-8">Pending Hustler Applications</h1>
 
             <div id="pending-hustlers" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Dynamically populated -->
+                <!-- Dynamically populated with pending hustlers + join date/time -->
             </div>
 
             <div class="mt-12 text-center text-gray-500">
@@ -596,6 +534,7 @@
         let categories = new Set();
         let currentHustlerId = null;
 
+        // Listen for all hustlers (for public + dashboard)
         db.ref('hustlers').on('value', snapshot => {
             allHustlers = [];
             categories.clear();
@@ -612,6 +551,8 @@
             populateCategorySelect();
             populateCategoryDropdown();
             renderAllHustlers(allHustlers);
+
+            // Also update admin dashboard with pending ones
             renderPendingHustlers(data);
         });
 
@@ -805,72 +746,147 @@
             document.getElementById('hustler-detail-modal').classList.remove('hidden');
         }
 
-        // ────────────────────────────────────────────────
-        // Show All Hustlers Grouped by Category
-        // ────────────────────────────────────────────────
-        function showAllHustlersByCategory() {
-            const container = document.getElementById('category-groups-container');
-            container.innerHTML = '';
-
-            // Group hustlers by category
-            const grouped = {};
-            allHustlers.forEach(h => {
-                const cat = h.category || 'Other';
-                if (!grouped[cat]) grouped[cat] = [];
-                grouped[cat].push(h);
-            });
-
-            // Sort categories alphabetically
-            const sortedCats = Object.keys(grouped).sort();
-
-            sortedCats.forEach(cat => {
-                const hustlers = grouped[cat];
-                const cardHTML = `
-                <div class="category-group">
-                    <div class="category-header" onclick="toggleCategory(this)">
-                        <div class="flex items-center">
-                            <h3 class="text-xl font-bold text-gray-900">${cat}</h3>
-                            <span class="ml-3 text-sm text-gray-600">(${hustlers.length} hustlers)</span>
-                        </div>
-                        <i class="fa-solid fa-chevron-down transition-transform duration-300"></i>
-                    </div>
-                    <div class="category-content">
-                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                            ${hustlers.map(h => `
-                                <div class="hustler-mini-card cursor-pointer" onclick="showHustlerDetail('${h.id}')">
-                                    <div class="flex items-center mb-3">
-                                        ${h.imageUrl ? 
-                                            `<img src="${h.imageUrl}" alt="${h.name}" class="w-14 h-14 rounded-full object-cover mr-4">` :
-                                            `<div class="w-14 h-14 rounded-full bg-gray-200 flex items-center justify-center text-xl font-bold text-gray-600 mr-4">
-                                                ${h.name ? h.name.charAt(0).toUpperCase() : '?'}
-                                            </div>`
-                                        }
-                                        <div>
-                                            <h4 class="font-bold text-gray-900">${h.name || 'Unnamed'}</h4>
-                                            <p class="text-sm text-[#f97316]">R${h.rate || '—'}/hr</p>
-                                        </div>
-                                    </div>
-                                    <p class="text-sm text-gray-600 line-clamp-2">${h.bio || 'No bio available.'}</p>
+        function loadReviews(hustlerId) {
+            db.ref(`reviews/${hustlerId}`).on('value', snapshot => {
+                const reviewsList = document.getElementById('reviews-list');
+                reviewsList.innerHTML = '';
+                const reviews = snapshot.val() || {};
+                Object.entries(reviews).forEach(([id, review]) => {
+                    reviewsList.innerHTML += `
+                        <div class="review-item">
+                            <div class="flex items-center mb-2">
+                                <div class="rating-stars flex mr-2">
+                                    ${Array(5).fill().map((_, i) => 
+                                        `<i class="fa-solid fa-star ${i < review.rating ? 'text-yellow-400' : 'text-gray-300'}"></i>`
+                                    ).join('')}
                                 </div>
-                            `).join('')}
+                                <span class="text-sm text-gray-500">${review.name || 'Anonymous'} • ${new Date(review.timestamp).toLocaleDateString()}</span>
+                            </div>
+                            <p class="text-gray-700">${review.comment}</p>
                         </div>
-                    </div>
-                </div>`;
-
-                container.innerHTML += cardHTML;
+                    `;
+                });
+                updateAverageRating(hustlerId);
             });
-
-            // Show the section and scroll to it
-            document.getElementById('all-hustlers-by-category').classList.remove('hidden');
-            window.scrollTo({ top: document.getElementById('all-hustlers-by-category').offsetTop - 80, behavior: 'smooth' });
         }
 
-        function toggleCategory(header) {
-            const content = header.nextElementSibling;
-            content.classList.toggle('open');
-            const icon = header.querySelector('i');
-            icon.classList.toggle('fa-chevron-down');
-            icon.classList.toggle('fa-chevron-up');
+        function setupReviewForm(hustlerId) {
+            const stars = document.querySelectorAll('#review-rating i');
+            stars.forEach(star => {
+                star.addEventListener('mouseover', () => {
+                    const rating = star.dataset.rating;
+                    stars.forEach(s => {
+                        s.classList.toggle('text-yellow-400', s.dataset.rating <= rating);
+                        s.classList.toggle('text-gray-300', s.dataset.rating > rating);
+                    });
+                });
+                star.addEventListener('mouseout', () => {
+                    const selected = document.getElementById('selected-rating').value;
+                    stars.forEach(s => {
+                        s.classList.toggle('text-yellow-400', s.dataset.rating <= selected);
+                        s.classList.toggle('text-gray-300', s.dataset.rating > selected);
+                    });
+                });
+                star.addEventListener('click', () => {
+                    document.getElementById('selected-rating').value = star.dataset.rating;
+                });
+            });
+
+            document.getElementById('review-form').addEventListener('submit', e => {
+                e.preventDefault();
+                const rating = Number(document.getElementById('selected-rating').value);
+                const comment = document.getElementById('review-comment').value.trim();
+                const name = document.getElementById('review-name').value.trim();
+
+                if (rating === 0 || comment === '') {
+                    alert('Please select a rating and write a comment.');
+                    return;
+                }
+
+                db.ref(`reviews/${hustlerId}`).push({
+                    rating,
+                    comment,
+                    name,
+                    timestamp: Date.now()
+                }).then(() => {
+                    document.getElementById('review-form').reset();
+                    document.getElementById('selected-rating').value = 0;
+                    stars.forEach(s => s.classList.replace('text-yellow-400', 'text-gray-300'));
+                }).catch(err => alert('Error submitting review: ' + err.message));
+            });
+        }
+
+        function updateAverageRating(hustlerId) {
+            db.ref(`reviews/${hustlerId}`).once('value', snapshot => {
+                const reviews = snapshot.val() || {};
+                const ratings = Object.values(reviews).map(r => r.rating);
+                const average = ratings.length > 0 ? ratings.reduce((a, b) => a + b, 0) / ratings.length : 0;
+                db.ref(`hustlers/${hustlerId}`).update({ rating: average.toFixed(1), reviews: ratings.length });
+            });
+        }
+
+        // ────────────────────────────────────────────────
+        // Admin Dashboard: Show pending hustlers with join date/time
+        // ────────────────────────────────────────────────
+        function renderPendingHustlers(allData) {
+            const container = document.getElementById('pending-hustlers');
+            container.innerHTML = '';
+
+            Object.entries(allData).forEach(([id, h]) => {
+                if (h.verified !== true) {  // only show unverified / pending
+                    const joinDate = h.createdAt 
+                        ? new Date(h.createdAt).toLocaleString('en-ZA', {
+                            dateStyle: 'medium',
+                            timeStyle: 'short'
+                          })
+                        : 'Unknown date';
+
+                    container.innerHTML += `
+                    <div class="bg-white p-6 rounded-2xl shadow-lg border border-gray-200">
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">${h.name || 'Unnamed'}</h3>
+                        <p class="text-sm text-gray-600 mb-1"><strong>Category:</strong> ${h.category || '—'}</p>
+                        <p class="text-sm text-gray-600 mb-1"><strong>Location:</strong> ${h.location || '—'}</p>
+                        <p class="text-sm text-gray-600 mb-1"><strong>Rate:</strong> R${h.rate || '—'}/hr</p>
+                        <p class="text-sm text-gray-500 mt-3">
+                            <i class="fa-solid fa-calendar-alt mr-1"></i> Joined: ${joinDate}
+                        </p>
+                        <div class="mt-4 flex gap-3">
+                            <button onclick="approveHustler('${id}')" 
+                                    class="pill-btn bg-green-600 text-white px-5 py-2 text-sm font-medium hover:bg-green-700">
+                                Approve
+                            </button>
+                            <button onclick="deleteHustler('${id}')" 
+                                    class="pill-btn bg-red-600 text-white px-5 py-2 text-sm font-medium hover:bg-red-700">
+                                Delete
+                            </button>
+                        </div>
+                    </div>`;
+                }
+            });
+
+            if (container.innerHTML === '') {
+                container.innerHTML = `
+                    <div class="col-span-full text-center py-16 text-gray-500">
+                        <i class="fa-solid fa-check-circle text-6xl mb-4 text-green-400"></i>
+                        <p class="text-xl">No pending applications at the moment.</p>
+                    </div>`;
+            }
+        }
+
+        function approveHustler(id) {
+            if (confirm("Approve this hustler?")) {
+                db.ref(`hustlers/${id}`).update({ verified: true })
+                    .then(() => alert("Hustler approved!"))
+                    .catch(err => alert("Error: " + err.message));
+            }
+        }
+
+        function deleteHustler(id) {
+            if (confirm("Delete this application permanently?")) {
+                db.ref(`hustlers/${id}`).remove()
+                    .then(() => alert("Application deleted."))
+                    .catch(err => alert("Error: " + err.message));
+            }
         }
 
         // ────────────────────────────────────────────────
